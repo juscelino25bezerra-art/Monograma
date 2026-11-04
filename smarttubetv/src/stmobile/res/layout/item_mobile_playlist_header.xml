@@ -117,7 +117,7 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/mobile_color_inverse_surface"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/manrope_semibold"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:minHeight="48dp"

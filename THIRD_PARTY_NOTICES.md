@@ -38,6 +38,9 @@ separately from their code, and NewTube uses it under those terms:
   See [`slidableactivity/LICENSE.md`](slidableactivity/LICENSE.md).
 - **filepicker-lib** (`filepicker-lib/`) — **Apache-2.0**.
   See [`filepicker-lib/LICENSE`](filepicker-lib/LICENSE).
+- **Manrope** (`smarttubetv/src/stmobile/res/font/manrope_*.ttf`) — © The Manrope Project
+  Authors, **SIL Open Font License 1.1** (https://github.com/googlefonts/manrope). Monograma's
+  interface typeface. See [`docs/licenses/Manrope-OFL.txt`](docs/licenses/Manrope-OFL.txt).
 
 ## Submodules
 

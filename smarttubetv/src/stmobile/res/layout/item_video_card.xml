@@ -101,7 +101,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="4dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/manrope_semibold"
             android:lineSpacingExtra="2sp"
             android:maxLines="2"
             android:textColor="@color/mobile_color_on_surface"

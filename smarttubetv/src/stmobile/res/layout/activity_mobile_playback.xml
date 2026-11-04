@@ -655,7 +655,7 @@
                     android:layout_marginTop="12dp"
                     android:paddingHorizontal="@dimen/mobile_watch_content_padding"
                     android:ellipsize="end"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/manrope_semibold"
                     android:maxLines="3"
                     android:textColor="@color/mobile_color_on_surface"
                     android:textSize="18sp"
@@ -940,7 +940,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
-                            android:fontFamily="sans-serif-medium"
+                            android:fontFamily="@font/manrope_semibold"
                             android:maxLines="1"
                             android:textColor="@color/mobile_color_on_surface"
                             android:textSize="15sp"
@@ -967,7 +967,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:backgroundTint="@color/mobile_color_inverse_surface"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/manrope_semibold"
                         android:insetTop="4dp"
                         android:insetBottom="4dp"
                         android:letterSpacing="0"
@@ -1011,7 +1011,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/manrope_semibold"
                         android:text="@string/mobile_comments_entry"
                         android:textColor="@color/mobile_color_on_surface"
                         android:textSize="14sp" />
@@ -1067,7 +1067,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_weight="1"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/manrope_semibold"
                         android:text="@string/mobile_live_chat_entry"
                         android:textColor="@color/mobile_color_on_surface"
                         android:textSize="14sp" />
@@ -1177,7 +1177,7 @@
                     android:text="@string/mobile_watch_related"
                     android:textColor="@color/mobile_color_on_surface"
                     android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium" />
+                    android:fontFamily="@font/manrope_semibold" />
 
                 <include
                     layout="@layout/mobile_watch_related_skeleton"

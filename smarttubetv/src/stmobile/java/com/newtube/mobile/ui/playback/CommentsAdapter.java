@@ -20,7 +20,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ReplacementSpan;
 import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -766,7 +765,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
                     meta.setSpan(new ForegroundColorSpan(mHandleColor), 0, handle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    meta.setSpan(new TypefaceSpan("sans-serif-medium"), 0, handle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    meta.setSpan(com.newtube.mobile.ui.common.AppFonts.semiboldSpan(itemView.getContext()), 0, handle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
             if (!TextUtils.isEmpty(date)) {
@@ -919,7 +918,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final float mHeight;
         private final int mFill;
         private final int mTextColor;
-        private final Typeface mTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL);
+        private final Typeface mTypeface;
         private final RectF mRect = new RectF();
 
         CreatorPillSpan(Context context, int fill) {
@@ -930,6 +929,7 @@ final class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mHeight = 14 * density;
             mFill = fill;
             mTextColor = ContextCompat.getColor(context, R.color.mobile_color_on_surface);
+            mTypeface = com.newtube.mobile.ui.common.AppFonts.semibold(context);
         }
 
         private TextPaint pillPaint(Paint base) {

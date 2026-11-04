@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:accessibilityHeading="true"
-    android:fontFamily="sans-serif-medium"
+    android:fontFamily="@font/manrope_semibold"
     android:paddingStart="@dimen/mobile_settings_row_inset"
     android:paddingTop="20dp"
     android:paddingEnd="@dimen/mobile_settings_row_inset"
