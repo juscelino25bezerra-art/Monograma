@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="update_urls">
-        <!-- NEWTUBE(phone-only): updates come from our own repo, not upstream SmartTube TV. -->
-        <!-- The latest published release's manifest (release.yml attaches it to every tag build). -->
-        <item>https://github.com/aleixrodriala/newtube/releases/latest/download/newtube.json</item>
-        <!-- The "latest" pre-release feed that 1.10.3 and older read; update-feed.yml keeps it in step. -->
-        <item>https://github.com/aleixrodriala/newtube/releases/download/latest/newtube.json</item>
+        <!-- MONOGRAMA: updates come from this fork's own releases, never from upstream NewTube.
+             release.yml attaches newtube.json to every tagged release; until the first release
+             exists the check simply reports that it couldn't reach the feed. -->
+        <item>https://github.com/juscelino25bezerra-art/Monograma/releases/latest/download/newtube.json</item>
     </string-array>
 </resources>

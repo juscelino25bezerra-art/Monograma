@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mobile_settings_search_hint">Pesquisar nas configurações</string>
+    <string name="mobile_settings_search_none">Nenhuma configuração corresponde a “%1$s”</string>
+    <string name="mobile_settings_search_kw_account">entrar login sair conta google perfil trocar sign in log out</string>
+    <string name="mobile_settings_search_kw_theme">modo escuro modo claro noturno aparência cores dark mode</string>
+    <string name="mobile_settings_search_kw_pure_black">amoled oled preto escuro noturno bateria</string>
+    <string name="mobile_settings_search_kw_country">país região localização</string>
+    <string name="mobile_settings_search_kw_start_screen">abrir inicialização abre em aba padrão página inicial início</string>
+    <string name="mobile_settings_search_kw_interface_size">escala zoom fonte texto tamanho densidade maior menor</string>
+    <string name="mobile_settings_search_kw_tabs">barra inferior seções navegação explorar</string>
+    <string name="mobile_settings_search_kw_hidden">ocultar assistidos filtrar futuras estreias ao vivo</string>
+    <string name="mobile_settings_search_kw_video_menu">menu de contexto três pontos segurar opções</string>
+    <string name="mobile_settings_search_kw_channels_order">inscrições ordenar canais</string>
+    <string name="mobile_settings_search_kw_watch_history">pausar histórico anônimo</string>
+    <string name="mobile_settings_search_kw_video_ends">reprodução automática repetir loop aleatório próximo vídeo autoplay</string>
+    <string name="mobile_settings_search_kw_background">segundo plano picture in picture pip só áudio minimizar</string>
+    <string name="mobile_settings_search_kw_natural_voice">tom pitch esquilo velocidade</string>
+    <string name="mobile_settings_search_kw_audio_focus">ligações chamadas notificações outros apps interrupções</string>
+    <string name="mobile_settings_search_kw_hide_related">sugestões relacionados recomendações a seguir</string>
+    <string name="mobile_settings_search_kw_dislikes">return youtube dislike ryd não gostei</string>
+    <string name="mobile_settings_search_kw_quality">resolução 4k 1080p 720p hd economia de dados dados móveis</string>
+    <string name="mobile_settings_search_kw_loudness">volume normalização volume automático baixo alto</string>
+    <string name="mobile_settings_search_kw_player_volume">baixo alto som volume</string>
+    <string name="mobile_settings_search_kw_captions">legendas cc closed captions subtitles</string>
+    <string name="mobile_settings_search_kw_sponsorblock">pular patrocínios anúncios segmentos introduções</string>
+    <string name="mobile_settings_search_kw_dearrow">sensacionalista clickbait títulos miniaturas</string>
+    <string name="mobile_settings_search_kw_backup">exportar importar salvar configurações</string>
+    <string name="mobile_settings_search_kw_video_format">codec vp9 av1 h264 avc hdr 60fps</string>
+    <string name="mobile_settings_search_kw_buffer">carregamento cache memória buffering</string>
+    <string name="mobile_settings_search_kw_dns">dns ipv4 ipv6 servidores</string>
+    <string name="mobile_settings_search_kw_conscrypt">ssl tls certificados segurança censura bloqueado byebyedpi</string>
+    <string name="mobile_settings_search_kw_multi_profiles">perfis por conta próprio diferente</string>
+    <string name="mobile_settings_search_kw_updates">atualização atualizar versão nova lançamento</string>
+    <string name="mobile_settings_search_kw_diagnostic_log">relatório de bug logs depuração debug</string>
+    <string name="mobile_settings_search_kw_gesture_levels">gestos brilho volume</string>
+    <string name="mobile_settings_search_kw_gesture_seek">gestos avançar voltar pular</string>
+</resources>
