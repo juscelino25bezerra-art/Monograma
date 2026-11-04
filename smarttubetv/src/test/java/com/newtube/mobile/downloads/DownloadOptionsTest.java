@@ -252,7 +252,7 @@ public class DownloadOptionsTest {
 
     @Test
     public void formatsBytesWithTheBrazilianDecimalComma() {
-        Locale ptBr = new Locale("pt", "BR");
+        Locale ptBr = Locale.forLanguageTag("pt-BR");
         assertEquals("88,7 MB", DownloadOptions.formatBytes(88_700_000, ptBr));
         assertEquals("245 MB", DownloadOptions.formatBytes(245_000_000, ptBr));
         assertEquals("1,3 GB", DownloadOptions.formatBytes(1_300_000_000, ptBr));
