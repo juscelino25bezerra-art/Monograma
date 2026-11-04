@@ -42,9 +42,10 @@
         <item name="colorControlActivated">@color/mobile_color_accent</item>
         <!-- MONOGRAMA(visual): Manrope is every text's default (res/font/manrope.xml; Android 8+,
              older versions keep the system font). Material's own text appearances name their
-             font, so the type scale below is re-pointed at it too. -->
+             font, so the type scale below is re-pointed at it too. Only android:fontFamily here:
+             a theme-wide app:fontFamily became the default AppCompat's text helper applies over a
+             view's own android:fontFamily, so every MaterialButton and Chip came out regular. -->
         <item name="android:fontFamily">@font/manrope</item>
-        <item name="fontFamily">@font/manrope</item>
         <item name="textAppearanceHeadline6">@style/TextAppearance.Monograma.Headline6</item>
         <item name="textAppearanceSubtitle1">@style/TextAppearance.Monograma.Subtitle1</item>
         <item name="textAppearanceSubtitle2">@style/TextAppearance.Monograma.Subtitle2</item>
