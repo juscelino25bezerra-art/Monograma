@@ -92,7 +92,8 @@ launch; sleep 15
 tap_text "Você" last; sleep 3
 tap_text "Configurações"; sleep 3
 tap_text "Aparência e idioma"; sleep 3
-tap_text "Coral"; shot 11_icone_coral 8
+tap_text "Coral"; shot 11_icone_confirmar 3
+tap_text "Trocar"; shot 11b_icone_reaberto 15
 adb shell input keyevent KEYCODE_HOME; sleep 6
 adb shell input swipe 540 1900 540 500 600; shot 12_launcher_coral 4
 echo "aliases: $(adb shell dumpsys package $PKG | grep -E -A1 'enabledComponents|disabledComponents' | tr -s ' ' | tr '\n' ' ')"
