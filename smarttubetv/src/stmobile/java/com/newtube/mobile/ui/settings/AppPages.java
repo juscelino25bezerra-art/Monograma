@@ -59,9 +59,9 @@ final class AppPages {
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_app_icon)));
         rows.add(SettingsRow.<Integer>choice(context.getString(R.string.mobile_settings_group_app_icon))
                 .option(context.getString(R.string.mobile_app_icon_grafite), context.getString(R.string.mobile_app_icon_grafite_desc),
-                        AppIcons.GRAFITE, R.mipmap.app_icon)
+                        AppIcons.GRAFITE, R.drawable.ic_monograma_logo)
                 .option(context.getString(R.string.mobile_app_icon_coral), context.getString(R.string.mobile_app_icon_coral_desc),
-                        AppIcons.CORAL, R.mipmap.app_icon_coral)
+                        AppIcons.CORAL, R.drawable.ic_monograma_logo_coral)
                 .iconPicker()
                 .bind(() -> AppIcons.get(context), icon -> {
                     AppIcons.set(context, icon);
