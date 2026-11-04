@@ -3,7 +3,7 @@
 # Navega pelo texto dos botões (uiautomator), não por coordenadas, e salva PNGs em build/screens.
 # Nunca falha o job por uma tela que não abriu: a captura que faltar já diz o que houve.
 set -u
-PKG=io.github.juscelino25bezerra.monograma
+PKG=io.github.juscelino25bezerra.monograma.debug  # o build de debug tem o sufixo .debug
 DIR=smarttubetv/build/outputs/renamed_apks/stmobileDebug
 APK=$(ls "$DIR"/*universal*.apk 2>/dev/null | head -1)
 [ -z "$APK" ] && APK=$(ls "$DIR"/*.apk | head -1)
