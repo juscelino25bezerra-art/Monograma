@@ -16,6 +16,11 @@ names, never shown to users; do not mass-rename them).
   SHA-256 is the repository variable `RELEASE_CERT_SHA256`.
 - Work happens on `monograma/<fase>` branches with small commits in Portuguese; never commit
   straight to `main`, never force-push.
+- Visual system (phase 2): coral accent on a #0E0E10/#1C1B20 palette, Manrope, card groups,
+  Grafite/Coral launcher aliases - see `docs/visual/README.md`. The theme sets only
+  `android:fontFamily` (a theme-wide `app:fontFamily` overrides every MaterialButton's/Chip's
+  font). Check screens with the **Monograma telas** workflow (emulator captures printed in its
+  log); the debug package is `io.github.juscelino25bezerra.monograma.debug`.
 
 Upstream NewTube description: single product flavor `stmobile`,
 touch UI in
