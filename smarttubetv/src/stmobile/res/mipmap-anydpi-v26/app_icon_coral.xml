@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MONOGRAMA(icon): the Coral launcher icon (Settings > Appearance > App icon), on the
+     LauncherCoral activity-alias. Same themed-icon layer as Grafite. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_coral_background" />
+    <foreground android:drawable="@drawable/ic_launcher_coral_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_monochrome" />
+</adaptive-icon>

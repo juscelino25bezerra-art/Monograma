@@ -8,8 +8,8 @@
       both declare it required=true; tools:replace forces the merged value false).
     * android.hardware.touchscreen -> required (TV manifest declares it false).
 
-  SplashActivity already carries the normal LAUNCHER category in the main manifest,
-  so no launcher changes are needed here - it routes via SplashPresenter ->
+  The launcher entries are the LauncherGrafite / LauncherCoral activity-aliases of
+  SplashActivity below (MONOGRAMA(icon)); Splash routes via SplashPresenter ->
   ViewManager.startView(BrowseView.class)/startDefaultView(), both of which are
   re-pointed at the touch Home screen below (see MobileMainApplication).
 
@@ -100,7 +100,44 @@
             android:launchMode="singleTop"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection|uiMode"
             android:theme="@style/Theme.NewTube"
-            tools:replace="android:launchMode,android:configChanges" />
+            tools:replace="android:launchMode,android:configChanges">
+            <!-- MONOGRAMA(icon): the launcher entry moved to the two aliases below, so Splash
+                 drops the main manifest's MAIN/LAUNCHER filter (its only one); it is still the
+                 activity every launch and restart (Utils.restartTheApp) runs. -->
+            <intent-filter tools:node="removeAll" />
+        </activity>
+
+        <!-- MONOGRAMA(icon): Settings > Appearance > App icon (AppIcons). One launcher entry per
+             icon, exactly one enabled at a time; both start Splash. They must come after it: an
+             alias's target has to be declared earlier in the merged manifest, and this overlay's
+             order wins. Grafite is the default; Coral starts disabled. -->
+        <activity-alias
+            android:name="com.newtube.mobile.LauncherGrafite"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/app_icon"
+            android:label="@string/app_name"
+            android:targetActivity="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name="com.newtube.mobile.LauncherCoral"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/app_icon_coral"
+            android:label="@string/app_name"
+            android:targetActivity="com.liskovsoft.smartyoutubetv2.tv.ui.main.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <activity
             android:name="com.newtube.mobile.ui.browse.MobileBrowseActivity"

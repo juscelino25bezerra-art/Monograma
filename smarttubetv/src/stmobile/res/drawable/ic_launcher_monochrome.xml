@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Themed-icon (API 33+) monochrome layer: the NewTube arch mark as a single
-     silhouette the launcher tints. Same geometry as the foreground. -->
+<!--
+  MONOGRAMA(icon): themed-icon (Android 13+) layer; the system tints it.
+  The Monograma "M": two rounded uprights and the wedge between them (docs/visual/README.md),
+  centred in the 66x66 adaptive-icon safe zone (viewport 108, safe area 21..87).
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <path android:fillColor="#000000" android:pathData="M40.5,37.5 a4.5,4.5 0 0 1 4.5,4.5 v24 a4.5,4.5 0 0 1 -9,0 v-24 a4.5,4.5 0 0 1 4.5,-4.5 z" />
+    <path android:fillColor="#000000" android:pathData="M67.5,37.5 a4.5,4.5 0 0 1 4.5,4.5 v24 a4.5,4.5 0 0 1 -9,0 v-24 a4.5,4.5 0 0 1 4.5,-4.5 z" />
     <path
-        android:fillColor="#FFFFFF"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="5"
+        android:fillColor="#000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="2.5"
         android:strokeLineJoin="round"
-        android:strokeLineCap="round"
-        android:pathData="M32,76 L32,53 A22,22 0 0 1 76,53 L76,76 L63,76 L63,53 A9,9 0 0 0 45,53 L45,76 Z" />
+        android:pathData="M47,39 L61,39 L54,55 Z" />
 </vector>

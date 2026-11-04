@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MONOGRAMA(icon): Coral variant foreground: dark uprights, white wedge.
+  The Monograma "M": two rounded uprights and the wedge between them (docs/visual/README.md),
+  centred in the 66x66 adaptive-icon safe zone (viewport 108, safe area 21..87).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:fillColor="#17161A" android:pathData="M40.5,37.5 a4.5,4.5 0 0 1 4.5,4.5 v24 a4.5,4.5 0 0 1 -9,0 v-24 a4.5,4.5 0 0 1 4.5,-4.5 z" />
+    <path android:fillColor="#17161A" android:pathData="M67.5,37.5 a4.5,4.5 0 0 1 4.5,4.5 v24 a4.5,4.5 0 0 1 -9,0 v-24 a4.5,4.5 0 0 1 4.5,-4.5 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineJoin="round"
+        android:pathData="M47,39 L61,39 L54,55 Z" />
+</vector>
