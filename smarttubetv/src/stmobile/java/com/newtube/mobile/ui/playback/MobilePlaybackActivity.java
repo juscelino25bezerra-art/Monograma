@@ -7557,14 +7557,15 @@ public class MobilePlaybackActivity extends MobileActivity
 
     private static final float[] SPEED_PRESETS = {0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f};
 
-    /** "Normal" for 1x (official-app wording), "0.5x"/"1.5x"/"2x" otherwise. */
+    /** "Normal" for 1x (official-app wording), "0.5x"/"1.5x"/"2x" otherwise ("1,5x" in pt-BR). */
     private String speedLabel(float speed) {
         if (Helpers.floatEquals(speed, 1.0f)) {
             return getString(R.string.mobile_speed_normal);
         }
-        String number = speed == Math.floor(speed)
-                ? String.valueOf((int) speed) : String.valueOf(speed);
-        return number + "x";
+        java.text.NumberFormat number = java.text.NumberFormat.getNumberInstance(java.util.Locale.getDefault());
+        number.setMaximumFractionDigits(2);
+        number.setGroupingUsed(false);
+        return number.format(speed) + "x";
     }
 
     private void showSpeedSheet() {

@@ -1,0 +1,29 @@
+O Monograma é um cliente não oficial do YouTube para celulares e tablets Android. É um fork do NewTube, de aleixrodriala, que por sua vez é construído sobre o SmartTube, o cliente para Android TV de yuliskov. Mantém o motor do SmartTube e a interface de toque, o player Media3 e os downloads do NewTube, com identidade visual própria e tradução completa para português do Brasil.
+
+<b>Sua conta em segundos</b>
+Faça login com um código, como numa TV: a página do Google abre, você permite o acesso e pronto. Inscrições, histórico, playlists, Assistir mais tarde e recomendações vêm da sua conta. Não precisa de microG, GmsCore, root nem app modificado. O login é opcional.
+
+<b>Continua tocando</b>
+Reprodução em segundo plano com a tela desligada, picture-in-picture e um miniplayer que você arrasta para baixo enquanto navega. Os controles da tela de bloqueio e do fone também funcionam.
+
+<b>Assista offline</b>
+Escolha uma qualidade de até 1080p ou baixe só o áudio. Os vídeos baixados tocam no mesmo player, sem conexão.
+
+<b>Menos ruído</b>
+O SponsorBlock pula trechos patrocinados, o DeArrow troca títulos e miniaturas apelativos e o Return YouTube Dislike mostra a contagem estimada de "Não gostei". Não há Shorts em nenhum lugar do app.
+
+<b>Funciona com o SmartTube na TV</b>
+Conecte ao SmartTube na TV com o código de controle remoto, transmita direto para um Chromecast (sem transmissões ao vivo ou legendas nesse modo) ou use o app do YouTube da própria TV.
+
+<b>E mais</b>
+• Até 4K quando o vídeo e o celular permitem (1080p por padrão)
+• Legendas, inclusive traduzidas automaticamente
+• Velocidade de 0,25x a 2x
+• Playlists, fila e várias contas
+• Comentários e chat ao vivo; capítulos e faixas de áudio dubladas
+• Picture-in-picture no Android 8 e mais recentes
+• Sem análises, sem relatórios de falha, sem SDKs de anúncio. Licença MIT.
+
+Dados do SponsorBlock e do DeArrow © seus colaboradores, CC BY-NC-SA 4.0.
+
+O Monograma é um projeto independente. Não tem afiliação, patrocínio ou endosso do Google, do YouTube nem dos desenvolvedores do SmartTube ou do NewTube. YouTube e Android são marcas do Google LLC.

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mobile_settings_search_hint">Pesquisar nas configurações</string>
+    <string name="mobile_settings_search_none">Nenhuma configuração corresponde a “%1$s”</string>
+    <string name="mobile_settings_search_kw_account">entrar login sair conta google perfil trocar sign in log out profile switch</string>
+    <string name="mobile_settings_search_kw_theme">modo escuro modo claro noturno aparência cores dark mode light night appearance colors colours</string>
+    <string name="mobile_settings_search_kw_pure_black">amoled oled preto escuro noturno bateria black dark mode night battery</string>
+    <string name="mobile_settings_search_kw_country">país região localização country region</string>
+    <string name="mobile_settings_search_kw_start_screen">abrir inicialização abre em aba padrão página inicial início launch startup opens on default tab home page</string>
+    <string name="mobile_settings_search_kw_interface_size">escala zoom fonte texto tamanho densidade maior menor ui scale font text size density bigger smaller</string>
+    <string name="mobile_settings_search_kw_tabs">barra inferior seções navegação explorar bottom bar sections navigation explore</string>
+    <string name="mobile_settings_search_kw_hidden">ocultar assistidos filtrar futuras estreias ao vivo hide watched filter upcoming premieres live</string>
+    <string name="mobile_settings_search_kw_video_menu">menu de contexto três pontos segurar opções context three dots long press options</string>
+    <string name="mobile_settings_search_kw_channels_order">inscrições ordenar canais subscriptions sort channels</string>
+    <string name="mobile_settings_search_kw_watch_history">pausar histórico anônimo pause history incognito</string>
+    <string name="mobile_settings_search_kw_video_ends">reprodução automática repetir loop aleatório próximo vídeo autoplay repeat shuffle next video</string>
+    <string name="mobile_settings_search_kw_background">segundo plano picture in picture pip só áudio minimizar background play audio only minimize</string>
+    <string name="mobile_settings_search_kw_natural_voice">tom pitch esquilo velocidade time stretching chipmunk</string>
+    <string name="mobile_settings_search_kw_audio_focus">ligações chamadas notificações outros apps interrupções calls notifications other interruptions</string>
+    <string name="mobile_settings_search_kw_hide_related">sugestões relacionados recomendações a seguir suggestions related recommendations</string>
+    <string name="mobile_settings_search_kw_dislikes">return youtube dislike ryd não gostei</string>
+    <string name="mobile_settings_search_kw_quality">resolução 4k 1080p 720p hd economia de dados dados móveis resolution data saver mobile data</string>
+    <string name="mobile_settings_search_kw_loudness">volume normalização volume automático baixo alto normalization auto quiet loud</string>
+    <string name="mobile_settings_search_kw_player_volume">baixo alto som volume quiet loud sound</string>
+    <string name="mobile_settings_search_kw_captions">legendas cc closed captions subtitles</string>
+    <string name="mobile_settings_search_kw_sponsorblock">pular patrocínios anúncios segmentos introduções skip sponsors ads segments intros</string>
+    <string name="mobile_settings_search_kw_dearrow">sensacionalista clickbait títulos miniaturas titles thumbnails</string>
+    <string name="mobile_settings_search_kw_backup">exportar importar salvar configurações export import save settings</string>
+    <string name="mobile_settings_search_kw_video_format">codec vp9 av1 h264 avc hdr 60fps</string>
+    <string name="mobile_settings_search_kw_buffer">carregamento cache memória buffering memory</string>
+    <string name="mobile_settings_search_kw_dns">dns ipv4 ipv6 servidores servers</string>
+    <string name="mobile_settings_search_kw_conscrypt">ssl tls certificados segurança censura bloqueado byebyedpi certificates security censorship blocked</string>
+    <string name="mobile_settings_search_kw_multi_profiles">perfis por conta próprio diferente profiles per account own different</string>
+    <string name="mobile_settings_search_kw_updates">atualização atualizar versão nova lançamento update version new release</string>
+    <string name="mobile_settings_search_kw_diagnostic_log">relatório de bug logs depuração debug report</string>
+    <string name="mobile_settings_search_kw_gesture_levels">gestos brilho volume gestures brightness</string>
+    <string name="mobile_settings_search_kw_gesture_seek">gestos avançar voltar pular gestures scrub skip forward rewind</string>
+</resources>

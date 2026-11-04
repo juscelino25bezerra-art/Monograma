@@ -1,1 +1,1 @@
-Unofficial YouTube client built on SmartTube: code sign-in, background, offline
+Unofficial YouTube client built on NewTube and SmartTube, in Portuguese

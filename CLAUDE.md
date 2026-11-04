@@ -1,8 +1,23 @@
-# NewTube — Claude Code context
+# Monograma — Claude Code context
 
-NewTube is a **phone-only fork of SmartTube** ("SmartTube for phones"): package
-`io.github.aleixrodriala.arc` (brand-neutral so a rename never touches the
-package; "arc" = the arch-"n" launcher mark), single product flavor `stmobile`,
+**Monograma** is a fork of **NewTube** (github.com/aleixrodriala/newtube), itself a
+**phone-only fork of SmartTube**. Monograma adds its own identity, a complete pt-BR
+translation and UX polish; everything below about NewTube's architecture still applies
+(code packages are still `com.newtube.mobile.*`, styles still `Theme.NewTube*` — internal
+names, never shown to users; do not mass-rename them).
+
+- Package: `io.github.juscelino25bezerra.monograma` (upstream NewTube's was
+  `io.github.aleixrodriala.arc`, so both install side by side). Permanent once released.
+- Visible name: **Monograma** everywhere (app_name, strings, downloads folder `Monograma`).
+- Users speak Brazilian Portuguese: every new user-facing string needs a pt-BR entry in
+  `values-pt-rBR/`; check with `python3 tools/i18n/check_ptbr.py`.
+- Updates: `update_urls.xml` -> this repo's `releases/latest/download/monograma.json`,
+  written by `release.yml`. Releases are signed with Monograma's own key; its certificate
+  SHA-256 is the repository variable `RELEASE_CERT_SHA256`.
+- Work happens on `monograma/<fase>` branches with small commits in Portuguese; never commit
+  straight to `main`, never force-push.
+
+Upstream NewTube description: single product flavor `stmobile`,
 touch UI in
 `smarttubetv/src/stmobile/`, playback on **androidx.media3 1.10.1** (Cronet media
 path). The TV flavors and the vendored ExoPlayer fork were deleted in the
@@ -18,11 +33,13 @@ screen in `ui/settings/`: a new setting is a row there (design and per-row audit
 `docs/settings/`), never a row in the TV `*SettingsPresenter`s, which Settings no longer opens. GTM: `docs/gtm/` is the archived July plan (its copy breaks the current rules); the live launch plan lives outside the repo.
 
 ## Repos & commit order
-- Main: `origin` = github.com/aleixrodriala/newtube, branch `main`.
-- Submodules `MediaServiceCore` and `SharedModules` are **our forks**:
-  `origin` = aleixrodriala/<name> (HTTPS — SSH keys are not set up on this
-  Mac), `upstream` = yuliskov/<name>, branch `master`. Commit INSIDE the
-  submodule first, push `origin master`, then commit the pointer bump in main.
+- Main: `origin` = github.com/juscelino25bezerra-art/Monograma, branch `main`.
+  Upstream NewTube: github.com/aleixrodriala/newtube.
+- Submodules `MediaServiceCore` and `SharedModules` still point at **NewTube's forks**
+  (aleixrodriala/<name>, `upstream` = yuliskov/<name>, branch `master`). Monograma cannot push
+  there: prefer app-side changes; if a submodule change is unavoidable, fork it under
+  juscelino25bezerra-art first, repoint `.gitmodules`, commit INSIDE the submodule, push, then
+  commit the pointer bump in main.
 - Upstream (yuliskov) fixes are merged into the **submodule forks only**; the
   main repo never merges upstream (TV code is gone). Submodules have repo-local
   `core.autocrlf=false` — keep it; several upstream build files are CRLF.
@@ -31,7 +48,7 @@ screen in `ui/settings/`: a new setting is a row there (design and per-row audit
 ```
 ANDROID_HOME=<sdk> ./gradlew :smarttubetv:assembleStmobileDebug   # verification builds
 ANDROID_HOME=<sdk> ./gradlew :smarttubetv:assembleStmobileRelease # distribution
-# -> smarttubetv/build/outputs/apk/stmobile/<type>/NewTube_<ver>_<abi>.apk
+# -> smarttubetv/build/outputs/renamed_apks/stmobile<Type>/Monograma_<ver>_<abi>.apk
 ```
 On an x86_64 emulator add `-PemulatorAbi` (native Cronet/J2V8; without it every
 CPU-bound timing runs through ARM translation — see HANDOFF §29).
