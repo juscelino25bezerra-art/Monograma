@@ -345,18 +345,31 @@
          absorbed below. Stock M2 wrap_content (56dp row) is the closest the widget allows;
          the view pads itself by the gesture-navigation inset (paddingBottomSystemWindowInsets)
          so the bar paints through to the display edge without squeezing the row. -->
+    <!-- MONOGRAMA(visual): a hairline above the bar (the mockups), the bar itself on the page. -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/mobile_color_divider"
+        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/mobile_bottom_nav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/newtubeColorBackground"
+        app:itemActiveIndicatorStyle="@style/Widget.Monograma.BottomNav.ActiveIndicator"
         app:itemIconSize="24dp"
-        app:itemIconTint="@color/mobile_bottom_nav_item"
-        app:itemTextAppearanceActive="@style/MobileBottomNavText"
+        app:itemIconTint="@color/monograma_nav_icon"
+        app:itemPaddingTop="10dp"
+        app:itemPaddingBottom="12dp"
+        app:itemRippleColor="@android:color/transparent"
+        app:itemTextAppearanceActive="@style/MobileBottomNavText.Active"
         app:itemTextAppearanceActiveBoldEnabled="false"
         app:itemTextAppearanceInactive="@style/MobileBottomNavText"
         app:paddingBottomSystemWindowInsets="true"
-        app:itemTextColor="@color/mobile_bottom_nav_item"
+        app:itemTextColor="@color/monograma_nav_text"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

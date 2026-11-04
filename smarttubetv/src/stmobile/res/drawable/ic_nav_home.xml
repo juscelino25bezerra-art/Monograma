@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- YouTube-style nav icon: filled when the tab is selected, outline otherwise. -->
+<!-- MONOGRAMA(visual): the outline in both states - the active tab is its coral pill and
+     coral tint (the mockups), not a filled icon. Was: YouTube-style nav icon: filled when the tab is selected, outline otherwise. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/ic_nav_home_fill" android:state_checked="true" />
+    <item android:drawable="@drawable/ic_nav_home_outline" android:state_checked="true" />
     <item android:drawable="@drawable/ic_nav_home_outline" />
 </selector>
