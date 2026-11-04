@@ -135,7 +135,7 @@ public final class AppUpdates implements AppUpdateCheckerListener {
 
     /**
      * Debug builds can point the updater at a test manifest - an update-flow check needs a newer
-     * version to be offered: {@code adb shell setprop debug.arc.update_manifest http://10.0.2.2:8000/newtube.json}
+     * version to be offered: {@code adb shell setprop debug.arc.update_manifest http://10.0.2.2:8000/monograma.json}
      */
     private static String[] manifestUrls(Context context) {
         String override = BuildConfig.DEBUG ? MobileMainApplication.getDebugSystemProperty("debug.arc.update_manifest") : "";
