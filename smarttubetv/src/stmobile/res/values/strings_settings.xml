@@ -253,7 +253,7 @@
     <string name="mobile_settings_stall_quality_summary">Drops one quality step after about 20 seconds of buffering. Turning it off can help with a VPN</string>
     <string name="mobile_settings_high_bitrate">High-bitrate formats</string>
     <string name="mobile_settings_high_bitrate_summary">Adds YouTube\'s higher-bitrate 1080p streams when a video has them. Costs an extra request</string>
-    <string name="mobile_settings_sabr">Stream with SABR (experimental)</string>
+    <string name="mobile_settings_sabr">SABR streaming</string>
     <string name="mobile_settings_sabr_summary">YouTube\'s newer streaming protocol, from the next video on. Uses a bit less data</string>
     <string name="mobile_settings_legacy_codecs">Single-file streams</string>
     <string name="mobile_settings_legacy_codecs_summary">Plays the old one-file stream, usually 360p, with no quality changes. Only for very slow phones</string>
@@ -290,4 +290,21 @@
     <!-- About -->
     <string name="mobile_settings_version">Version</string>
     <string name="mobile_settings_update_notify_summary">Tells you when a new version is out</string>
+
+    <!-- MONOGRAMA(visual): the redesigned Settings (badges, Appearance groups, app icon). -->
+    <string name="mobile_settings_status_on">On</string>
+    <string name="mobile_settings_sponsorblock_root_summary">Skips sponsors and intros</string>
+    <string name="mobile_settings_dearrow_root_summary">Community titles and thumbnails</string>
+    <string name="mobile_settings_group_app_icon">App icon</string>
+    <string name="mobile_settings_group_theme">Theme</string>
+    <string name="mobile_settings_group_language">Language and region</string>
+    <string name="mobile_settings_group_interface">Interface</string>
+    <string name="mobile_app_icon_grafite">Graphite</string>
+    <string name="mobile_app_icon_grafite_desc">Default</string>
+    <string name="mobile_app_icon_coral">Coral</string>
+    <string name="mobile_app_icon_coral_desc">Stands out more</string>
+    <string name="mobile_app_icon_changed">The icon changes on your home screen in a few seconds</string>
+    <string name="mobile_theme_segment_system">System</string>
+    <string name="mobile_settings_buffer_segment_highest">Max</string>
+    <string name="mobile_settings_tag_experimental">Experimental</string>
 </resources>

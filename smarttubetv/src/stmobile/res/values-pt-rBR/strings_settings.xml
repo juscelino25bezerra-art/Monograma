@@ -22,7 +22,7 @@
     <string name="mobile_settings_account">Conta</string>
     <string name="mobile_settings_account_signed_out">Sem login · Faça login para ver suas inscrições</string>
     <string name="mobile_settings_account_switch">Trocar ou gerenciar contas</string>
-    <string name="mobile_settings_group_app">App</string>
+    <string name="mobile_settings_group_app">Geral</string>
     <string name="mobile_settings_group_video">Vídeo e áudio</string>
     <string name="mobile_settings_group_other">Outros</string>
     <string name="mobile_settings_general">Aparência e idioma</string>
@@ -34,9 +34,9 @@
     <string name="mobile_settings_feeds">Abas e feeds</string>
     <string name="mobile_settings_feeds_summary">Abas, vídeos ocultos, menu do vídeo</string>
     <string name="mobile_settings_privacy">Histórico e privacidade</string>
-    <string name="mobile_settings_privacy_summary">Histórico de exibição e de pesquisa</string>
+    <string name="mobile_settings_privacy_summary">Histórico de exibição e de busca</string>
     <string name="mobile_settings_playback">Reprodução</string>
-    <string name="mobile_settings_playback_summary">Reprodução automática, segundo plano, velocidade</string>
+    <string name="mobile_settings_playback_summary">Automática, segundo plano, velocidade</string>
     <string name="mobile_settings_quality">Qualidade</string>
     <string name="mobile_settings_captions">Legendas</string>
     <string name="mobile_settings_captions_summary">Estilo, tamanho e posição</string>
@@ -45,7 +45,7 @@
     <string name="mobile_settings_dearrow_titles_only">Títulos melhores</string>
     <string name="mobile_settings_dearrow_thumbnails_only">Miniaturas melhores</string>
     <string name="mobile_settings_backup">Backup e restauração</string>
-    <string name="mobile_settings_backup_summary">Salvar suas configurações em um arquivo</string>
+    <string name="mobile_settings_backup_summary">Salvar configurações em um arquivo</string>
     <string name="mobile_settings_advanced">Avançado</string>
     <string name="mobile_settings_advanced_summary">Streaming, rede e correções</string>
     <string name="mobile_settings_about">Sobre</string>
@@ -53,8 +53,8 @@
     <string name="mobile_settings_country">Região do conteúdo</string>
     <string name="mobile_settings_start_screen">Tela inicial</string>
     <string name="mobile_settings_interface_size">Tamanho da interface</string>
-    <string name="mobile_settings_voice_search">Pesquisa por voz imediata</string>
-    <string name="mobile_settings_voice_search_summary">Ao abrir a pesquisa, o app já começa a ouvir</string>
+    <string name="mobile_settings_voice_search">Busca por voz imediata</string>
+    <string name="mobile_settings_voice_search_summary">Ao abrir a busca, o app já começa a ouvir</string>
     <string name="mobile_settings_24_hour">Formato 24 horas</string>
     <string name="mobile_settings_24_hour_summary">Para horários de estreias e transmissões ao vivo</string>
     <string name="mobile_settings_tabs">Abas</string>
@@ -228,18 +228,18 @@
     <string name="mobile_settings_buffer_high_desc">Até 75 segundos à frente</string>
     <string name="mobile_settings_buffer_highest_desc">Até 2 minutos à frente. Usa mais memória</string>
     <string name="mobile_settings_stall_quality">Reduzir qualidade ao travar</string>
-    <string name="mobile_settings_stall_quality_summary">Cai um nível de qualidade após cerca de 20 segundos carregando. Desativar pode ajudar com VPN</string>
+    <string name="mobile_settings_stall_quality_summary">Cai um nível após cerca de 20 s carregando. Desative se usar VPN</string>
     <string name="mobile_settings_high_bitrate">Alta taxa de bits</string>
-    <string name="mobile_settings_high_bitrate_summary">Usa os streams 1080p de maior qualidade do YouTube quando o vídeo tem. Faz uma requisição extra</string>
-    <string name="mobile_settings_sabr">Streaming via SABR (experimental)</string>
-    <string name="mobile_settings_sabr_summary">Protocolo de streaming mais novo do YouTube, a partir do próximo vídeo. Usa um pouco menos de dados</string>
+    <string name="mobile_settings_high_bitrate_summary">Usa streams 1080p de maior qualidade quando existirem. Faz uma requisição extra</string>
+    <string name="mobile_settings_sabr">Streaming via SABR</string>
+    <string name="mobile_settings_sabr_summary">Protocolo mais novo do YouTube, a partir do próximo vídeo. Usa menos dados</string>
     <string name="mobile_settings_legacy_codecs">Arquivo único</string>
-    <string name="mobile_settings_legacy_codecs_summary">Usa o stream antigo de um arquivo, geralmente 360p, sem troca de qualidade. Só para celulares muito lentos</string>
+    <string name="mobile_settings_legacy_codecs_summary">Stream antigo de um arquivo, geralmente 360p. Só para aparelhos muito lentos</string>
     <string name="mobile_settings_live">Transmissões ao vivo</string>
     <string name="mobile_settings_live_edge">Começar no ponto ao vivo</string>
     <string name="mobile_settings_live_edge_summary">O mais próximo do tempo real, sem a margem de 15 segundos</string>
     <string name="mobile_settings_live_hls">Ao vivo via HLS</string>
-    <string name="mobile_settings_live_hls_summary">Pode ficar mais leve em celulares lentos. Não dá para voltar, e a qualidade vai até 1080p</string>
+    <string name="mobile_settings_live_hls_summary">Mais leve em aparelhos lentos. Sem voltar e limitado a 1080p</string>
     <string name="mobile_settings_player">Player</string>
     <string name="mobile_settings_controls_on_next">Mostrar controles no próximo vídeo</string>
     <string name="mobile_settings_controls_on_next_summary">Os controles aparecem quando o próximo vídeo começa</string>
@@ -266,4 +266,21 @@
     <string name="mobile_settings_legacy_feeds_summary">Carrega Inscrições, canais e playlists como o app do YouTube para TV. Tente se eles aparecerem vazios</string>
     <string name="mobile_settings_version">Versão</string>
     <string name="mobile_settings_update_notify_summary">Avisa quando sai uma versão nova</string>
+
+    <!-- MONOGRAMA(visual) -->
+    <string name="mobile_settings_status_on">Ativado</string>
+    <string name="mobile_settings_sponsorblock_root_summary">Pula patrocínios e introduções</string>
+    <string name="mobile_settings_dearrow_root_summary">Títulos e miniaturas da comunidade</string>
+    <string name="mobile_settings_group_app_icon">Ícone do app</string>
+    <string name="mobile_settings_group_theme">Tema</string>
+    <string name="mobile_settings_group_language">Idioma e região</string>
+    <string name="mobile_settings_group_interface">Interface</string>
+    <string name="mobile_app_icon_grafite">Grafite</string>
+    <string name="mobile_app_icon_grafite_desc">Padrão</string>
+    <string name="mobile_app_icon_coral">Coral</string>
+    <string name="mobile_app_icon_coral_desc">Mais destaque</string>
+    <string name="mobile_app_icon_changed">O ícone muda na tela inicial em alguns segundos</string>
+    <string name="mobile_theme_segment_system">Sistema</string>
+    <string name="mobile_settings_buffer_segment_highest">Máximo</string>
+    <string name="mobile_settings_tag_experimental">Experimental</string>
 </resources>

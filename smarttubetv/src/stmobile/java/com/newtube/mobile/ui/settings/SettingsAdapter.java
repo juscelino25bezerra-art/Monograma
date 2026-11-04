@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,7 +24,14 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     interface Listener {
         void onRowClicked(@NonNull SettingsRow row);
+
+        /** MONOGRAMA(visual): a segment or an icon card of an inline choice was tapped. */
+        void onOptionPicked(@NonNull SettingsRow row, int index);
     }
+
+    /** MONOGRAMA(visual): view types of the inline choices (the row kinds are 0..5). */
+    private static final int VIEW_SEGMENTED = 100;
+    private static final int VIEW_ICONS = 101;
 
     private final Listener mListener;
     private List<SettingsRow> mRows = new ArrayList<>();
@@ -68,7 +76,50 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return mRows.get(position).kind;
+        SettingsRow row = mRows.get(position);
+        if (row.kind == SettingsRow.KIND_CHOICE && row.iconPicker) {
+            return VIEW_ICONS;
+        }
+        if (row.kind == SettingsRow.KIND_CHOICE && row.inline) {
+            return VIEW_SEGMENTED;
+        }
+        return row.kind;
+    }
+
+    /**
+     * MONOGRAMA(visual): a row's background by its place in its group - the run of card rows
+     * between two headers, notes, dividers or pickers - so the run reads as one rounded card.
+     * Rows after the first get a hairline on top.
+     */
+    private void bindGroup(@NonNull View itemView, int position) {
+        boolean first = position == 0 || !mRows.get(position - 1).isInCard();
+        boolean last = position == mRows.size() - 1 || !mRows.get(position + 1).isInCard();
+        itemView.setBackgroundResource(first && last ? R.drawable.bg_settings_group_single
+                : first ? R.drawable.bg_settings_group_top
+                : last ? R.drawable.bg_settings_group_bottom
+                : R.drawable.bg_settings_group_middle);
+
+        View separator = itemView.findViewById(R.id.settings_row_separator);
+        if (separator != null) {
+            separator.setVisibility(first ? View.GONE : View.VISIBLE);
+            // Under the text when the row (and so the card) has icons, edge to edge otherwise.
+            boolean icons = mRows.get(position).icon != 0 && mRows.get(position - (first ? 0 : 1)).icon != 0;
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) separator.getLayoutParams();
+            int start = itemView.getResources().getDimensionPixelSize(icons
+                    ? R.dimen.mobile_settings_separator_with_icon : R.dimen.mobile_settings_row_inset);
+            if (lp.getMarginStart() != start) {
+                lp.setMarginStart(start);
+                separator.setLayoutParams(lp);
+            }
+        }
+        // The outer gap that keeps two cards apart: a header or a divider supplies it.
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) itemView.getLayoutParams();
+        int bottom = last && position < mRows.size() - 1 && mRows.get(position + 1).kind == SettingsRow.KIND_NOTE
+                ? Math.round(4 * itemView.getResources().getDisplayMetrics().density) : 0;
+        if (lp.bottomMargin != bottom) {
+            lp.bottomMargin = bottom;
+            itemView.setLayoutParams(lp);
+        }
     }
 
     @Override
@@ -87,6 +138,10 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return new TextHolder(inflater.inflate(R.layout.item_mobile_settings_note, parent, false));
             case SettingsRow.KIND_DIVIDER:
                 return new RecyclerView.ViewHolder(inflater.inflate(R.layout.item_mobile_settings_divider, parent, false)) {};
+            case VIEW_SEGMENTED:
+                return new SegmentedHolder(inflater.inflate(R.layout.item_mobile_settings_segmented, parent, false));
+            case VIEW_ICONS:
+                return new IconsHolder(inflater.inflate(R.layout.item_mobile_settings_icons, parent, false));
             default:
                 return new RowHolder(inflater.inflate(R.layout.item_mobile_settings_row, parent, false));
         }
@@ -99,6 +154,12 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((TextHolder) holder).text.setText(row.title);
         } else if (holder instanceof RowHolder) {
             ((RowHolder) holder).bind(row, mListener);
+            bindGroup(holder.itemView, position);
+        } else if (holder instanceof SegmentedHolder) {
+            ((SegmentedHolder) holder).bind(row, mListener);
+            bindGroup(holder.itemView, position);
+        } else if (holder instanceof IconsHolder) {
+            ((IconsHolder) holder).bind(row, mListener);
         }
     }
 
@@ -122,6 +183,9 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final TextView title;
         private final TextView summary;
         private final SwitchMaterial toggle;
+        private final TextView tag;
+        private final TextView badge;
+        private final ImageView chevron;
 
         RowHolder(@NonNull View itemView) {
             super(itemView);
@@ -129,6 +193,9 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             title = itemView.findViewById(R.id.settings_row_title);
             summary = itemView.findViewById(R.id.settings_row_summary);
             toggle = itemView.findViewById(R.id.settings_row_switch);
+            tag = itemView.findViewById(R.id.settings_row_tag);
+            badge = itemView.findViewById(R.id.settings_row_badge);
+            chevron = itemView.findViewById(R.id.settings_row_chevron);
         }
 
         void bind(SettingsRow row, Listener listener) {
@@ -151,6 +218,28 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 summary.setVisibility(View.GONE);
             }
 
+            if (row.tag != null && row.tag.length() > 0) {
+                tag.setText(row.tag);
+                tag.setVisibility(View.VISIBLE);
+            } else {
+                tag.setVisibility(View.GONE);
+            }
+
+            // MONOGRAMA(visual): the On/Off badge, and a chevron on rows that go somewhere (a
+            // page, or a choice's dialog) - not on actions, switches or badged rows.
+            if (row.status != null) {
+                boolean on = row.status.getAsBoolean();
+                badge.setText(on ? R.string.mobile_settings_status_on : R.string.mobile_settings_off);
+                badge.setBackgroundResource(on ? R.drawable.bg_settings_badge_on : R.drawable.bg_settings_badge_off);
+                badge.setTextColor(ContextCompat.getColor(itemView.getContext(),
+                        on ? R.color.mobile_color_on_accent_container : R.color.mobile_color_on_surface_secondary));
+                badge.setVisibility(View.VISIBLE);
+            } else {
+                badge.setVisibility(View.GONE);
+            }
+            boolean goesSomewhere = row.status == null && (row.page != null || row.kind == SettingsRow.KIND_CHOICE);
+            chevron.setVisibility(goesSomewhere ? View.VISIBLE : View.GONE);
+
             boolean isSwitch = row.kind == SettingsRow.KIND_SWITCH;
             toggle.setVisibility(isSwitch ? View.VISIBLE : View.GONE);
             if (isSwitch && row.checked != null) {
@@ -159,6 +248,8 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     toggle.setChecked(on);
                 }
                 itemView.setContentDescription(row.title + (text != null ? ", " + text : ""));
+            } else if (row.status != null) {
+                itemView.setContentDescription(row.title + (text != null ? ", " + text : "") + ", " + badge.getText());
             } else {
                 itemView.setContentDescription(null);
             }
@@ -170,6 +261,121 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             toggle.setEnabled(enabled);
             itemView.setOnClickListener(enabled ? v -> listener.onRowClicked(row) : null);
             itemView.setClickable(enabled);
+        }
+    }
+
+    /** MONOGRAMA(visual): an inline choice as a segmented control; a tap picks that option. */
+    private static final class SegmentedHolder extends RecyclerView.ViewHolder {
+        private final TextView title;
+        private final TextView summary;
+        private final LinearLayout segments;
+
+        SegmentedHolder(@NonNull View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.settings_row_title);
+            summary = itemView.findViewById(R.id.settings_row_summary);
+            segments = itemView.findViewById(R.id.settings_segments);
+        }
+
+        void bind(SettingsRow row, Listener listener) {
+            title.setText(row.title);
+            title.setVisibility(row.hideTitle ? View.GONE : View.VISIBLE);
+            // A choice's summary defaults to its current option, which the segments already show.
+            CharSequence text = row.summary != null ? row.summary.get() : null;
+            summary.setText(text);
+            summary.setVisibility(!row.hideTitle && text != null && text.length() > 0 ? View.VISIBLE : View.GONE);
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) segments.getLayoutParams();
+            int top = Math.round((row.hideTitle ? 12 : 10) * itemView.getResources().getDisplayMetrics().density);
+            if (lp.topMargin != top) {
+                lp.topMargin = top;
+                segments.setLayoutParams(lp);
+            }
+
+            int count = row.options != null ? row.options.size() : 0;
+            while (segments.getChildCount() > count) {
+                segments.removeViewAt(segments.getChildCount() - 1);
+            }
+            LayoutInflater inflater = LayoutInflater.from(itemView.getContext());
+            while (segments.getChildCount() < count) {
+                inflater.inflate(R.layout.item_mobile_settings_segment, segments, true);
+            }
+
+            int current = row.currentIndex();
+            boolean enabled = row.isEnabled();
+            itemView.setAlpha(enabled ? 1f : 0.38f);
+            for (int i = 0; i < count; i++) {
+                TextView segment = (TextView) segments.getChildAt(i);
+                SettingsRow.Option option = row.options.get(i);
+                boolean selected = i == current;
+                segment.setText(option.label);
+                segment.setSelected(selected);
+                segment.setBackgroundResource(selected ? R.drawable.bg_settings_segment_selected : 0);
+                segment.setTextColor(ContextCompat.getColor(itemView.getContext(),
+                        selected ? R.color.mobile_color_on_accent : R.color.mobile_color_on_surface_secondary));
+                segment.setContentDescription(row.title + ", " + option.label);
+                int index = i;
+                segment.setOnClickListener(enabled ? v -> listener.onOptionPicked(row, index) : null);
+                segment.setClickable(enabled);
+                segment.setAccessibilityDelegate(SegmentRole.INSTANCE);
+            }
+        }
+    }
+
+    /** MONOGRAMA(visual): the app-icon picker, one card per option. */
+    private static final class IconsHolder extends RecyclerView.ViewHolder {
+        private final LinearLayout cards;
+
+        IconsHolder(@NonNull View itemView) {
+            super(itemView);
+            cards = (LinearLayout) itemView;
+        }
+
+        void bind(SettingsRow row, Listener listener) {
+            int count = row.options != null ? row.options.size() : 0;
+            LayoutInflater inflater = LayoutInflater.from(itemView.getContext());
+            int gap = Math.round(12 * itemView.getResources().getDisplayMetrics().density);
+            while (cards.getChildCount() > count) {
+                cards.removeViewAt(cards.getChildCount() - 1);
+            }
+            while (cards.getChildCount() < count) {
+                View card = inflater.inflate(R.layout.item_mobile_settings_icon_card, cards, false);
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) card.getLayoutParams();
+                lp.setMarginStart(cards.getChildCount() > 0 ? gap : 0);
+                cards.addView(card, lp);
+            }
+            int current = row.currentIndex();
+            for (int i = 0; i < count; i++) {
+                View card = cards.getChildAt(i);
+                SettingsRow.Option option = row.options.get(i);
+                boolean selected = i == current;
+                ((ImageView) card.findViewById(R.id.settings_icon_image)).setImageResource(option.image);
+                ((TextView) card.findViewById(R.id.settings_icon_label)).setText(option.label);
+                TextView description = card.findViewById(R.id.settings_icon_description);
+                description.setText(option.description);
+                description.setVisibility(option.description != null ? View.VISIBLE : View.GONE);
+                card.findViewById(R.id.settings_icon_check).setVisibility(selected ? View.VISIBLE : View.GONE);
+                // The selected card's outline; the ripple card otherwise.
+                card.setBackgroundResource(selected ? R.drawable.bg_monograma_icon_card_selected
+                        : R.drawable.bg_monograma_card);
+                card.setSelected(selected);
+                card.setContentDescription(option.label + (option.description != null ? ", " + option.description : ""));
+                int index = i;
+                card.setOnClickListener(v -> listener.onOptionPicked(row, index));
+                card.setAccessibilityDelegate(SegmentRole.INSTANCE);
+            }
+        }
+    }
+
+    /** TalkBack reads a segment or an icon card as a radio button, selected or not. */
+    private static final class SegmentRole extends View.AccessibilityDelegate {
+        static final SegmentRole INSTANCE = new SegmentRole();
+
+        @Override
+        public void onInitializeAccessibilityNodeInfo(View host, android.view.accessibility.AccessibilityNodeInfo info) {
+            super.onInitializeAccessibilityNodeInfo(host, info);
+            info.setClassName(android.widget.RadioButton.class.getName());
+            info.setCheckable(true);
+            info.setChecked(host.isSelected());
         }
     }
 

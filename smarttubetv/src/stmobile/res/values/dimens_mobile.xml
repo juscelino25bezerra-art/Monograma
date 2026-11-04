@@ -44,12 +44,21 @@
          the text at 60dp, 56dp one-line rows, a 64dp bar with the title at 72dp. -->
     <dimen name="mobile_settings_bar_height">64dp</dimen>
     <dimen name="mobile_settings_title_inset">20dp</dimen>
-    <dimen name="mobile_settings_title_size">20sp</dimen>
-    <dimen name="mobile_settings_row_min_height">56dp</dimen>
+    <dimen name="mobile_settings_title_size">26sp</dimen>
+    <dimen name="mobile_settings_row_min_height">64dp</dimen>
     <dimen name="mobile_settings_row_inset">16dp</dimen>
-    <dimen name="mobile_settings_icon_gap">20dp</dimen>
+    <dimen name="mobile_settings_icon_gap">16dp</dimen>
     <dimen name="mobile_settings_row_padding_vertical">14dp</dimen>
     <dimen name="mobile_settings_row_title_size">16sp</dimen>
     <dimen name="mobile_settings_row_summary_size">14sp</dimen>
-    <dimen name="mobile_settings_header_size">16sp</dimen>
+    <dimen name="mobile_settings_header_size">13sp</dimen>
+    <!-- MONOGRAMA(visual): settings rows sit in group cards 16dp in from the screen edge; the
+         header lines up a little inside the card's corner; a row icon sits on a 40dp disc. -->
+    <dimen name="mobile_settings_card_margin">16dp</dimen>
+    <dimen name="mobile_settings_header_inset">20dp</dimen>
+    <dimen name="mobile_settings_icon_circle">40dp</dimen>
+    <!-- Where a hairline between two rows of a card starts when the rows carry icons. -->
+    <dimen name="mobile_settings_separator_with_icon">72dp</dimen>
+    <!-- The large page / tab titles ("Downloads", "Você", "Configurações"). -->
+    <dimen name="mobile_page_title_size">26sp</dimen>
 </resources>

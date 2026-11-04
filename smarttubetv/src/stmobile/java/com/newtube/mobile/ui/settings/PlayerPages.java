@@ -504,6 +504,15 @@ final class PlayerPages {
         return new SettingsPages.Page(context.getString(R.string.mobile_settings_segment_marks), rows);
     }
 
+    static boolean isSponsorBlockOn(Context context) {
+        return SponsorBlockData.instance(context).isSponsorBlockEnabled();
+    }
+
+    static boolean isDeArrowOn(Context context) {
+        DeArrowData data = DeArrowData.instance(context);
+        return data.isReplaceTitlesEnabled() || data.isReplaceThumbnailsEnabled();
+    }
+
     static CharSequence sponsorBlockSummary(Context context) {
         return context.getString(SponsorBlockData.instance(context).isSponsorBlockEnabled()
                 ? R.string.mobile_settings_sponsorblock_on : R.string.mobile_settings_off);
@@ -588,12 +597,19 @@ final class PlayerPages {
 
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_streaming)));
         rows.add(videoFormat(context, playerData, tweaks));
-        rows.add(SettingsRow.<Integer>choice(context.getString(R.string.mobile_settings_buffer))
+        // MONOGRAMA(visual): a segmented control; its summary is what the selected size means.
+        SettingsRow buffer = SettingsRow.<Integer>choice(context.getString(R.string.mobile_settings_buffer))
                 .option(context.getString(R.string.video_buffer_size_low), context.getString(R.string.mobile_settings_buffer_low_desc), PlayerData.BUFFER_LOW)
                 .option(context.getString(R.string.video_buffer_size_med), context.getString(R.string.mobile_settings_buffer_med_desc), PlayerData.BUFFER_MEDIUM)
                 .option(context.getString(R.string.video_buffer_size_high), context.getString(R.string.mobile_settings_buffer_high_desc), PlayerData.BUFFER_HIGH)
-                .option(context.getString(R.string.video_buffer_size_highest), context.getString(R.string.mobile_settings_buffer_highest_desc), PlayerData.BUFFER_HIGHEST)
-                .bind(playerData::getVideoBufferType, type -> playerData.setVideoBufferTypeByUser(context, type)));
+                .option(context.getString(R.string.mobile_settings_buffer_segment_highest), context.getString(R.string.mobile_settings_buffer_highest_desc), PlayerData.BUFFER_HIGHEST)
+                .segmented()
+                .bind(playerData::getVideoBufferType, type -> playerData.setVideoBufferTypeByUser(context, type));
+        buffer.summary(() -> {
+            SettingsRow.Option option = buffer.currentOption();
+            return option != null ? option.description : null;
+        });
+        rows.add(buffer);
         rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_stall_quality),
                 context.getString(R.string.mobile_settings_stall_quality_summary),
                 () -> !tweaks.isNetworkErrorFixingDisabled(), on -> tweaks.setNetworkErrorFixingDisabled(!on)));
@@ -602,7 +618,8 @@ final class PlayerPages {
                 tweaks::isHighBitrateFormatsEnabled, tweaks::setHighBitrateFormatsEnabled));
         rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_sabr),
                 context.getString(R.string.mobile_settings_sabr_summary),
-                () -> SabrSourcePreference.isPreferred(context), on -> SabrSourcePreference.setPreferred(context, on)));
+                () -> SabrSourcePreference.isPreferred(context), on -> SabrSourcePreference.setPreferred(context, on))
+                .tag(context.getString(R.string.mobile_settings_tag_experimental)));
         rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_legacy_codecs),
                 context.getString(R.string.mobile_settings_legacy_codecs_summary),
                 playerData::isLegacyCodecsForced, playerData::setLegacyCodecsForced));

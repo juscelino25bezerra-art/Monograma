@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- A group title inside a settings page. -->
+<!-- A group title inside a settings page. MONOGRAMA(visual): coral, bold, upper case, tracked -
+     "GERAL", "VÍDEO E ÁUDIO" in the mockups - above the group's card. -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_header_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:accessibilityHeading="true"
-    android:fontFamily="@font/manrope_semibold"
-    android:paddingStart="@dimen/mobile_settings_row_inset"
-    android:paddingTop="20dp"
-    android:paddingEnd="@dimen/mobile_settings_row_inset"
-    android:paddingBottom="4dp"
-    android:textColor="@color/mobile_color_on_surface"
+    android:fontFamily="@font/manrope_extrabold"
+    android:letterSpacing="0.08"
+    android:paddingStart="@dimen/mobile_settings_header_inset"
+    android:paddingTop="24dp"
+    android:paddingEnd="@dimen/mobile_settings_header_inset"
+    android:paddingBottom="10dp"
+    android:textAllCaps="true"
+    android:textColor="@color/mobile_color_accent"
     android:textSize="@dimen/mobile_settings_header_size"
     tools:text="Network" />

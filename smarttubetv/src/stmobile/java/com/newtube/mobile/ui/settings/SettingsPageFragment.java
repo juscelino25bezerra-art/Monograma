@@ -210,6 +210,18 @@ public final class SettingsPageFragment extends Fragment implements SettingsAdap
         }
     }
 
+    /** MONOGRAMA(visual): a segment or an icon card - the same pick as the choice dialog's. */
+    @Override
+    public void onOptionPicked(@NonNull SettingsRow row, int index) {
+        if (row.options == null || row.pick == null || index < 0 || index >= row.options.size()
+                || index == row.currentIndex() || !row.isEnabled()) {
+            return;
+        }
+        com.newtube.mobile.ui.common.Haptics.tick(mList);
+        row.pick.pick(row.options.get(index).value);
+        applied(row);
+    }
+
     private void applied(SettingsRow row) {
         rebuild();
         if (row.restart) {

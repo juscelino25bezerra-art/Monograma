@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MONOGRAMA(visual): the selected card of the app-icon picker. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="?attr/newtubeColorCard" />
+    <stroke android:width="2dp" android:color="@color/mobile_color_accent" />
+    <corners android:radius="20dp" />
+</shape>

@@ -59,11 +59,18 @@ public final class SettingsRow {
         final CharSequence label;
         @Nullable final CharSequence description;
         final Object value;
+        /** MONOGRAMA(visual): the picture of an icon-picker option (0 elsewhere). */
+        @DrawableRes final int image;
 
         Option(CharSequence label, @Nullable CharSequence description, Object value) {
+            this(label, description, value, 0);
+        }
+
+        Option(CharSequence label, @Nullable CharSequence description, Object value, @DrawableRes int image) {
             this.label = label;
             this.description = description;
             this.value = value;
+            this.image = image;
         }
     }
 
@@ -83,6 +90,19 @@ public final class SettingsRow {
     boolean restart;
     /** Red title: an action that deletes something. */
     boolean destructive;
+    /**
+     * MONOGRAMA(visual): a {@link #KIND_CHOICE} shown in place as a segmented control (Theme,
+     * Buffer) instead of a row that opens a dialog. Still a choice everywhere else (search, picks).
+     */
+    boolean inline;
+    /** An inline choice whose group header already names it ("Theme" under THEME): no title line. */
+    boolean hideTitle;
+    /** MONOGRAMA(visual): a {@link #KIND_CHOICE} shown as picture cards (Settings > App icon). */
+    boolean iconPicker;
+    /** MONOGRAMA(visual): an "On" / "Off" badge at the row's end (SponsorBlock, DeArrow). */
+    @Nullable BooleanSupplier status;
+    /** MONOGRAMA(visual): a small outlined label beside the title ("Experimental"). */
+    @Nullable CharSequence tag;
 
     private SettingsRow(int kind) {
         this.kind = kind;
@@ -206,6 +226,23 @@ public final class SettingsRow {
         return this;
     }
 
+    /** An "On" / "Off" badge read from {@code on}. */
+    public SettingsRow status(@NonNull BooleanSupplier on) {
+        this.status = on;
+        return this;
+    }
+
+    /** A small label beside the title, such as "Experimental". */
+    public SettingsRow tag(@Nullable CharSequence tag) {
+        this.tag = tag;
+        return this;
+    }
+
+    /** The inline kinds and the picker are drawn by their own layouts; a group card holds the rest. */
+    boolean isInCard() {
+        return (kind == KIND_LINK || kind == KIND_SWITCH || kind == KIND_CHOICE) && !iconPicker;
+    }
+
     boolean isEnabled() {
         return enabled == null || enabled.getAsBoolean();
     }
@@ -262,6 +299,31 @@ public final class SettingsRow {
 
         public Choice<T> option(Context context, int labelRes, T value) {
             return option(context.getString(labelRes), value);
+        }
+
+        /** An icon-picker option: its picture, name and one line under it. */
+        public Choice<T> option(CharSequence label, @Nullable CharSequence description, T value, @DrawableRes int image) {
+            mOptions.add(new Option(label, description, value, image));
+            return this;
+        }
+
+        /** Shown in place as a segmented control, under its title. */
+        public Choice<T> segmented() {
+            mRow.inline = true;
+            return this;
+        }
+
+        /** Shown in place as a segmented control, with no title line (the header names it). */
+        public Choice<T> segmentedUnderHeader() {
+            mRow.inline = true;
+            mRow.hideTitle = true;
+            return this;
+        }
+
+        /** Shown as picture cards, one per option. */
+        public Choice<T> iconPicker() {
+            mRow.iconPicker = true;
+            return this;
         }
 
         /** A fixed summary (an explanation) instead of the current option's label. */

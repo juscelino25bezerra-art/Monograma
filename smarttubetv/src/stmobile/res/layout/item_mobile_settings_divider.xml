@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Between two groups. MONOGRAMA(visual): the groups are cards now, so the gap is space, not a
+     hairline. -->
+<Space xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="17dp"
-    android:importantForAccessibility="no">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="center_vertical"
-        android:background="@color/mobile_color_divider" />
-
-</FrameLayout>
+    android:layout_height="16dp"
+    android:importantForAccessibility="no" />

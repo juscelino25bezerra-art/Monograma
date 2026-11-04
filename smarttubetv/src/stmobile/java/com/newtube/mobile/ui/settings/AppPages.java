@@ -23,6 +23,7 @@ import com.liskovsoft.smartyoutubetv2.common.utils.ClickbaitRemover;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
 import com.newtube.mobile.CardMenuMigration;
+import com.newtube.mobile.ui.common.AppIcons;
 import com.newtube.mobile.ui.common.MobileSnackbar;
 import com.newtube.mobile.ui.common.ThemeMode;
 
@@ -53,10 +54,26 @@ final class AppPages {
         MainUIData mainUIData = MainUIData.instance(context);
         SearchData searchData = SearchData.instance(context);
 
+        // MONOGRAMA(visual): the Appearance page in the mockup's four groups - app icon, theme,
+        // language and region, interface.
+        rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_app_icon)));
+        rows.add(SettingsRow.<Integer>choice(context.getString(R.string.mobile_settings_group_app_icon))
+                .option(context.getString(R.string.mobile_app_icon_grafite), context.getString(R.string.mobile_app_icon_grafite_desc),
+                        AppIcons.GRAFITE, R.mipmap.app_icon)
+                .option(context.getString(R.string.mobile_app_icon_coral), context.getString(R.string.mobile_app_icon_coral_desc),
+                        AppIcons.CORAL, R.mipmap.app_icon_coral)
+                .iconPicker()
+                .bind(() -> AppIcons.get(context), icon -> {
+                    AppIcons.set(context, icon);
+                    MobileSnackbar.show(context, R.string.mobile_app_icon_changed);
+                }));
+
+        rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_theme)));
         rows.add(SettingsRow.<Integer>choice(context.getString(R.string.mobile_theme))
-                .option(context.getString(R.string.mobile_theme_system), ThemeMode.SYSTEM)
+                .option(context.getString(R.string.mobile_theme_segment_system), ThemeMode.SYSTEM)
                 .option(context.getString(R.string.mobile_theme_light), ThemeMode.LIGHT)
                 .option(context.getString(R.string.mobile_theme_dark), ThemeMode.DARK)
+                .segmentedUnderHeader()
                 .bind(ThemeMode::get, mode -> ThemeMode.set(context, mode)));
         // NEWTUBE(theme): pure black (issues #73, #74) - the dark side's page goes #000000. Applies
         // to Dark and to System default while the system is dark; greyed out on Light.
@@ -65,12 +82,17 @@ final class AppPages {
                 ThemeMode::isPureBlack, on -> ThemeMode.setPureBlack(context, on))
                 .enabledWhen(() -> ThemeMode.get() != ThemeMode.LIGHT));
 
+        rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_language)));
         LanguageSettingsPresenter language = LanguageSettingsPresenter.instance(context);
         rows.add(SettingsRow.fromRadio(language.createLanguageCategory(),
                 context.getString(R.string.mobile_settings_language)).needsRestart());
         rows.add(SettingsRow.fromRadio(language.createCountryCategory(),
                 context.getString(R.string.mobile_settings_country)).needsRestart());
+        rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_24_hour),
+                context.getString(R.string.mobile_settings_24_hour_summary),
+                generalData::is24HourLocaleEnabled, generalData::set24HourLocaleEnabled).needsRestart());
 
+        rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_interface)));
         rows.add(startScreen(context));
 
         rows.add(interfaceSize(context, mainUIData));
@@ -78,10 +100,6 @@ final class AppPages {
         rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_voice_search),
                 context.getString(R.string.mobile_settings_voice_search_summary),
                 searchData::isInstantVoiceSearchEnabled, searchData::setInstantVoiceSearchEnabled));
-
-        rows.add(SettingsRow.toggle(context.getString(R.string.mobile_settings_24_hour),
-                context.getString(R.string.mobile_settings_24_hour_summary),
-                generalData::is24HourLocaleEnabled, generalData::set24HourLocaleEnabled).needsRestart());
 
         return new SettingsPages.Page(context.getString(R.string.mobile_settings_general), rows);
     }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MONOGRAMA(visual): Settings > Appearance > App icon - one card per icon (added by
+     SettingsAdapter from item_mobile_settings_icon_card), the current one outlined in coral. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings_icon_cards"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/mobile_settings_card_margin"
+    android:layout_marginEnd="@dimen/mobile_settings_card_margin"
+    android:orientation="horizontal" />

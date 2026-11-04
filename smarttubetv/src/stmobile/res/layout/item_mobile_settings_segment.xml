@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MONOGRAMA(visual): one segment of item_mobile_settings_segmented. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:ellipsize="end"
+    android:fontFamily="@font/manrope_bold"
+    android:gravity="center"
+    android:maxLines="1"
+    android:paddingHorizontal="4dp"
+    android:textColor="@color/mobile_color_on_surface_secondary"
+    android:textSize="15sp" />

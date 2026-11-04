@@ -132,10 +132,13 @@ public final class SettingsPages {
                 null, QUALITY).summary(() -> PlayerPages.qualitySummary(context)));
         rows.add(SettingsRow.page(R.drawable.ic_settings_captions, context.getString(R.string.mobile_settings_captions),
                 context.getString(R.string.mobile_settings_captions_summary), CAPTIONS));
+        // MONOGRAMA(visual): what the service does, and an On/Off badge for whether it is on.
         rows.add(SettingsRow.page(R.drawable.ic_settings_sponsorblock, context.getString(R.string.content_block_provider),
-                null, SPONSORBLOCK).summary(() -> PlayerPages.sponsorBlockSummary(context)));
+                context.getString(R.string.mobile_settings_sponsorblock_root_summary), SPONSORBLOCK)
+                .status(() -> PlayerPages.isSponsorBlockOn(context)));
         rows.add(SettingsRow.page(R.drawable.ic_settings_dearrow, context.getString(R.string.dearrow_provider),
-                null, DEARROW).summary(() -> PlayerPages.deArrowSummary(context)));
+                context.getString(R.string.mobile_settings_dearrow_root_summary), DEARROW)
+                .status(() -> PlayerPages.isDeArrowOn(context)));
 
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_other)));
         rows.add(SettingsRow.page(R.drawable.ic_settings_backup, context.getString(R.string.mobile_settings_backup),

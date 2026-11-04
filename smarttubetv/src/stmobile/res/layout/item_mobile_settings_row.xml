@@ -1,65 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- A settings row: optional leading icon (top-level pages), title, optional summary (what it
-     does, or the current value of a choice), optional trailing switch. -->
+     does, or the current value of a choice), optional trailing switch.
+     MONOGRAMA(visual): rows sit inside rounded group cards (SettingsAdapter sets the background
+     by the row's place in its group); a hairline separates rows of one card, the icon sits on a
+     round backdrop, and a row may carry an "Experimental" tag, an On/Off badge and a chevron. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:gravity="center_vertical"
-    android:minHeight="@dimen/mobile_settings_row_min_height"
-    android:orientation="horizontal"
-    android:paddingStart="@dimen/mobile_settings_row_inset"
-    android:paddingEnd="@dimen/mobile_settings_row_inset">
+    android:layout_marginStart="@dimen/mobile_settings_card_margin"
+    android:layout_marginEnd="@dimen/mobile_settings_card_margin"
+    android:background="@drawable/bg_settings_group_single"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/settings_row_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="@dimen/mobile_settings_icon_gap"
-        android:contentDescription="@null"
+    <View
+        android:id="@+id/settings_row_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/mobile_settings_row_inset"
+        android:background="@color/mobile_color_divider"
         android:importantForAccessibility="no"
-        android:scaleType="fitCenter"
-        android:tint="@color/mobile_color_on_surface"
         android:visibility="gone" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/mobile_settings_row_padding_vertical"
-        android:paddingBottom="@dimen/mobile_settings_row_padding_vertical">
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/mobile_settings_row_min_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/mobile_settings_row_inset"
+        android:paddingEnd="@dimen/mobile_settings_row_inset">
+
+        <ImageView
+            android:id="@+id/settings_row_icon"
+            android:layout_width="@dimen/mobile_settings_icon_circle"
+            android:layout_height="@dimen/mobile_settings_icon_circle"
+            android:layout_marginEnd="@dimen/mobile_settings_icon_gap"
+            android:background="@drawable/bg_settings_icon_circle"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:padding="9dp"
+            android:scaleType="fitCenter"
+            android:tint="@color/mobile_color_on_surface"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/mobile_settings_row_padding_vertical"
+            android:paddingBottom="@dimen/mobile_settings_row_padding_vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/settings_row_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_bold"
+                    android:textColor="@color/mobile_color_on_surface"
+                    android:textSize="@dimen/mobile_settings_row_title_size"
+                    tools:text="Background play" />
+
+                <TextView
+                    android:id="@+id/settings_row_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_settings_tag"
+                    android:fontFamily="@font/manrope_bold"
+                    android:letterSpacing="0.06"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="1dp"
+                    android:textAllCaps="true"
+                    android:textColor="@color/mobile_color_on_surface_secondary"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="Experimental"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/settings_row_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/mobile_color_on_surface_secondary"
+                android:textSize="@dimen/mobile_settings_row_summary_size"
+                android:visibility="gone"
+                tools:text="Keep listening with the screen off"
+                tools:visibility="visible" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/settings_row_title"
-            android:layout_width="match_parent"
+            android:id="@+id/settings_row_badge"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/mobile_color_on_surface"
-            android:textSize="@dimen/mobile_settings_row_title_size"
-            tools:text="Background play" />
-
-        <TextView
-            android:id="@+id/settings_row_summary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textColor="@color/mobile_color_on_surface_secondary"
-            android:textSize="@dimen/mobile_settings_row_summary_size"
+            android:layout_marginStart="12dp"
+            android:fontFamily="@font/manrope_bold"
+            android:minHeight="28dp"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:textSize="13sp"
             android:visibility="gone"
-            tools:text="Keep listening with the screen off"
+            tools:background="@drawable/bg_settings_badge_on"
+            tools:text="On"
+            tools:textColor="@color/mobile_color_on_accent_container"
             tools:visibility="visible" />
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/settings_row_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:clickable="false"
+            android:focusable="false"
+            android:importantForAccessibility="no"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/settings_row_chevron"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="12dp"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_chevron_right"
+            android:tint="@color/mobile_color_on_surface_secondary"
+            android:visibility="gone" />
     </LinearLayout>
-
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/settings_row_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:clickable="false"
-        android:focusable="false"
-        android:importantForAccessibility="no"
-        android:visibility="gone" />
-
 </LinearLayout>
