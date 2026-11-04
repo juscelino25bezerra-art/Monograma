@@ -48,7 +48,7 @@ abstract class CopyRenamedApks extends DefaultTask {
         builtArtifacts.elements.each { artifact ->
             def abi = artifact.filters.find { it.filterType.toString() == 'ABI' }?.identifier ?: 'universal'
             def version = artifact.versionName ?: 'unknown'
-            def outputFile = new File(outputDirectory, "NewTube_${version}_${nameTag.get()}${abi}.apk")
+            def outputFile = new File(outputDirectory, "Monograma_${version}_${nameTag.get()}${abi}.apk")
             Files.copy(new File(artifact.outputFile).toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
         }
     }
@@ -304,12 +304,7 @@ android {
     productFlavors {
         stmobile {
             // MONOGRAMA: this fork's own applicationId, so it installs beside upstream NewTube and
-            // never receives its updates. Upstream note: brand-neutral, GitHub-verifiable applicationId chosen so the
-            // package name never has to change if the app is ever renamed — "arc" ties to the
-            // arch-"n" launcher mark (Catalan for "arch"). This ID is permanent once released;
-            // do not couple it to the marketing name. See docs/gtm + the legal-risk memo.
-            // MONOGRAMA: this fork's own ID, so it installs beside upstream NewTube and never
-            // receives its updates. Permanent once released.
+            // never receives its updates. Permanent once released.
             applicationId "io.github.juscelino25bezerra.monograma"
             minSdk = 24 // media3 1.10.x floor is 23; 24 = project-wide minimum
             targetSdk = project.ext.targetSdkVersion
