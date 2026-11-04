@@ -10,7 +10,7 @@ APK=$(ls "$DIR"/*universal*.apk 2>/dev/null | head -1)
 OUT=build/screens
 mkdir -p "$OUT"
 
-shot() { sleep "${2:-3}"; adb exec-out screencap -p > "$OUT/$1.png"; echo "captura: $1"; }
+shot() { sleep "${2:-3}"; adb exec-out screencap -p > "$OUT/$1.png"; echo "captura: $1"; report; }
 
 # Toca no elemento cujo texto é $1. $2=last escolhe o mais baixo da tela (rótulos da barra).
 tap_text() {
@@ -38,7 +38,15 @@ PY
 
 launch() {
   adb shell am force-stop $PKG
-  adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
+  adb shell am start -W -n $PKG/com.newtube.mobile.LauncherGrafite
+}
+
+# O que está na frente, e qualquer falha do app desde a última chamada.
+report() {
+  echo "frente: $(adb shell dumpsys activity activities | grep -m1 -E 'topResumedActivity|mResumedActivity' | tr -s ' ')"
+  adb logcat -d -b crash | tail -60
+  adb logcat -d -s AndroidRuntime:E | tail -60
+  adb logcat -c
 }
 
 adb wait-for-device
@@ -54,6 +62,7 @@ adb shell input keyevent KEYCODE_WAKEUP
 adb shell wm dismiss-keyguard >/dev/null 2>&1
 
 adb install -r -g "$APK"
+adb logcat -c
 adb shell pm grant $PKG android.permission.POST_NOTIFICATIONS >/dev/null 2>&1
 
 # --- Tema escuro ---
