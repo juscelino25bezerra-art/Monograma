@@ -26,15 +26,34 @@
     <style name="Theme.NewTube" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/mobile_color_primary</item>
         <item name="colorPrimaryDark">@color/mobile_color_primary_dark</item>
+        <item name="colorOnPrimary">@color/mobile_color_on_accent</item>
         <!-- Selection controls (checkbox, radio, switch, text caret) and any untinted
              indeterminate ProgressBar read the accent. Left at the framework default this
              was Material pink on a black-and-red app: the whole settings screen - section
              headers, ticks, radio dots - came out #FF4081. Monochrome instead, per the
              "subtle states, no tints" rule; red stays the brand/playback colour and the
              one accent tint left is the cast-connected icon. -->
-        <item name="colorAccent">@color/mobile_color_on_surface</item>
-        <item name="colorSecondary">@color/mobile_color_on_surface</item>
-        <item name="colorControlActivated">@color/mobile_color_on_surface</item>
+        <!-- MONOGRAMA(visual): coral instead - the Monograma proposal puts its one accent on
+             every "on" control (switches, selected segments, radio dots, the text caret), so the
+             accent is no longer monochrome. Text on coral is near-black (colorOnSecondary). -->
+        <item name="colorAccent">@color/mobile_color_accent</item>
+        <item name="colorSecondary">@color/mobile_color_accent</item>
+        <item name="colorOnSecondary">@color/mobile_color_on_accent</item>
+        <item name="colorControlActivated">@color/mobile_color_accent</item>
+        <!-- MONOGRAMA(visual): Manrope is every text's default (res/font/manrope.xml; Android 8+,
+             older versions keep the system font). Material's own text appearances name their
+             font, so the type scale below is re-pointed at it too. -->
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/manrope</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Monograma.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Monograma.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Monograma.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Monograma.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Monograma.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Monograma.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.Monograma.Overline</item>
+        <item name="switchStyle">@style/Widget.Monograma.Switch</item>
+        <item name="chipStyle">@style/Widget.Monograma.Chip</item>
         <!-- NEWTUBE(theme): the page colours (attrs_mobile.xml). ThemeOverlay.NewTube.PureBlack
              replaces them on the dark side; everything below reads them through the attributes. -->
         <item name="newtubePureBlack">false</item>
@@ -94,12 +113,102 @@
 
     <style name="Widget.NewTube.Snackbar.Action" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
         <item name="android:textColor">@color/mobile_color_background</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/manrope_semibold</item>
     </style>
 
     <style name="TextAppearance.NewTube.Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="fontFamily">@font/manrope_bold</item>
+    </style>
+
+    <!-- MONOGRAMA(visual): Material's type scale in Manrope (sizes stay Material's). -->
+    <style name="TextAppearance.Monograma.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="fontFamily">@font/manrope_bold</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="TextAppearance.Monograma.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/manrope</item>
+    </style>
+    <style name="TextAppearance.Monograma.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:fontFamily">@font/manrope_semibold</item>
+        <item name="fontFamily">@font/manrope_semibold</item>
+    </style>
+    <style name="TextAppearance.Monograma.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/manrope</item>
+    </style>
+    <style name="TextAppearance.Monograma.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/manrope</item>
+    </style>
+    <style name="TextAppearance.Monograma.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/manrope</item>
+    </style>
+    <style name="TextAppearance.Monograma.Overline" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="fontFamily">@font/manrope_bold</item>
+    </style>
+
+    <!--
+      MONOGRAMA(visual): the mockups' switch - a 52x32dp pill track, coral when on with a white
+      24dp thumb, an outlined grey track with a 16dp thumb when off. Drawn by our own drawables
+      (useMaterialThemeColors off, so SwitchMaterial does not re-tint them), not Material 3's
+      MaterialSwitch, whose default style reads Material 3 theme colours this M2 theme lacks.
+    -->
+    <style name="Widget.Monograma.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="useMaterialThemeColors">false</item>
+        <item name="android:thumb">@drawable/monograma_switch_thumb</item>
+        <item name="track">@drawable/monograma_switch_track</item>
+        <item name="thumbTint">@null</item>
+        <item name="trackTint">@null</item>
+        <item name="switchMinWidth">52dp</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- MONOGRAMA(visual): the mockups' chip - a flat 40dp pill, the card colour, inverted when
+         selected ("Tudo", "Recentes"); Manrope semibold; no stroke, no check mark. -->
+    <style name="Widget.Monograma.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/monograma_chip_background</item>
+        <item name="android:textColor">@color/monograma_chip_text</item>
+        <item name="android:textAppearance">@style/TextAppearance.Monograma.Chip</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipMinHeight">40dp</item>
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipStartPadding">8dp</item>
+        <item name="chipEndPadding">8dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipIconVisible">false</item>
+        <item name="closeIconVisible">false</item>
+        <item name="rippleColor">@color/mobile_color_divider</item>
+        <item name="android:checkable">true</item>
+        <item name="ensureMinTouchTargetSize">true</item>
+    </style>
+
+    <style name="TextAppearance.Monograma.Chip" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:fontFamily">@font/manrope_semibold</item>
+        <item name="fontFamily">@font/manrope_semibold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/monograma_chip_text</item>
+    </style>
+
+    <!-- MONOGRAMA(visual): the active tab's coral pill (NavigationBarView's active indicator,
+         which this M2 bottom nav leaves off by default). -->
+    <style name="Widget.Monograma.BottomNav.ActiveIndicator" parent="">
+        <item name="android:width">64dp</item>
+        <item name="android:height">32dp</item>
+        <item name="android:color">@color/mobile_color_accent_container</item>
+        <item name="marginHorizontal">4dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Monograma.Pill</item>
+    </style>
+
+    <style name="ShapeAppearance.Monograma.Pill" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
     <!--
@@ -111,10 +220,11 @@
       pill is 40dp tall; the 4dp insets keep the touch target at 48dp.
     -->
     <style name="Widget.NewTube.Button.Pill" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/mobile_color_on_inverse_surface</item>
-        <item name="backgroundTint">@color/mobile_color_inverse_surface</item>
+        <!-- MONOGRAMA(visual): coral with near-black text, the mockups' "Inscrever-se". -->
+        <item name="android:textColor">@color/mobile_color_on_accent</item>
+        <item name="backgroundTint">@color/mobile_color_accent</item>
         <item name="rippleColor">@color/mobile_color_inverse_ripple</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/manrope_bold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
@@ -125,7 +235,7 @@
         <item name="android:paddingEnd">20dp</item>
         <item name="android:elevation">0dp</item>
         <item name="android:stateListAnimator">@null</item>
-        <item name="cornerRadius">20dp</item>
+        <item name="cornerRadius">24dp</item>
     </style>
 
     <!--
@@ -173,8 +283,8 @@
 
     <style name="ShapeAppearance.NewTube.BottomSheet" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopLeft">16dp</item>
-        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeTopRight">24dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
@@ -299,7 +409,7 @@
     </style>
 
     <style name="MobileAlertDialogShape" parent="ShapeAppearance.MaterialComponents.MediumComponent">
-        <item name="cornerSize">16dp</item>
+        <item name="cornerSize">24dp</item>
     </style>
 
     <style name="MobileAlertDialogBody" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
@@ -341,14 +451,14 @@
     </style>
 
     <style name="MobileCastCodeDialogTitle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/manrope_semibold</item>
         <item name="android:textColor">@color/mobile_color_on_surface</item>
         <item name="android:textSize">20sp</item>
         <item name="android:letterSpacing">0</item>
     </style>
 
     <style name="MobileCastCodeDialogSecondaryButton" parent="MobileAlertDialogButton">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/manrope_semibold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:letterSpacing">0</item>
@@ -356,7 +466,7 @@
     </style>
 
     <style name="MobileCastCodeDialogPrimaryButton" parent="Widget.MaterialComponents.Button">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/manrope_semibold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textAllCaps">false</item>
@@ -376,8 +486,16 @@
          theirs side-by-side; the old 10sp-medium choice predates dropping the long
          "Listas de reproducción" label from the bar). -->
     <style name="MobileBottomNavText" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:textSize">11sp</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/manrope_medium</item>
+        <item name="fontFamily">@font/manrope_medium</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- MONOGRAMA(visual): the active tab's label is bold and in the page's ink (the mockups). -->
+    <style name="MobileBottomNavText.Active">
+        <item name="android:fontFamily">@font/manrope_bold</item>
+        <item name="fontFamily">@font/manrope_bold</item>
     </style>
 
     <!-- Watch-page loading skeleton (alpha-pulsed from code while related videos load). -->
