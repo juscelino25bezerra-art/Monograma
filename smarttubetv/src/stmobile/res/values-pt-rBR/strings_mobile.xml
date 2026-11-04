@@ -371,6 +371,7 @@
         <item quantity="many">%1$d vídeos · %2$s</item>
         <item quantity="other">%1$d vídeos · %2$s</item>
     </plurals>
+    <string name="mobile_downloads_storage_none">Nenhum vídeo</string>
     <string name="mobile_downloads_storage_free">Livre no aparelho: %1$s</string>
     <string name="mobile_downloads_storage_description">Armazenamento: %1$s. %2$s</string>
     <string name="mobile_downloads_sort_recent">Recentes</string>

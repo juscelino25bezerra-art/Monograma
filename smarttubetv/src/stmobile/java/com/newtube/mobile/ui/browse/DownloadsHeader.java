@@ -79,8 +79,9 @@ final class DownloadsHeader {
         long used = DownloadSort.totalBytes(items);
         long free = freeBytes();
 
-        String usedText = mActivity.getResources().getQuantityString(R.plurals.mobile_downloads_storage_used,
-                done, done, used > 0 ? DownloadOptions.formatBytes(used) : DownloadOptions.formatBytes(0));
+        String usedText = done == 0 ? mActivity.getString(R.string.mobile_downloads_storage_none)
+                : mActivity.getResources().getQuantityString(R.plurals.mobile_downloads_storage_used,
+                        done, done, DownloadOptions.formatBytes(used));
         mUsed.setText(usedText);
         String freeText = free >= 0
                 ? mActivity.getString(R.string.mobile_downloads_storage_free, DownloadOptions.formatBytes(free)) : "";
