@@ -466,9 +466,9 @@
     <string name="mobile_about_star_desc">Free and open source. A star helps others find it</string>
     <string name="mobile_about_share">Share Monograma</string>
     <string name="mobile_about_share_desc">Send the link to someone who\'d like it</string>
-    <string name="mobile_about_share_text">Monograma — a YouTube client for phones, built on SmartTube: %1$s</string>
+    <string name="mobile_about_share_text">Monograma — a YouTube client for phones, built on NewTube and SmartTube: %1$s</string>
     <string name="mobile_about_repo_url" translatable="false">https://github.com/juscelino25bezerra-art/Monograma</string>
-    <string name="mobile_about_site_url" translatable="false">https://newtube.org/</string>
+    <string name="mobile_about_site_url" translatable="false">https://github.com/juscelino25bezerra-art/Monograma</string>
     <!-- Experimental SABR playback (was strings_sabr.xml) -->
     <string name="sabr_vod_option">Prefer SABR even when links work (experimental; next VOD)</string>
     <string name="sabr_vod_stopped">Experimental SABR playback stopped. Tap play to retry, or disable SABR in Settings.</string>
