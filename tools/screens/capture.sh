@@ -38,7 +38,8 @@ PY
 
 launch() {
   adb shell am force-stop $PKG
-  adb shell am start -W -n $PKG/com.newtube.mobile.LauncherGrafite
+  # Pelo ícone que estiver ativo (Grafite ou Coral), como o launcher faria.
+  adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
 }
 
 # O que está na frente, e qualquer falha do app desde a última chamada.
@@ -85,6 +86,17 @@ tap_text "Início" last; sleep 2
 adb shell am start -a android.intent.action.VIEW -d "https://www.youtube.com/watch?v=jNQXAC9IVRw" $PKG >/dev/null 2>&1
 shot 07_video 30
 adb shell input swipe 540 1800 540 900 900; shot 07b_video_baixo 3
+
+# --- Ícone Coral: o app continua aberto e a tela inicial mostra o ícone novo ---
+launch; sleep 15
+tap_text "Você" last; sleep 3
+tap_text "Configurações"; sleep 3
+tap_text "Aparência e idioma"; sleep 3
+tap_text "Coral"; shot 11_icone_coral 8
+adb shell input keyevent KEYCODE_HOME; sleep 6
+adb shell input swipe 540 1900 540 500 600; shot 12_launcher_coral 4
+echo "aliases: $(adb shell dumpsys package $PKG | grep -E -A1 'enabledComponents|disabledComponents' | tr -s ' ' | tr '\n' ' ')"
+adb shell input keyevent KEYCODE_HOME; sleep 2
 
 # --- Tema claro ---
 adb shell cmd uimode night no
