@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MONOGRAMA(visual): a full-width card row on the You tab (Settings): an icon on a round
+     backdrop, the label, a chevron. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:background="@drawable/bg_monograma_card"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="72dp"
+    android:orientation="horizontal"
+    android:paddingHorizontal="20dp">
+
+    <ImageView
+        android:id="@+id/mobile_you_row_icon"
+        android:layout_width="@dimen/mobile_settings_icon_circle"
+        android:layout_height="@dimen/mobile_settings_icon_circle"
+        android:background="@drawable/bg_settings_icon_circle"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:padding="9dp"
+        android:scaleType="fitCenter"
+        android:tint="@color/mobile_color_on_surface" />
+
+    <TextView
+        android:id="@+id/mobile_you_row_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:fontFamily="@font/manrope_bold"
+        android:maxLines="1"
+        android:textColor="@color/mobile_color_on_surface"
+        android:textSize="17sp"
+        tools:text="Settings" />
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_chevron_right"
+        android:tint="@color/mobile_color_on_surface_secondary" />
+</LinearLayout>

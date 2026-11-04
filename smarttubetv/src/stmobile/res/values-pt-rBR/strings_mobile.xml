@@ -363,4 +363,28 @@
     <string name="mobile_about_share_text">Monograma — um app de YouTube para celular, feito a partir do NewTube e do SmartTube: %1$s</string>
     <string name="sabr_vod_option">Preferir SABR mesmo quando os links funcionam (experimental; próximo vídeo)</string>
     <string name="sabr_vod_stopped">A reprodução experimental via SABR parou. Toque em reproduzir para tentar de novo ou desative o SABR nas Configurações.</string>
+
+    <!-- MONOGRAMA(visual) -->
+    <string name="mobile_downloads_storage">Armazenamento</string>
+    <plurals name="mobile_downloads_storage_used">
+        <item quantity="one">%1$d vídeo · %2$s</item>
+        <item quantity="many">%1$d vídeos · %2$s</item>
+        <item quantity="other">%1$d vídeos · %2$s</item>
+    </plurals>
+    <string name="mobile_downloads_storage_free">Livre no aparelho: %1$s</string>
+    <string name="mobile_downloads_storage_description">Armazenamento: %1$s. %2$s</string>
+    <string name="mobile_downloads_sort_recent">Recentes</string>
+    <string name="mobile_downloads_sort_size">Tamanho</string>
+    <string name="mobile_downloads_sort_name">Nome</string>
+    <string name="mobile_downloads_empty_title">Assista sem internet</string>
+    <string name="mobile_downloads_empty_body">Toque em “Baixar” no menu de qualquer vídeo para guardá-lo aqui.</string>
+    <string name="mobile_you_library">Sua biblioteca</string>
+    <string name="mobile_you_manage_account">Gerenciar conta</string>
+    <string name="mobile_you_sign_in_hint">Faça login para ver suas inscrições</string>
+    <string name="mobile_you_tile_playlists">Suas playlists</string>
+    <string name="mobile_you_tile_my_videos">Seu canal</string>
+    <string name="mobile_you_tile_channels">Suas inscrições</string>
+    <string name="mobile_you_tile_queue">O que toca a seguir</string>
+    <string name="mobile_you_tile_notifications">Dos seus canais</string>
+    <string name="mobile_watch_autoplay">Reprodução automática</string>
 </resources>

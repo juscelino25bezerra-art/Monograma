@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MONOGRAMA(visual): the logo tile beside the wordmark on Home's top bar - the Grafite app icon
+     as a 32dp rounded square, the same in both themes. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+    <path android:fillColor="#27262B" android:pathData="M8,0 h16 a8,8 0 0 1 8,8 v16 a8,8 0 0 1 -8,8 h-16 a8,8 0 0 1 -8,-8 v-16 a8,8 0 0 1 8,-8 z" />
+    <path android:fillColor="#EEEEF1" android:pathData="M10.0,8.67 a2.0,2.0 0 0 1 2.0,2.0 v10.66 a2.0,2.0 0 0 1 -4.0,0 v-10.66 a2.0,2.0 0 0 1 2.0,-2.0 z" />
+    <path android:fillColor="#EEEEF1" android:pathData="M22.0,8.67 a2.0,2.0 0 0 1 2.0,2.0 v10.66 a2.0,2.0 0 0 1 -4.0,0 v-10.66 a2.0,2.0 0 0 1 2.0,-2.0 z" />
+    <path
+        android:fillColor="#FE5A4E"
+        android:strokeColor="#FE5A4E"
+        android:strokeWidth="1.1"
+        android:strokeLineJoin="round"
+        android:pathData="M12.89,9.33 L19.11,9.33 L16.0,16.44 Z" />
+</vector>

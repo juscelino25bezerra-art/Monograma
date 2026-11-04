@@ -170,6 +170,10 @@ public class MobileBrowseActivity extends MobileActivity
     private View mErrorContainer;
     private ImageView mErrorIcon;
     private TextView mErrorMessage;
+    /** MONOGRAMA(visual): the empty state's bold line (empty Downloads only). */
+    private TextView mErrorTitle;
+    /** MONOGRAMA(visual): the Downloads tab's storage card and sort chips. */
+    private DownloadsHeader mDownloadsHeader;
     private MaterialButton mErrorAction;
     private ImageButton mSearchButton;
     private ImageButton mCastButton;
@@ -309,10 +313,17 @@ public class MobileBrowseActivity extends MobileActivity
         mErrorContainer = findViewById(R.id.mobile_error_container);
         mErrorIcon = findViewById(R.id.mobile_error_icon);
         mErrorMessage = findViewById(R.id.mobile_error_message);
+        mErrorTitle = findViewById(R.id.mobile_error_title);
         mErrorAction = findViewById(R.id.mobile_error_action);
         mSearchButton = findViewById(R.id.mobile_search_button);
         mCastButton = findViewById(R.id.mobile_cast_button);
         mTopBar = new BrowseTopBar(this, () -> getOnBackPressedDispatcher().onBackPressed());
+        mTopBar.settingsButton().setOnClickListener(v -> openSettings());
+        mDownloadsHeader = new DownloadsHeader(this, () -> {
+            if (mPresenter != null && isDownloadsSectionShowing()) {
+                mPresenter.refresh(false);
+            }
+        });
 
         mMiniPlayerBar = findViewById(R.id.mobile_mini_player);
         mMiniPlayerFrame = findViewById(R.id.mobile_mini_player_frame);
@@ -1025,9 +1036,36 @@ public class MobileBrowseActivity extends MobileActivity
         mFeedSkeleton.setImportantForAccessibility(a11y);
         mErrorContainer.setImportantForAccessibility(a11y);
 
+        refreshTopBar();
+        refreshDownloadsHeader();
+    }
+
+    /** MONOGRAMA(visual): the storage card and sort chips, on the Downloads tab only. */
+    private void refreshDownloadsHeader() {
+        if (mDownloadsHeader != null) {
+            mDownloadsHeader.show(isDownloadsSectionShowing());
+        }
+    }
+
+    /**
+     * MONOGRAMA(visual): the top bar's look for what is on screen - Home's logo and wordmark, a
+     * tab's large title (Settings in place of Search on You), or a You sub-screen's back arrow.
+     */
+    private void refreshTopBar() {
+        if (mTopBar == null) {
+            return;
+        }
         boolean subScreen = mSectionFromYou && !mYouShowing
                 && mBottomNav.getMenu().findItem(toMenuItemId(mCurrentSectionId)) == null;
-        mTopBar.show(subScreen, getCurrentSectionTitle());
+        if (subScreen) {
+            mTopBar.show(BrowseTopBar.SUBSCREEN, getCurrentSectionTitle(), false);
+        } else if (mYouShowing) {
+            mTopBar.show(BrowseTopBar.TAB, getString(R.string.mobile_nav_you), true);
+        } else if (mCurrentSectionId == MediaGroup.TYPE_HOME) {
+            mTopBar.show(BrowseTopBar.HOME, null, false);
+        } else {
+            mTopBar.show(BrowseTopBar.TAB, getCurrentSectionTitle(), false);
+        }
     }
 
     /**
@@ -1084,44 +1122,135 @@ public class MobileBrowseActivity extends MobileActivity
             (isPersonalSection(section.getId()) ? personal : explore).add(section);
         }
 
-        for (BrowseSection section : personal) {
-            addYouSectionRow(section);
+        // MONOGRAMA(visual): the mockup's You page - the user's own sections as a two-column
+        // "Your library" grid of tiles, pinned and discovery sections as chips, then Settings as
+        // a card.
+        if (!personal.isEmpty()) {
+            addYouGroupLabel(getString(R.string.mobile_you_library));
+            addYouTiles(personal);
         }
 
         if (!pinned.isEmpty()) {
             addYouGroupLabel(getString(R.string.mobile_you_pinned));
-            for (BrowseSection section : pinned) {
-                addYouSectionRow(section);
-            }
+            addYouChips(pinned);
         }
 
         if (!explore.isEmpty()) {
             addYouGroupLabel(getString(R.string.mobile_you_explore));
-            for (BrowseSection section : explore) {
-                addYouSectionRow(section);
-            }
+            addYouChips(explore);
         }
 
-        addYouDivider();
-        addYouRow(R.drawable.ic_mobile_settings, getString(R.string.header_settings),
-                this::openSettings);
+        View settings = LayoutInflater.from(this).inflate(R.layout.item_mobile_you_card_row, mYouRows, false);
+        ((ImageView) settings.findViewById(R.id.mobile_you_row_icon)).setImageResource(R.drawable.ic_mobile_settings);
+        ((TextView) settings.findViewById(R.id.mobile_you_row_label)).setText(R.string.header_settings);
+        settings.setOnClickListener(v -> openSettings());
+        ((LinearLayout.LayoutParams) settings.getLayoutParams()).topMargin = dp(24);
+        mYouRows.addView(settings);
     }
 
-    private void addYouSectionRow(BrowseSection section) {
-        int sectionId = section.getId();
-        View row = addYouRow(section.getResId(), section.getTitle(), () -> {
-            mSectionFromYou = true;
-            hideYouPanel();
-            onSectionChosen(sectionId);
-            onYouPanelToggled(); // now that the chosen section is current: its name in the top bar
-        });
-        row.setOnLongClickListener(v -> {
-            if (mPresenter != null) {
-                mPresenter.onSectionLongPressed(sectionId);
-            }
-            return true;
-        });
+    /** Opening a section from the You tab: it becomes a You sub-screen (back arrow, its name). */
+    private void openYouSection(int sectionId) {
+        mSectionFromYou = true;
+        hideYouPanel();
+        onSectionChosen(sectionId);
+        onYouPanelToggled(); // now that the chosen section is current: its name in the top bar
     }
+
+    /** Long-press on a section's tile or chip: the section-management menu. */
+    private boolean onYouSectionLongPressed(int sectionId) {
+        if (mPresenter != null) {
+            mPresenter.onSectionLongPressed(sectionId);
+        }
+        return true;
+    }
+
+    /** MONOGRAMA(visual): the library grid, two tiles to a row. */
+    private void addYouTiles(List<BrowseSection> sections) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        int gap = dp(12);
+        LinearLayout line = null;
+        for (int i = 0; i < sections.size(); i++) {
+            if (i % 2 == 0) {
+                line = new LinearLayout(this);
+                line.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(dp(16), i == 0 ? 0 : gap, dp(16), 0);
+                line.setLayoutParams(lp);
+                mYouRows.addView(line);
+            }
+            BrowseSection section = sections.get(i);
+            int sectionId = section.getId();
+            View tile = inflater.inflate(R.layout.item_mobile_you_tile, line, false);
+            ImageView icon = tile.findViewById(R.id.mobile_you_tile_icon);
+            if (section.getResId() > 0) {
+                icon.setImageResource(section.getResId());
+            } else {
+                icon.setVisibility(View.INVISIBLE);
+            }
+            ((TextView) tile.findViewById(R.id.mobile_you_tile_title)).setText(section.getTitle());
+            TextView subtitle = tile.findViewById(R.id.mobile_you_tile_subtitle);
+            int subtitleRes = youTileSubtitle(sectionId);
+            if (subtitleRes != 0) {
+                subtitle.setText(subtitleRes);
+                subtitle.setVisibility(View.VISIBLE);
+            }
+            tile.setOnClickListener(v -> openYouSection(sectionId));
+            tile.setOnLongClickListener(v -> onYouSectionLongPressed(sectionId));
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tile.getLayoutParams();
+            lp.setMarginStart(i % 2 == 0 ? 0 : gap);
+            line.addView(tile, lp);
+        }
+        if (sections.size() % 2 == 1 && line != null) {
+            // An odd tile keeps its half width: an empty cell beside it.
+            android.widget.Space space = new android.widget.Space(this);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, 1, 1f);
+            lp.setMarginStart(gap);
+            line.addView(space, lp);
+        }
+    }
+
+    /** The line under a library tile's name (the mockup's "Seu canal", "Suas inscrições"). */
+    private static int youTileSubtitle(int sectionId) {
+        switch (sectionId) {
+            case MediaGroup.TYPE_USER_PLAYLISTS:
+                return R.string.mobile_you_tile_playlists;
+            case MediaGroup.TYPE_MY_VIDEOS:
+                return R.string.mobile_you_tile_my_videos;
+            case MediaGroup.TYPE_CHANNEL_UPLOADS:
+                return R.string.mobile_you_tile_channels;
+            case MediaGroup.TYPE_PLAYBACK_QUEUE:
+                return R.string.mobile_you_tile_queue;
+            case MediaGroup.TYPE_NOTIFICATIONS:
+                return R.string.mobile_you_tile_notifications;
+            default:
+                return 0;
+        }
+    }
+
+    /** MONOGRAMA(visual): sections as wrapping chips ("Explore": Music, Live, News, ...). */
+    private void addYouChips(List<BrowseSection> sections) {
+        com.google.android.material.chip.ChipGroup group = new com.google.android.material.chip.ChipGroup(this);
+        group.setChipSpacingHorizontal(dp(10));
+        group.setChipSpacingVertical(dp(10));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(dp(16), 0, dp(16), 0);
+        group.setLayoutParams(lp);
+        for (BrowseSection section : sections) {
+            int sectionId = section.getId();
+            com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(this);
+            chip.setText(section.getTitle());
+            chip.setCheckable(false);
+            chip.setEnsureMinTouchTargetSize(false);
+            chip.setChipMinHeight(dp(44));
+            chip.setOnClickListener(v -> openYouSection(sectionId));
+            chip.setOnLongClickListener(v -> onYouSectionLongPressed(sectionId));
+            group.addView(chip);
+        }
+        mYouRows.addView(group);
+    }
+
 
     /** Small secondary-color group label, official-You-page style. */
     // ---------------------------------------------------------------------------------
@@ -1172,9 +1301,12 @@ public class MobileBrowseActivity extends MobileActivity
         View row = LayoutInflater.from(this).inflate(R.layout.item_mobile_you_update_row, mYouRows, false);
         row.setOnClickListener(v -> MobileUpdateActivity.start(this));
         bindYouUpdateRow(row);
-        mYouRows.addView(row);
+        // MONOGRAMA(visual): a card under the profile card, like the rest of the page.
+        row.setBackgroundResource(R.drawable.bg_monograma_card);
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) row.getLayoutParams();
+        lp.setMargins(dp(16), dp(12), dp(16), 0);
+        mYouRows.addView(row, lp);
         mYouUpdateRow = row;
-        addYouDivider();
     }
 
     private void bindYouUpdateRow(View row) {
@@ -1216,44 +1348,16 @@ public class MobileBrowseActivity extends MobileActivity
                 hasNotes ? () -> MobileUpdateActivity.startWhatsNew(this) : null, MobileSnackbar.NOTICE_DURATION_MS);
     }
 
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
+    }
+
+    /** MONOGRAMA(visual): a group title - coral, bold, upper case, like Settings' headers. */
     private void addYouGroupLabel(CharSequence text) {
-        TextView label = new TextView(this);
+        TextView label = (TextView) LayoutInflater.from(this)
+                .inflate(R.layout.item_mobile_settings_header, mYouRows, false);
         label.setText(text);
-        label.setTextColor(getColorInt(R.color.mobile_color_on_surface_secondary));
-        label.setTextSize(14);
-        label.setTypeface(label.getTypeface(), android.graphics.Typeface.BOLD);
-        int pad = Math.round(20 * getResources().getDisplayMetrics().density);
-        int padV = Math.round(10 * getResources().getDisplayMetrics().density);
-        label.setPadding(pad, padV, pad, padV / 2);
         mYouRows.addView(label);
-    }
-
-    private void addYouDivider() {
-        View divider = new View(this);
-        float density = getResources().getDisplayMetrics().density;
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, Math.max(1, Math.round(density)));
-        int margin = Math.round(20 * density);
-        int marginV = Math.round(8 * density);
-        lp.setMargins(margin, marginV, margin, marginV);
-        divider.setLayoutParams(lp);
-        divider.setBackgroundColor(getColorInt(R.color.mobile_color_divider));
-        mYouRows.addView(divider);
-    }
-
-    private View addYouRow(int iconRes, CharSequence title, Runnable action) {
-        View row = LayoutInflater.from(this).inflate(R.layout.item_mobile_you_row, mYouRows, false);
-
-        ImageView icon = row.findViewById(R.id.mobile_you_row_icon);
-        if (iconRes > 0) {
-            icon.setImageResource(iconRes);
-        }
-        TextView label = row.findViewById(R.id.mobile_you_row_label);
-        label.setText(title);
-
-        row.setOnClickListener(v -> action.run());
-        mYouRows.addView(row);
-        return row;
     }
 
     /**
@@ -1275,6 +1379,8 @@ public class MobileBrowseActivity extends MobileActivity
         mCurrentSectionId = sectionId;
         paintCachedSnapshot(sectionId, switched);
         syncNavHighlight(sectionId);
+        refreshTopBar();
+        refreshDownloadsHeader();
 
         if (mPresenter != null) {
             mPresenter.onSectionFocused(sectionId);
@@ -1422,6 +1528,8 @@ public class MobileBrowseActivity extends MobileActivity
 
     private void syncChannelAvatars() {
         mAdapter.setChannelAvatars(showsChannelAvatars(mCurrentSectionId) ? this::onChannelAvatarClicked : null);
+        // MONOGRAMA(visual): Downloads lists its videos as rows (thumbnail beside the text).
+        mAdapter.setRowLayout(mCurrentSectionId == VideoDownloads.SECTION_ID);
     }
 
     /** The loading skeleton's avatar circles, where the cards will have avatars. */
@@ -1640,7 +1748,8 @@ public class MobileBrowseActivity extends MobileActivity
             return;
         }
 
-        List<DownloadItem> items = DownloadRegistry.instance(this).itemsNewestFirst();
+        List<DownloadItem> items = com.newtube.mobile.downloads.DownloadSort.sorted(this);
+        refreshDownloadsHeader();
         boolean sameSet = items.size() == mCurrentVideos.size();
         if (sameSet) {
             for (int i = 0; i < items.size(); i++) {
@@ -1667,8 +1776,12 @@ public class MobileBrowseActivity extends MobileActivity
         mContentGrid.setVisibility(View.GONE);
         mErrorContainer.setVisibility(View.VISIBLE);
         mErrorIcon.setVisibility(View.VISIBLE);
-        mErrorMessage.setText(mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS
-                ? R.string.mobile_empty_subscriptions : R.string.mobile_empty_generic);
+        boolean downloads = mCurrentSectionId == VideoDownloads.SECTION_ID;
+        DownloadsHeader.applyEmptyLook(mErrorIcon, mErrorTitle, mErrorMessage, downloads);
+        if (!downloads) {
+            mErrorMessage.setText(mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS
+                    ? R.string.mobile_empty_subscriptions : R.string.mobile_empty_generic);
+        }
         mErrorAction.setVisibility(View.GONE);
         mErrorAction.setTag(null);
     }
@@ -1679,7 +1792,8 @@ public class MobileBrowseActivity extends MobileActivity
         mContentGrid.setVisibility(View.GONE);
         mErrorContainer.setVisibility(View.VISIBLE);
         mErrorIcon.setVisibility(View.VISIBLE);
-        mErrorMessage.setText(R.string.mobile_downloads_empty);
+        DownloadsHeader.applyEmptyLook(mErrorIcon, mErrorTitle, mErrorMessage, true);
+        refreshDownloadsHeader();
         mErrorAction.setVisibility(View.GONE);
         mErrorAction.setTag(null);
     }
@@ -1909,24 +2023,30 @@ public class MobileBrowseActivity extends MobileActivity
             String name = account.getName() != null ? account.getName() : account.getEmail();
             mYouAccountText.setText(name != null ? name : getString(R.string.settings_accounts));
 
-            String email = account.getEmail();
-            boolean showEmail = email != null && !email.equals(name);
-            mYouAccountSub.setText(showEmail ? email : null);
-            mYouAccountSub.setVisibility(showEmail ? View.VISIBLE : View.GONE);
+            // MONOGRAMA(visual): "Manage account" under the name, as in the mockup (the email is
+            // one tap away, in the accounts sheet); the initials until the picture arrives.
+            mYouAccountSub.setText(R.string.mobile_you_manage_account);
+            mYouAccountSub.setVisibility(View.VISIBLE);
 
+            com.newtube.mobile.ui.common.InitialsAvatar initials =
+                    new com.newtube.mobile.ui.common.InitialsAvatar(this, name);
             String avatarUrl = account.getAvatarImageUrl();
             if (avatarUrl != null && !avatarUrl.isEmpty()) {
                 com.bumptech.glide.Glide.with(this)
                         .load(avatarUrl)
                         .circleCrop()
-                        .placeholder(R.drawable.ic_mobile_account)
+                        .placeholder(initials)
+                        .error(initials)
                         .into(mYouAvatar);
             } else {
-                mYouAvatar.setImageResource(R.drawable.ic_mobile_account);
+                com.bumptech.glide.Glide.with(this).clear(mYouAvatar);
+                mYouAvatar.setImageDrawable(initials);
             }
         } else {
             mYouAccountText.setText(R.string.dialog_add_account);
-            mYouAccountSub.setVisibility(View.GONE);
+            mYouAccountSub.setText(R.string.mobile_you_sign_in_hint);
+            mYouAccountSub.setVisibility(View.VISIBLE);
+            com.bumptech.glide.Glide.with(this).clear(mYouAvatar);
             mYouAvatar.setImageResource(R.drawable.ic_mobile_account);
         }
     }
@@ -2647,6 +2767,7 @@ public class MobileBrowseActivity extends MobileActivity
             mContentGrid.setVisibility(View.GONE);
             mErrorContainer.setVisibility(View.VISIBLE);
             mErrorIcon.setVisibility(View.VISIBLE);
+            DownloadsHeader.applyEmptyLook(mErrorIcon, mErrorTitle, mErrorMessage, false);
 
             if (hasSignInAction) {
                 mErrorMessage.setText(SignInCopy.forSection(this, mCurrentSectionId, getCurrentSectionTitle()));

@@ -57,7 +57,8 @@ public final class DownloadsBridge implements VideoDownloads.Handler {
     public List<Video> listSectionVideos() {
         List<Video> result = new ArrayList<>();
         synchronized (mCards) {
-            List<DownloadItem> items = DownloadRegistry.instance(mContext).itemsNewestFirst();
+            // MONOGRAMA(visual): in the order the Downloads chips picked (newest first by default).
+            List<DownloadItem> items = DownloadSort.sorted(mContext);
             Map<String, Video> alive = new HashMap<>();
             for (DownloadItem item : items) {
                 Video card = videoFor(item);

@@ -472,4 +472,28 @@
     <!-- Experimental SABR playback (was strings_sabr.xml) -->
     <string name="sabr_vod_option">Prefer SABR even when links work (experimental; next VOD)</string>
     <string name="sabr_vod_stopped">Experimental SABR playback stopped. Tap play to retry, or disable SABR in Settings.</string>
+
+    <!-- MONOGRAMA(visual): the Downloads tab's storage card, sort chips and empty state. -->
+    <string name="mobile_downloads_storage">Storage</string>
+    <plurals name="mobile_downloads_storage_used">
+        <item quantity="one">%1$d video · %2$s</item>
+        <item quantity="other">%1$d videos · %2$s</item>
+    </plurals>
+    <string name="mobile_downloads_storage_free">Free on device: %1$s</string>
+    <string name="mobile_downloads_storage_description">Storage: %1$s. %2$s</string>
+    <string name="mobile_downloads_sort_recent">Recent</string>
+    <string name="mobile_downloads_sort_size">Size</string>
+    <string name="mobile_downloads_sort_name">Name</string>
+    <string name="mobile_downloads_empty_title">Watch without internet</string>
+    <string name="mobile_downloads_empty_body">Tap “Download” in any video\'s menu to keep it here.</string>
+    <!-- MONOGRAMA(visual): the You tab's library tiles and the watch page's Up next row. -->
+    <string name="mobile_you_library">Your library</string>
+    <string name="mobile_you_manage_account">Manage account</string>
+    <string name="mobile_you_sign_in_hint">Sign in to see your subscriptions</string>
+    <string name="mobile_you_tile_playlists">Your playlists</string>
+    <string name="mobile_you_tile_my_videos">Your channel</string>
+    <string name="mobile_you_tile_channels">Your subscriptions</string>
+    <string name="mobile_you_tile_queue">What plays next</string>
+    <string name="mobile_you_tile_notifications">From your channels</string>
+    <string name="mobile_watch_autoplay">Autoplay</string>
 </resources>

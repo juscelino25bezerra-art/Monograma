@@ -31,21 +31,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- MONOGRAMA(visual): the logo tile before the wordmark, on Home only (BrowseTopBar). -->
+    <ImageView
+        android:id="@+id/mobile_title_logo"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="16dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_monograma_logo"
+        app:layout_constraintBottom_toBottomOf="@id/mobile_title_bar"
+        app:layout_constraintStart_toEndOf="@id/mobile_title_back"
+        app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
+
     <TextView
         android:id="@+id/mobile_title_bar"
         android:layout_width="0dp"
         android:layout_height="@dimen/mobile_title_bar_height"
         android:background="?attr/newtubeColorBackground"
         android:ellipsize="end"
+        android:fontFamily="@font/manrope_extrabold"
         android:gravity="center_vertical|start"
         android:maxLines="1"
-        android:paddingStart="16dp"
+        android:paddingStart="12dp"
         android:text="@string/app_name"
         android:textColor="@color/mobile_color_on_surface"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
-        app:layout_constraintStart_toEndOf="@id/mobile_title_back"
+        app:layout_constraintStart_toEndOf="@id/mobile_title_logo"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Cast picker entry on the home feed, like the official app's top bar. Tinted with the
@@ -61,6 +73,20 @@
         app:layout_constraintEnd_toStartOf="@id/mobile_search_button"
         app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
 
+    <!-- MONOGRAMA(visual): Settings on the You tab's top bar (the mockup), in place of Search. -->
+    <ImageButton
+        android:id="@+id/mobile_settings_button"
+        android:layout_width="48dp"
+        android:layout_height="@dimen/mobile_title_bar_height"
+        android:layout_marginEnd="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/header_settings"
+        android:padding="12dp"
+        android:src="@drawable/ic_mobile_settings"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
+
     <ImageButton
         android:id="@+id/mobile_search_button"
         android:layout_width="48dp"
@@ -73,6 +99,133 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
 
+    <!-- MONOGRAMA(visual): the Downloads tab's header - the storage card and the sort chips -
+         between the title bar and the list; GONE on every other tab (DownloadsHeader). The list
+         and the empty state hang off it, so a GONE header collapses onto the title bar's edge. -->
+    <LinearLayout
+        android:id="@+id/mobile_downloads_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/mobile_downloads_storage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_monograma_card"
+            android:importantForAccessibility="yes"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/manrope_bold"
+                    android:importantForAccessibility="no"
+                    android:text="@string/mobile_downloads_storage"
+                    android:textColor="@color/mobile_color_on_surface"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/mobile_downloads_storage_used"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:textColor="@color/mobile_color_on_surface_secondary"
+                    android:textSize="14sp"
+                    tools:text="1 video · 88.7 MB" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/mobile_downloads_storage_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="14dp"
+                android:importantForAccessibility="no"
+                android:max="1000"
+                android:progressDrawable="@drawable/bg_monograma_storage_bar"
+                tools:progress="40" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:importantForAccessibility="no"
+                    android:text="@string/app_name"
+                    android:textColor="@color/mobile_color_on_surface_secondary"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/mobile_downloads_storage_free"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:textColor="@color/mobile_color_on_surface_secondary"
+                    android:textSize="13sp"
+                    tools:text="Free on device: 12.3 GB" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/mobile_downloads_sort_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/mobile_downloads_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipSpacingHorizontal="8dp"
+                app:selectionRequired="true"
+                app:singleLine="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/mobile_downloads_sort_recent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mobile_downloads_sort_recent" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/mobile_downloads_sort_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mobile_downloads_sort_size" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/mobile_downloads_sort_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mobile_downloads_sort_name" />
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+    </LinearLayout>
+
     <!-- Pull-to-refresh drives BrowsePresenter.refresh() - also the natural retry
          gesture when a section shows the error placeholder (the error overlay doesn't
          consume touches, so the pull still reaches this layout). -->
@@ -83,7 +236,7 @@
         app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar">
+        app:layout_constraintTop_toBottomOf="@id/mobile_downloads_header">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mobile_content_grid"
@@ -127,7 +280,7 @@
         app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar">
+        app:layout_constraintTop_toBottomOf="@id/mobile_downloads_header">
 
         <ImageView
             android:id="@+id/mobile_error_icon"
@@ -137,11 +290,25 @@
             android:contentDescription="@null"
             android:src="@drawable/ic_mobile_empty" />
 
+        <!-- MONOGRAMA(visual): a bold line above the message ("Watch without internet" on an
+             empty Downloads tab); GONE elsewhere. -->
+        <TextView
+            android:id="@+id/mobile_error_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/manrope_extrabold"
+            android:gravity="center"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="20sp"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/mobile_error_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:lineSpacingMultiplier="1.15"
             android:textColor="@color/mobile_color_on_surface"
             android:textSize="16sp" />
 
@@ -174,27 +341,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="16dp">
+            android:paddingBottom="24dp">
 
             <!-- Account header, official-app style: circular avatar (real account image via
-                 Glide when signed in), name + email, chevron. Tap = sign in when signed out,
-                 manage/switch accounts when signed in. -->
+                 Glide when signed in), name + "Manage account", chevron. Tap = sign in when signed
+                 out, manage/switch accounts when signed in.
+                 MONOGRAMA(visual): a rounded card, the initials on a coral disc until the picture
+                 loads (InitialsAvatar). -->
             <LinearLayout
                 android:id="@+id/mobile_you_account_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_monograma_card"
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="20dp">
+                android:paddingVertical="18dp">
 
                 <ImageView
                     android:id="@+id/mobile_you_avatar"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_mobile_account" />
 
@@ -210,11 +381,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
+                        android:fontFamily="@font/manrope_extrabold"
                         android:maxLines="1"
                         android:text="@string/dialog_add_account"
                         android:textColor="@color/mobile_color_on_surface"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/mobile_you_account_sub"
@@ -224,25 +395,19 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:textColor="@color/mobile_color_on_surface_secondary"
-                        android:textSize="14sp"
+                        android:textSize="15sp"
                         android:visibility="gone" />
 
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_chevron_right" />
+                    android:src="@drawable/ic_chevron_right"
+                    android:tint="@color/mobile_color_on_surface_secondary" />
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginBottom="8dp"
-                android:background="@color/mobile_color_divider" />
 
             <LinearLayout
                 android:id="@+id/mobile_you_rows"

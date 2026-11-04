@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MONOGRAMA(visual): one tile of the You tab's "Your library" grid (two per row): a coral icon,
+     the section's name and a line about it. Wired in MobileBrowseActivity.addYouTiles. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="@drawable/bg_monograma_card"
+    android:clickable="true"
+    android:focusable="true"
+    android:minHeight="116dp"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="18dp">
+
+    <ImageView
+        android:id="@+id/mobile_you_tile_icon"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        android:tint="@color/mobile_color_accent" />
+
+    <TextView
+        android:id="@+id/mobile_you_tile_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/manrope_extrabold"
+        android:maxLines="2"
+        android:textColor="@color/mobile_color_on_surface"
+        android:textSize="16sp"
+        tools:text="Watch later" />
+
+    <TextView
+        android:id="@+id/mobile_you_tile_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/mobile_color_on_surface_secondary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="309 videos"
+        tools:visibility="visible" />
+</LinearLayout>

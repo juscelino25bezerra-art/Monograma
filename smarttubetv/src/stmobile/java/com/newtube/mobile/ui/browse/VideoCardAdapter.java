@@ -38,6 +38,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private static final int VIEW_TYPE_VIDEO = 0;
     /** Channel result row (round avatar + name + subs) — e.g. channels in search results. */
     private static final int VIEW_TYPE_CHANNEL = 1;
+    /** MONOGRAMA(visual): a video card as a row (Downloads) - see {@link #setRowLayout}. */
+    private static final int VIEW_TYPE_VIDEO_ROW = 2;
 
     public interface OnVideoClickListener {
         void onVideoClick(Video video);
@@ -58,6 +60,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private OnVideoClickListener mChannelClickListener;
     /** Held here; ChannelAvatars holds it weakly, so it goes away with this adapter. */
     private final ChannelAvatars.Listener mAvatarListener = this::onAvatarsChanged;
+    private boolean mRowLayout;
 
     public VideoCardAdapter(OnVideoClickListener clickListener) {
         this(clickListener, null);
@@ -91,7 +94,10 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         // (videoId/playlistId null + a VL... channelId — the standard shape of the user
         // Playlists section): those must stay thumbnail cards, not round-avatar channel rows.
         Video item = getItem(position);
-        return item.isChannel() && !item.isPlaylistAsChannel() ? VIEW_TYPE_CHANNEL : VIEW_TYPE_VIDEO;
+        if (item.isChannel() && !item.isPlaylistAsChannel()) {
+            return VIEW_TYPE_CHANNEL;
+        }
+        return mRowLayout ? VIEW_TYPE_VIDEO_ROW : VIEW_TYPE_VIDEO;
     }
 
     /**
@@ -131,7 +137,22 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
     /** Full-span rows (channel results) for the grid's SpanSizeLookup in multi-column layouts. */
     public boolean isFullSpan(int position) {
-        return position >= 0 && position < getItemCount() && getItemViewType(position) == VIEW_TYPE_CHANNEL;
+        return position >= 0 && position < getItemCount()
+                && (mRowLayout || getItemViewType(position) == VIEW_TYPE_CHANNEL);
+    }
+
+    /**
+     * MONOGRAMA(visual): video cards as rows (item_video_card_row: thumbnail beside the text) - the
+     * Downloads tab's look - each one the grid's full width. Same view holder, same bindings.
+     */
+    public void setRowLayout(boolean rows) {
+        if (mRowLayout == rows) {
+            return;
+        }
+        mRowLayout = rows;
+        if (getItemCount() > 0) {
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -141,7 +162,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         if (viewType == VIEW_TYPE_CHANNEL) {
             return new ChannelViewHolder(inflater.inflate(R.layout.item_mobile_channel_card, parent, false), mClickListener);
         }
-        return new VideoViewHolder(inflater.inflate(R.layout.item_video_card, parent, false), mClickListener);
+        return new VideoViewHolder(inflater.inflate(viewType == VIEW_TYPE_VIDEO_ROW
+                ? R.layout.item_video_card_row : R.layout.item_video_card, parent, false), mClickListener);
     }
 
     @Override
