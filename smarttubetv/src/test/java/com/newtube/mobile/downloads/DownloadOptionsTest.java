@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class DownloadOptionsTest {
     private static final FakeMediaFormat AAC = FakeMediaFormat.audio("140", 129_000, 5_000_000);
@@ -242,11 +243,19 @@ public class DownloadOptionsTest {
 
     @Test
     public void formatsBytesLikeTheFileManager() {
-        assertEquals("", DownloadOptions.formatBytes(-1));
-        assertEquals("512 B", DownloadOptions.formatBytes(512));
-        assertEquals("4.2 MB", DownloadOptions.formatBytes(4_200_000));
-        assertEquals("245 MB", DownloadOptions.formatBytes(245_000_000));
-        assertEquals("1.3 GB", DownloadOptions.formatBytes(1_300_000_000));
+        assertEquals("", DownloadOptions.formatBytes(-1, Locale.US));
+        assertEquals("512 B", DownloadOptions.formatBytes(512, Locale.US));
+        assertEquals("4.2 MB", DownloadOptions.formatBytes(4_200_000, Locale.US));
+        assertEquals("245 MB", DownloadOptions.formatBytes(245_000_000, Locale.US));
+        assertEquals("1.3 GB", DownloadOptions.formatBytes(1_300_000_000, Locale.US));
+    }
+
+    @Test
+    public void formatsBytesWithTheBrazilianDecimalComma() {
+        Locale ptBr = new Locale("pt", "BR");
+        assertEquals("88,7 MB", DownloadOptions.formatBytes(88_700_000, ptBr));
+        assertEquals("245 MB", DownloadOptions.formatBytes(245_000_000, ptBr));
+        assertEquals("1,3 GB", DownloadOptions.formatBytes(1_300_000_000, ptBr));
     }
 
     @Test

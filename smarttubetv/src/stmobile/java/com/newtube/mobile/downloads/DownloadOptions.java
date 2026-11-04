@@ -349,8 +349,13 @@ public final class DownloadOptions {
         return mime != null && mime.toLowerCase(Locale.US).contains(codec);
     }
 
-    /** "245 MB" style, decimal units like the system file manager. */
+    /** "245 MB" style, decimal units like the system file manager, in the app's locale ("88,7 MB" in pt-BR). */
     public static String formatBytes(long bytes) {
+        return formatBytes(bytes, Locale.getDefault());
+    }
+
+    /** {@link #formatBytes(long)} with an explicit locale for the decimal separator. */
+    public static String formatBytes(long bytes, Locale locale) {
         if (bytes < 0) {
             return "";
         }
@@ -367,7 +372,7 @@ public final class DownloadOptions {
         if (unit < 0) {
             return bytes + " B";
         }
-        return String.format(Locale.US, value >= 100 || unit == 0 ? "%.0f %s" : "%.1f %s", value, units[unit]);
+        return String.format(locale, value >= 100 || unit == 0 ? "%.0f %s" : "%.1f %s", value, units[unit]);
     }
 
     /** "12:34" / "1:02:03" like the card duration badge. */

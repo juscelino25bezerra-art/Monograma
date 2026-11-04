@@ -167,6 +167,9 @@ public class MobileMainApplication extends MainApplication {
         // global exception handler and every other View->Activity mapping.
         super.onCreate();
 
+        // MONOGRAMA(pt-BR): 24-hour clock by default when the app runs in Brazilian Portuguese.
+        BrazilianDefaults.apply(this);
+
         // Release-visible launch milestones + the "first frame drawn" hook used below.
         LaunchMilestones.install(this);
 
