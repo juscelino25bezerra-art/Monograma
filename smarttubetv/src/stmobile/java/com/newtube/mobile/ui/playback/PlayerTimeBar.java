@@ -44,7 +44,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * media3's bar with chapters: "so many steps and in big red" - a 3 dp track squeezed between the
  * times, cut by a black notch per chapter, under a 14 dp red dot. Measured on YouTube 21.18: a 2 dp
  * track that becomes 3 dp while dragging; chapters as 2 dp transparent gaps (3 dp while dragging); a
- * 12 dp dot, 20 dp while dragging; played #FF0033 turning pink (#FF2791) over the last 40 dp before
+ * 12 dp dot, 20 dp while dragging; played coral #FE5A4E turning lighter (#FF8A73) over the last 40 dp before
  * the dot; white 70% buffered, white 20% unplayed. This bar keeps those proportions (the dragged dot
  * a little smaller) with a calmer buffered tone.
  *
@@ -68,8 +68,10 @@ public class PlayerTimeBar extends View implements TimeBar {
         void onReleaseToCancel(boolean armed);
     }
 
-    static final int PLAYED_COLOR = 0xFFFF0033;
-    static final int PLAYED_TAIL_COLOR = 0xFFFF2791;
+    // MONOGRAMA(visual): Monograma's coral (mobile_color_progress), warming to a lighter coral at
+    // the head instead of YouTube's red-to-pink.
+    static final int PLAYED_COLOR = 0xFFFE5A4E;
+    static final int PLAYED_TAIL_COLOR = 0xFFFF8A73;
     static final int BUFFERED_COLOR = 0x80FFFFFF;
     static final int UNPLAYED_COLOR = 0x33FFFFFF;
 

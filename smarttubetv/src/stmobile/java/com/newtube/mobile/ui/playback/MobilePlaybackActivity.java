@@ -742,6 +742,7 @@ public class MobilePlaybackActivity extends MobileActivity
         mWatchSubs = findViewById(R.id.mobile_watch_subs);
         mWatchSubscribe = findViewById(R.id.mobile_watch_subscribe);
         mWatchRelatedLabel = findViewById(R.id.mobile_watch_related_label);
+        setupAutoplayToggle();
         mRelatedSkeleton = findViewById(R.id.mobile_watch_related_skeleton);
         mWatchRelated = findViewById(R.id.mobile_watch_related);
         mQueueCard = findViewById(R.id.mobile_watch_queue_card);
@@ -6570,6 +6571,7 @@ public class MobilePlaybackActivity extends MobileActivity
                 // NEWTUBE(watch-jump): held over the skeleton instead of inserted above it later.
                 mWatchRelatedLabel.setText(R.string.mobile_watch_related);
                 mWatchRelatedLabel.setVisibility(View.VISIBLE);
+                syncAutoplayToggle(true);
             }
             // A new video is loading: the video itself starts first (by design), so show the
             // pulsing "up next" skeleton until the related feed lands.
@@ -6604,6 +6606,7 @@ public class MobilePlaybackActivity extends MobileActivity
             } else {
                 mWatchRelatedLabel.setVisibility(View.GONE);
             }
+            syncAutoplayToggle(false);
         }
         // Nothing came for this page at all: drop what was held for it (online too - a failed
         // /next leaves no comments key either; a late metadata bind re-shows the row).
@@ -8169,12 +8172,12 @@ public class MobilePlaybackActivity extends MobileActivity
             }
         } else if (buttonId == R.id.action_subscribe && mWatchSubscribe != null) {
             mWatchSubscribe.setText(on ? R.string.mobile_watch_subscribed : R.string.mobile_watch_subscribe);
-            // NEWTUBE(theme): the main-action pill while not subscribed (white on the dark page,
-            // near-black on the light one), the quiet grey once subscribed.
+            // MONOGRAMA(visual): the coral main action while not subscribed, the quiet grey once
+            // subscribed.
             mWatchSubscribe.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                    getColorInt(on ? R.color.mobile_color_subscribed_button : R.color.mobile_color_inverse_surface)));
+                    getColorInt(on ? R.color.mobile_color_subscribed_button : R.color.mobile_color_accent)));
             mWatchSubscribe.setTextColor(getColorInt(on
-                    ? R.color.mobile_color_on_surface : R.color.mobile_color_on_inverse_surface));
+                    ? R.color.mobile_color_on_surface : R.color.mobile_color_on_accent));
         }
     }
 
@@ -8452,6 +8455,69 @@ public class MobilePlaybackActivity extends MobileActivity
         if (mWatchRelatedLabel != null && !mRelatedVideos.isEmpty()) {
             mWatchRelatedLabel.setText(R.string.mobile_watch_related);
             mWatchRelatedLabel.setVisibility(View.VISIBLE);
+            syncAutoplayToggle(true);
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // MONOGRAMA(visual): the autoplay switch beside "Up next"
+    // ---------------------------------------------------------------------------------------------
+
+    @Nullable private View mWatchAutoplay;
+    @Nullable private android.widget.CompoundButton mWatchAutoplaySwitch;
+
+    private void setupAutoplayToggle() {
+        mWatchAutoplay = findViewById(R.id.mobile_watch_autoplay);
+        mWatchAutoplaySwitch = findViewById(R.id.mobile_watch_autoplay_switch);
+        if (mWatchAutoplay == null || mWatchAutoplaySwitch == null) {
+            return;
+        }
+        mWatchAutoplay.setOnClickListener(v -> {
+            boolean on = !isAutoplayOn();
+            // Off = pause when a video ends; on = the next one plays (the default). Any other end
+            // mode the user picked in Settings (repeat, shuffle, ...) counts as on and is kept
+            // until this switch is turned off.
+            int mode = on ? PlayerConstants.PLAYBACK_MODE_ALL : PlayerConstants.PLAYBACK_MODE_PAUSE;
+            PlayerData.instance(this).setPlaybackMode(mode);
+            setButtonState(R.id.action_repeat, mode);
+            com.newtube.mobile.ui.common.Haptics.tick(v);
+            bindAutoplayToggle();
+        });
+        mWatchAutoplay.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            @Override
+            public void onInitializeAccessibilityNodeInfo(View host, android.view.accessibility.AccessibilityNodeInfo info) {
+                super.onInitializeAccessibilityNodeInfo(host, info);
+                info.setClassName(android.widget.Switch.class.getName());
+                info.setCheckable(true);
+                info.setChecked(isAutoplayOn());
+                info.setText(getString(R.string.mobile_watch_autoplay));
+            }
+        });
+    }
+
+    private boolean isAutoplayOn() {
+        int mode = PlayerData.instance(this).getPlaybackMode();
+        return mode != PlayerConstants.PLAYBACK_MODE_PAUSE && mode != PlayerConstants.PLAYBACK_MODE_CLOSE;
+    }
+
+    private void bindAutoplayToggle() {
+        if (mWatchAutoplaySwitch != null) {
+            boolean on = isAutoplayOn();
+            if (mWatchAutoplaySwitch.isChecked() != on) {
+                mWatchAutoplaySwitch.setChecked(on);
+            }
+        }
+    }
+
+    /** Shown beside "Up next" only - not beside the offline notice, not without a label. */
+    private void syncAutoplayToggle(boolean upNext) {
+        if (mWatchAutoplay == null) {
+            return;
+        }
+        boolean shown = upNext && mWatchRelatedLabel != null && mWatchRelatedLabel.getVisibility() == View.VISIBLE;
+        mWatchAutoplay.setVisibility(shown ? View.VISIBLE : View.GONE);
+        if (shown) {
+            bindAutoplayToggle();
         }
     }
 

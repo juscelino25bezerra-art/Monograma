@@ -655,10 +655,11 @@
                     android:layout_marginTop="12dp"
                     android:paddingHorizontal="@dimen/mobile_watch_content_padding"
                     android:ellipsize="end"
-                    android:fontFamily="@font/manrope_semibold"
+                    android:fontFamily="@font/manrope_extrabold"
+                    android:lineSpacingExtra="2sp"
                     android:maxLines="3"
                     android:textColor="@color/mobile_color_on_surface"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     tools:text="A great video title that may wrap across a couple of lines" />
 
                 <!-- views + date + expand-description affordance -->
@@ -940,10 +941,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
-                            android:fontFamily="@font/manrope_semibold"
+                            android:fontFamily="@font/manrope_bold"
                             android:maxLines="1"
                             android:textColor="@color/mobile_color_on_surface"
-                            android:textSize="15sp"
+                            android:textSize="16sp"
                             tools:text="Channel name" />
 
                         <TextView
@@ -966,19 +967,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:backgroundTint="@color/mobile_color_inverse_surface"
-                        android:fontFamily="@font/manrope_semibold"
-                        android:insetTop="4dp"
-                        android:insetBottom="4dp"
+                        android:backgroundTint="@color/mobile_color_accent"
+                        android:fontFamily="@font/manrope_extrabold"
+                        android:insetTop="2dp"
+                        android:insetBottom="2dp"
                         android:letterSpacing="0"
-                        android:minHeight="48dp"
-                        android:paddingHorizontal="16dp"
+                        android:minHeight="52dp"
+                        android:paddingHorizontal="22dp"
                         android:paddingVertical="0dp"
                         android:text="@string/mobile_watch_subscribe"
                         android:textAllCaps="false"
-                        android:textColor="@color/mobile_color_on_inverse_surface"
-                        android:textSize="14sp"
-                        app:cornerRadius="20dp" />
+                        android:textColor="@color/mobile_color_on_accent"
+                        android:textSize="15sp"
+                        app:cornerRadius="26dp" />
 
                 </LinearLayout>
 
@@ -1011,10 +1012,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
-                        android:fontFamily="@font/manrope_semibold"
+                        android:fontFamily="@font/manrope_extrabold"
                         android:text="@string/mobile_comments_entry"
                         android:textColor="@color/mobile_color_on_surface"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <!-- NEWTUBE(comments-panel): the total from the same /next ("1.8K"). -->
                     <TextView
@@ -1026,7 +1027,7 @@
                         android:fontFeatureSettings="tnum"
                         android:maxLines="1"
                         android:textColor="@color/mobile_color_on_surface_secondary"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         tools:text="1.8K" />
 
                     <ImageView
@@ -1167,17 +1168,59 @@
                 </LinearLayout>
 
                 <!-- Related / up next -->
-                <TextView
-                    android:id="@+id/mobile_watch_related_label"
+                <!-- MONOGRAMA(visual): "UP NEXT" in the coral group-title style, with the autoplay
+                     switch at the row's end (the switch shows only beside "Up next" itself:
+                     MobilePlaybackActivity.syncAutoplayToggle). -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingHorizontal="@dimen/mobile_watch_content_padding"
-                    android:paddingTop="18dp"
-                    android:paddingBottom="6dp"
-                    android:text="@string/mobile_watch_related"
-                    android:textColor="@color/mobile_color_on_surface"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/manrope_semibold" />
+                    android:paddingTop="14dp"
+                    android:paddingBottom="2dp">
+                    <TextView
+                        android:id="@+id/mobile_watch_related_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:accessibilityHeading="true"
+                        android:fontFamily="@font/manrope_extrabold"
+                        android:letterSpacing="0.08"
+                        android:paddingVertical="12dp"
+                        android:text="@string/mobile_watch_related"
+                        android:textAllCaps="true"
+                        android:textColor="@color/mobile_color_accent"
+                        android:textSize="13sp" />
+                    <LinearLayout
+                        android:id="@+id/mobile_watch_autoplay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:importantForAccessibility="no"
+                            android:text="@string/mobile_watch_autoplay"
+                            android:textColor="@color/mobile_color_on_surface_secondary"
+                            android:textSize="14sp" />
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/mobile_watch_autoplay_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:importantForAccessibility="no" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <include
                     layout="@layout/mobile_watch_related_skeleton"

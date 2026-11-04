@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Rounded pill background for the Like / Dislike / Share action buttons. -->
+<!-- MONOGRAMA(visual): the watch page's action pills, in the card colour (the mockups). -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/mobile_color_pill" />
-    <corners android:radius="20dp" />
+    <solid android:color="?attr/newtubeColorCard" />
+    <corners android:radius="24dp" />
 </shape>
