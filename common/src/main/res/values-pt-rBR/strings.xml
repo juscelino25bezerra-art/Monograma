@@ -748,4 +748,39 @@
   <string name="remove_from_search_history">Remover do histórico de pesquisa</string>
   <string name="sidebar_notification">Mostrar notificação na barra lateral</string>
   <string name="color_scheme_dark_blue_oled">Azul Escuro (OLED)</string>
+  <!-- MONOGRAMA: textos que aparecem no celular e ainda não tinham tradução. -->
+  <string name="header_downloads">Downloads</string>
+  <string name="dialog_download">Baixar</string>
+  <string name="msg_sign_in_to_save">Faça login para salvar vídeos em playlists</string>
+  <string name="about_app">Sobre o %1$s</string>
+  <string name="about_source_code">Código-fonte</string>
+  <string name="about_license">Licença</string>
+  <string name="diagnostic_log_send">Enviar registro de diagnóstico</string>
+  <string name="diagnostic_log_send_desc">Para relatar bugs. Inclui os vídeos e canais que você abriu; senhas e tokens de login são removidos</string>
+  <string name="diagnostic_log_subject">Registro de diagnóstico do %1$s %2$s</string>
+  <string name="diagnostic_log_failed">Não foi possível criar o registro de diagnóstico</string>
+  <string name="signed_in_success">Login feito</string>
+  <string name="feedback_failed">Não foi possível enviar ao YouTube. Tente de novo.</string>
+  <string name="subscribed_to_channel_name">Inscrição em %1$s feita</string>
+  <string name="unsubscribed_from_channel_name">Inscrição em %1$s cancelada</string>
+  <string name="subscribe_failed">Não foi possível se inscrever. Tente de novo.</string>
+  <string name="unsubscribe_failed">Não foi possível cancelar a inscrição. Tente de novo.</string>
+  <string name="action_undo">Desfazer</string>
+  <string name="msg_player_no_connection_retry">Sem conexão. Vamos tentar de novo quando você voltar a ficar on-line, ou toque em reproduzir.</string>
+  <string name="msg_player_no_connection_short">Sem conexão — tentando de novo…</string>
+  <string name="msg_player_no_connection_tap">Sem conexão — toque em reproduzir para tentar de novo</string>
+  <string name="msg_quality_pin_fallback">%1$s com falha — qualidade em Automática neste vídeo</string>
+  <string name="msg_audio_pin_fallback">Faixa de áudio com falha — usando o áudio padrão neste vídeo</string>
+  <string name="update_check_failed">Não foi possível verificar atualizações. Tente mais tarde.</string>
+  <string name="playlist_name_hint">Nome da playlist</string>
+  <string name="player_return_youtube_dislike">Contagem de \"Não gostei\" (Return YouTube Dislike)</string>
+  <string name="header_live">Ao vivo</string>
+  <plurals name="hours">
+    <item quantity="one">%s hora</item>
+    <item quantity="other">%s horas</item>
+  </plurals>
+  <plurals name="seconds">
+    <item quantity="one">%s segundo</item>
+    <item quantity="other">%s segundos</item>
+  </plurals>
 </resources>
