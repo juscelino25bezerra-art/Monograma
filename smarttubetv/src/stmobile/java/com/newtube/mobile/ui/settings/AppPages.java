@@ -63,10 +63,7 @@ final class AppPages {
                 .option(context.getString(R.string.mobile_app_icon_coral), context.getString(R.string.mobile_app_icon_coral_desc),
                         AppIcons.CORAL, R.drawable.ic_monograma_logo_coral)
                 .iconPicker()
-                .bind(() -> AppIcons.get(context), icon -> {
-                    AppIcons.set(context, icon);
-                    MobileSnackbar.show(context, R.string.mobile_app_icon_changed);
-                }));
+                .bind(() -> AppIcons.get(context), icon -> confirmAppIcon(context, icon)));
 
         rows.add(SettingsRow.header(context.getString(R.string.mobile_settings_group_theme)));
         rows.add(SettingsRow.<Integer>choice(context.getString(R.string.mobile_theme))
@@ -102,6 +99,24 @@ final class AppPages {
                 searchData::isInstantVoiceSearchEnabled, searchData::setInstantVoiceSearchEnabled));
 
         return new SettingsPages.Page(context.getString(R.string.mobile_settings_general), rows);
+    }
+
+    /**
+     * MONOGRAMA(icon): switching the launcher alias makes Android close the task the old alias
+     * started - the app would just vanish. Say so first, then switch and start the app again
+     * (Utils.restartTheApp opens Splash itself, which stays enabled).
+     */
+    private static void confirmAppIcon(Context context, int icon) {
+        new MaterialAlertDialogBuilder(context, R.style.MobileAlertDialog)
+                .setTitle(R.string.mobile_app_icon_confirm_title)
+                .setMessage(R.string.mobile_app_icon_confirm_body)
+                .setPositiveButton(R.string.mobile_app_icon_confirm_action, (dialog, which) -> {
+                    Context app = context.getApplicationContext();
+                    AppIcons.set(app, icon);
+                    com.liskovsoft.smartyoutubetv2.common.utils.Utils.restartTheApp(app);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     /** The tab NewTube opens on: the enabled sections, then pinned channels and playlists. */

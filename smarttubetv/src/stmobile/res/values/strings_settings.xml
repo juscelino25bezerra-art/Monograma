@@ -303,7 +303,9 @@
     <string name="mobile_app_icon_grafite_desc">Default</string>
     <string name="mobile_app_icon_coral">Coral</string>
     <string name="mobile_app_icon_coral_desc">Stands out more</string>
-    <string name="mobile_app_icon_changed">The icon changes on your home screen in a few seconds</string>
+    <string name="mobile_app_icon_confirm_title">Change the app icon?</string>
+    <string name="mobile_app_icon_confirm_body">Monograma restarts to show the new icon. Some launchers drop a home-screen shortcut of the old icon; add it again from the app list.</string>
+    <string name="mobile_app_icon_confirm_action">Change</string>
     <string name="mobile_theme_segment_system">System</string>
     <string name="mobile_settings_buffer_segment_highest">Max</string>
     <string name="mobile_settings_tag_experimental">Experimental</string>

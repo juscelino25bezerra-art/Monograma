@@ -279,7 +279,9 @@
     <string name="mobile_app_icon_grafite_desc">Padrão</string>
     <string name="mobile_app_icon_coral">Coral</string>
     <string name="mobile_app_icon_coral_desc">Mais destaque</string>
-    <string name="mobile_app_icon_changed">O ícone muda na tela inicial em alguns segundos</string>
+    <string name="mobile_app_icon_confirm_title">Trocar o ícone do app?</string>
+    <string name="mobile_app_icon_confirm_body">O Monograma reinicia para mostrar o ícone novo. Alguns launchers tiram da tela inicial o atalho do ícone antigo; é só colocar de novo pela lista de apps.</string>
+    <string name="mobile_app_icon_confirm_action">Trocar</string>
     <string name="mobile_theme_segment_system">Sistema</string>
     <string name="mobile_settings_buffer_segment_highest">Máximo</string>
     <string name="mobile_settings_tag_experimental">Experimental</string>
