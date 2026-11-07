@@ -158,13 +158,18 @@
          anchors keep the placeholder centered and visible over the (empty) content area.
          (First-load progress is the card skeleton above, not a spinner.)
     -->
+    <!-- YEWPLAY(empty): estado vazio da proposta (p. 17, "Inscrições vazia"): gravura de teixo com
+         fruto, título em Bricolage, uma frase do que vai aparecer e a ação principal em marfim, tudo
+         alinhado à margem de 20dp. A gravura muda com a tela (MobileBrowseActivity.showEmptyState). -->
     <LinearLayout
         android:id="@+id/mobile_error_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:paddingStart="@dimen/yew_side_margin"
+        android:paddingEnd="@dimen/yew_side_margin"
+        android:paddingBottom="24dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/mobile_nav_capsule"
         app:layout_constraintEnd_toEndOf="parent"
@@ -173,26 +178,40 @@
 
         <ImageView
             android:id="@+id/mobile_error_icon"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginBottom="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/yew_engraving_height"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/ic_mobile_empty" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/yew_gravura_inscricoes" />
+
+        <TextView
+            android:id="@+id/mobile_error_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:fontFamily="@font/bricolage_bold"
+            android:letterSpacing="-0.01"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="20sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/mobile_error_message"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/mobile_color_on_surface"
-            android:textSize="16sp" />
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="2sp"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="13.5sp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mobile_error_action"
             style="@style/Widget.NewTube.Button.Pill"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:visibility="gone" />
 
     </LinearLayout>

@@ -4110,6 +4110,14 @@ public class MobilePlaybackActivity extends MobileActivity
             addMenuRow(content, sheet, R.drawable.ic_watch_download, R.string.dialog_download,
                     downloadStateLabel(), true, this::onDownloadTapped);
         }
+        // YEWPLAY(player): a página do vídeo mostra só as cinco ações da proposta (p. 16); Não curti
+        // e Compartilhar moram aqui.
+        addMenuRow(content, sheet, R.drawable.ic_watch_share, R.string.mobile_watch_share,
+                null, true, this::shareCurrentVideo);
+        if (mWatchDislike != null && mWatchDislike.isEnabled()) {
+            addMenuRow(content, sheet, R.drawable.ic_watch_thumb_down_outline, R.string.mobile_watch_dislike,
+                    mWatchDislike.isSelected() ? stateLabel(true) : null, false, mWatchDislike::performClick);
+        }
         // Playback queue.
         addMenuRow(content, sheet, R.drawable.ic_player_queue, R.string.mobile_menu_queue,
                 null, true, () -> openPlayerOption(R.id.action_playback_queue, false));
@@ -6332,6 +6340,13 @@ public class MobilePlaybackActivity extends MobileActivity
     }
 
     /** X tapped on the Browse mini bar: stop playback and quietly retire this hidden activity. */
+    /** YEWPLAY(mini): "próximo" vindo da barra flutuante. */
+    void nextFromMiniPlayer() {
+        if (mPresenter != null) {
+            mPresenter.onNextClicked();
+        }
+    }
+
     void closeFromMiniPlayer() {
         if (mPresenter != null) {
             mPresenter.onFinish();

@@ -392,4 +392,14 @@
     <string name="yew_download_deleted">Download excluído</string>
     <!-- YEWPLAY(library): títulos da Biblioteca. -->
     <string name="yew_library_continue">Continue de onde parou</string>
+    <!-- YEWPLAY(empty): títulos dos estados vazios (proposta p. 17). -->
+    <string name="yew_empty_subs_title">Seus canais crescem aqui</string>
+    <string name="yew_empty_downloads_title">Nada baixado ainda</string>
+    <string name="yew_empty_offline_title">Sem conexão</string>
+    <string name="yew_empty_offline_body">Confira o Wi-Fi ou os dados móveis e tente de novo.</string>
+    <string name="yew_empty_generic_title">Nada por aqui ainda</string>
+    <string name="yew_empty_generic_body">Puxe para baixo para atualizar.</string>
+    <string name="yew_empty_signin_title">Faça login para ver</string>
+    <string name="yew_library_saved_playlists">Playlists salvas</string>
+    <string name="yew_mini_next">Próximo</string>
 </resources>

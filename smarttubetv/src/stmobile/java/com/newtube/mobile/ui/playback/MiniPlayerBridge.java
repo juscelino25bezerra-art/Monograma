@@ -358,6 +358,14 @@ public final class MiniPlayerBridge {
         ViewManager.instance(context).startView(PlaybackView.class);
     }
 
+    /** YEWPLAY(mini): o botão "próximo" da barra - o mesmo do player. */
+    public static void next() {
+        MobilePlaybackActivity activity = sActivity.get();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
+            activity.nextFromMiniPlayer();
+        }
+    }
+
     /** Close from the bar's X: stop playback and finish the hidden playback activity. */
     public static void close() {
         MobilePlaybackActivity activity = sActivity.get();

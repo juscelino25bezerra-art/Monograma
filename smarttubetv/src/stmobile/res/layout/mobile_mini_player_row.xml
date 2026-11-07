@@ -88,16 +88,18 @@
             android:src="@drawable/ic_player_pause"
             android:tint="@color/mobile_color_on_surface" />
 
+        <!-- YEWPLAY(mini): "próximo" no lugar do X, como na proposta (p. 14-15); fechar é arrastar
+             a barra para o lado (MiniCardSwipe). O id antigo fica para o código que anima os botões. -->
         <ImageButton
             android:id="@+id/mobile_mini_close"
             android:layout_width="44dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/mobile_mini_close"
+            android:contentDescription="@string/yew_mini_next"
             android:padding="13dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_sheet_close"
-            android:tint="@color/mobile_color_on_surface_secondary" />
+            android:src="@drawable/ic_yew_skip_next"
+            android:tint="@color/mobile_color_on_surface" />
     </LinearLayout>
 
     <ProgressBar

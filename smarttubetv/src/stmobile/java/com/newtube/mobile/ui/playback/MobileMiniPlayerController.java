@@ -95,7 +95,7 @@ public final class MobileMiniPlayerController {
             }
         });
 
-        mClose.setOnClickListener(v -> close());
+        mClose.setOnClickListener(v -> MiniPlayerBridge.next());
         // NEWTUBE(motion): or swipe the card away sideways.
         mSwipe = MiniCardSwipe.attach(mBar, new MiniCardSwipe.Callback() {
             @Override

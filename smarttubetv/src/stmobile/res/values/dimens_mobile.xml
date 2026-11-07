@@ -75,4 +75,6 @@
          (60dp de navegação + 12dp de margem + folga); a Biblioteca cobre a tela toda para que a
          grade do Início não apareça em volta da barra. -->
     <dimen name="yew_capsule_clearance">88dp</dimen>
+    <!-- YEWPLAY(empty): altura da gravura de teixo nos estados vazios (proposta p. 17). -->
+    <dimen name="yew_engraving_height">170dp</dimen>
 </resources>

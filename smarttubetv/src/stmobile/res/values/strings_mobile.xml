@@ -500,4 +500,14 @@
     <string name="yew_download_deleted">Download deleted</string>
     <!-- YEWPLAY(library): títulos da Biblioteca. -->
     <string name="yew_library_continue">Continue where you left off</string>
+    <!-- YEWPLAY(empty): títulos dos estados vazios (proposta p. 17). -->
+    <string name="yew_empty_subs_title">Your channels grow here</string>
+    <string name="yew_empty_downloads_title">Nothing downloaded yet</string>
+    <string name="yew_empty_offline_title">No connection</string>
+    <string name="yew_empty_offline_body">Check Wi-Fi or mobile data and try again.</string>
+    <string name="yew_empty_generic_title">Nothing here yet</string>
+    <string name="yew_empty_generic_body">Pull down to refresh.</string>
+    <string name="yew_empty_signin_title">Sign in to see this</string>
+    <string name="yew_library_saved_playlists">Saved playlists</string>
+    <string name="yew_mini_next">Next</string>
 </resources>

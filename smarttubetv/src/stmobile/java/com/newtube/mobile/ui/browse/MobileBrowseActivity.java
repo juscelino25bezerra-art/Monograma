@@ -170,6 +170,7 @@ public class MobileBrowseActivity extends MobileActivity
     private View mErrorContainer;
     private ImageView mErrorIcon;
     private TextView mErrorMessage;
+    private TextView mErrorTitle;
     private MaterialButton mErrorAction;
     private ImageButton mSearchButton;
     private ImageButton mCastButton;
@@ -323,6 +324,7 @@ public class MobileBrowseActivity extends MobileActivity
         mErrorContainer = findViewById(R.id.mobile_error_container);
         mErrorIcon = findViewById(R.id.mobile_error_icon);
         mErrorMessage = findViewById(R.id.mobile_error_message);
+        mErrorTitle = findViewById(R.id.mobile_error_title);
         mErrorAction = findViewById(R.id.mobile_error_action);
         mSearchButton = findViewById(R.id.mobile_search_button);
         mCastButton = findViewById(R.id.mobile_cast_button);
@@ -522,7 +524,7 @@ public class MobileBrowseActivity extends MobileActivity
             }
         });
 
-        findViewById(R.id.mobile_mini_close).setOnClickListener(v -> closeMiniPlayer());
+        findViewById(R.id.mobile_mini_close).setOnClickListener(v -> MiniPlayerBridge.next());
         // NEWTUBE(motion): or swipe the card away sideways.
         mMiniSwipe = com.newtube.mobile.ui.playback.MiniCardSwipe.attach(mMiniPlayerBar,
                 new com.newtube.mobile.ui.playback.MiniCardSwipe.Callback() {
@@ -1365,6 +1367,28 @@ public class MobileBrowseActivity extends MobileActivity
         mYouRows.addView(scroll);
     }
 
+    /** YEWPLAY(icons): os ícones Phosphor das linhas da Biblioteca; as seções sem par guardam o seu. */
+    private static int libraryIcon(int sectionId, int stock) {
+        switch (sectionId) {
+            case MediaGroup.TYPE_HISTORY:
+                return R.drawable.ic_nav_history_outline;
+            case VideoDownloads.SECTION_ID:
+                return R.drawable.ic_nav_downloads_outline;
+            case MediaGroup.TYPE_USER_PLAYLISTS:
+                return R.drawable.ic_yew_saved;
+            case MediaGroup.TYPE_CHANNEL_UPLOADS:
+                return R.drawable.ic_yew_channels;
+            case MediaGroup.TYPE_MY_VIDEOS:
+                return R.drawable.ic_yew_my_videos;
+            case MediaGroup.TYPE_PLAYBACK_QUEUE:
+                return R.drawable.ic_yew_queue;
+            case MediaGroup.TYPE_NOTIFICATIONS:
+                return R.drawable.ic_yew_bell;
+            default:
+                return stock;
+        }
+    }
+
     /** YEWPLAY(nav): the Library's order. */
     private static int libraryRank(int sectionId) {
         switch (sectionId) {
@@ -1387,9 +1411,11 @@ public class MobileBrowseActivity extends MobileActivity
 
     private void addYouSectionRow(BrowseSection section, boolean last) {
         int sectionId = section.getId();
-        int icon = sectionId == MediaGroup.TYPE_HISTORY ? R.drawable.ic_nav_history_outline
-                : sectionId == VideoDownloads.SECTION_ID ? R.drawable.ic_nav_downloads_outline : section.getResId();
-        View row = addYouRow(icon, section.getTitle(), () -> {
+        int icon = libraryIcon(sectionId, section.getResId());
+        // YEWPLAY(library): a biblioteca de playlists do YouTube é "Playlists salvas" na proposta (p. 15).
+        String label = sectionId == MediaGroup.TYPE_USER_PLAYLISTS
+                ? getString(R.string.yew_library_saved_playlists) : section.getTitle();
+        View row = addYouRow(icon, label, () -> {
             mSectionFromYou = true;
             hideYouPanel();
             onSectionChosen(sectionId);
@@ -1989,10 +2015,24 @@ public class MobileBrowseActivity extends MobileActivity
         mContentGrid.setVisibility(View.GONE);
         mErrorContainer.setVisibility(View.VISIBLE);
         mErrorIcon.setVisibility(View.VISIBLE);
-        mErrorMessage.setText(mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS
-                ? R.string.mobile_empty_subscriptions : R.string.mobile_empty_generic);
+        if (mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS) {
+            showEmptyState(R.drawable.yew_gravura_inscricoes, getString(R.string.yew_empty_subs_title),
+                    getString(R.string.mobile_empty_subscriptions));
+        } else {
+            showEmptyState(R.drawable.yew_gravura_boas_vindas, getString(R.string.yew_empty_generic_title),
+                    getString(R.string.yew_empty_generic_body));
+        }
         mErrorAction.setVisibility(View.GONE);
         mErrorAction.setTag(null);
+    }
+
+    /** YEWPLAY(empty): gravura, título em Bricolage e a frase do estado vazio (proposta p. 17). */
+    private void showEmptyState(int engraving, CharSequence title, CharSequence body) {
+        mErrorIcon.setImageResource(engraving);
+        mErrorTitle.setText(title);
+        mErrorTitle.setVisibility(title != null && title.length() > 0 ? View.VISIBLE : View.GONE);
+        mErrorMessage.setText(body);
+        mErrorMessage.setVisibility(body != null && body.length() > 0 ? View.VISIBLE : View.GONE);
     }
 
     private void showDownloadsEmptyState() {
@@ -2001,7 +2041,8 @@ public class MobileBrowseActivity extends MobileActivity
         mContentGrid.setVisibility(View.GONE);
         mErrorContainer.setVisibility(View.VISIBLE);
         mErrorIcon.setVisibility(View.VISIBLE);
-        mErrorMessage.setText(R.string.mobile_downloads_empty);
+        showEmptyState(R.drawable.yew_gravura_downloads, getString(R.string.yew_empty_downloads_title),
+                getString(R.string.mobile_downloads_empty));
         mErrorAction.setVisibility(View.GONE);
         mErrorAction.setTag(null);
     }
@@ -2982,7 +3023,10 @@ public class MobileBrowseActivity extends MobileActivity
             mErrorIcon.setVisibility(View.VISIBLE);
 
             if (hasSignInAction) {
-                mErrorMessage.setText(SignInCopy.forSection(this, mCurrentSectionId, getCurrentSectionTitle()));
+                boolean subs = mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS;
+                showEmptyState(subs ? R.drawable.yew_gravura_inscricoes : R.drawable.yew_gravura_boas_vindas,
+                        getString(subs ? R.string.yew_empty_subs_title : R.string.yew_empty_signin_title),
+                        SignInCopy.forSection(this, mCurrentSectionId, getCurrentSectionTitle()));
                 mErrorAction.setText(actionText);
                 mErrorAction.setVisibility(View.VISIBLE);
             } else if (!hasValidatedNetwork()) {
@@ -2992,14 +3036,16 @@ public class MobileBrowseActivity extends MobileActivity
                 // is the whole complaint. The section really being empty and the request never
                 // leaving the device are indistinguishable at this seam, so ask the device
                 // instead of guessing from the error.
-                mErrorMessage.setText(R.string.mobile_empty_no_connection);
+                showEmptyState(R.drawable.yew_gravura_boas_vindas, getString(R.string.yew_empty_offline_title),
+                        getString(R.string.yew_empty_offline_body));
                 mErrorAction.setText(R.string.mobile_signin_retry_button);
                 mErrorAction.setVisibility(View.VISIBLE);
                 // Null tag = "plain retry" for the click listener; this state has no sign-in action
                 // to carry, and running the section's own onAction here would be the wrong thing.
                 actionData = null;
             } else {
-                mErrorMessage.setText(R.string.mobile_empty_generic);
+                showEmptyState(R.drawable.yew_gravura_boas_vindas, getString(R.string.yew_empty_generic_title),
+                        getString(R.string.yew_empty_generic_body));
                 mErrorAction.setVisibility(View.GONE);
             }
 
