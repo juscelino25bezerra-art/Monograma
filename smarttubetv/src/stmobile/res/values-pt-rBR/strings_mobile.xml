@@ -12,7 +12,7 @@
     <string name="mobile_player_speed">Velocidade</string>
     <string name="mobile_player_chapter_button">Capítulo: %1$s. Mostrar todos os capítulos</string>
     <string name="mobile_player_release_to_cancel">Solte para cancelar</string>
-    <string name="mobile_player_pip">Picture-in-picture</string>
+    <string name="mobile_player_pip">Janela</string>
     <string name="mobile_player_previous">Anterior</string>
     <string name="mobile_player_next">Próximo</string>
     <string name="mobile_playlist_play_all">Reproduzir tudo</string>
@@ -26,7 +26,7 @@
     <string name="mobile_menu_repeat">Modo de repetição</string>
     <string name="mobile_menu_shuffle">Ordem aleatória</string>
     <string name="mobile_menu_zoom">Zoom</string>
-    <string name="mobile_menu_background">Reproduzir em segundo plano</string>
+    <string name="mobile_menu_background">Ouvir</string>
     <string name="mobile_menu_stats">Estatísticas para nerds</string>
     <string name="mobile_menu_playlist_add">Salvar na playlist</string>
     <string name="mobile_menu_queue">Fila de reprodução</string>
@@ -167,7 +167,7 @@
     <string name="action_signin">Fazer login</string>
     <string name="mobile_empty_generic">Nada para mostrar aqui ainda</string>
     <string name="mobile_empty_subscriptions">Os vídeos dos canais em que você se inscreveu aparecem aqui</string>
-    <string name="mobile_empty_no_connection">Sem conexão. Verifique sua rede e tente de novo.</string>
+    <string name="mobile_empty_no_connection">Sem conexão.</string>
     <string name="mobile_page_load_error">Não foi possível carregar esta página.</string>
     <string name="mobile_load_more_error">Não foi possível carregar mais.</string>
     <string name="mobile_refresh_error">Não foi possível atualizar.</string>

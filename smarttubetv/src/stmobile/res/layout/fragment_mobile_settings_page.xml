@@ -6,47 +6,41 @@
     android:background="?attr/newtubeColorBackground"
     android:orientation="vertical">
 
-    <LinearLayout
+    <!-- YEWPLAY(settings): título grande (Bricolage, proposta p. 18) numa linha própria, abaixo
+         da seta de voltar, como os títulos de tela do Início e da Biblioteca. -->
+    <ImageButton
+        android:id="@+id/settings_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/mobile_dialog_back"
+        android:padding="12dp"
+        android:src="@drawable/ic_mobile_back_arrow" />
+
+    <TextView
+        android:id="@+id/settings_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/mobile_settings_bar_height"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/settings_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/mobile_dialog_back"
-            android:padding="12dp"
-            android:src="@drawable/ic_mobile_back_arrow" />
-
-        <TextView
-            android:id="@+id/settings_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingStart="@dimen/mobile_settings_title_inset"
-            android:paddingEnd="16dp"
-            android:textColor="@color/mobile_color_on_surface"
-            android:textSize="@dimen/mobile_settings_title_size"
-            android:fontFamily="@font/instrument_semibold"
-            tools:text="Settings" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingStart="@dimen/mobile_settings_title_inset"
+        android:paddingTop="2dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp"
+        android:textAppearance="@style/TextAppearance.Yew.ScreenTitle"
+        tools:text="Settings" />
 
     <!-- "Search settings" on the top level, pinned under the title: a tap opens the search page
          (SettingsSearchFragment). Gone on every other page. -->
     <LinearLayout
         android:id="@+id/settings_search_field"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginStart="16dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="@dimen/yew_side_margin"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/yew_side_margin"
         android:layout_marginBottom="8dp"
         android:background="@drawable/mobile_settings_search_bar"
         android:clickable="true"
@@ -73,7 +67,7 @@
             android:paddingStart="16dp"
             android:text="@string/mobile_settings_search_hint"
             android:textColor="@color/mobile_color_on_surface_secondary"
-            android:textSize="16sp" />
+            android:textSize="15sp" />
 
     </LinearLayout>
 

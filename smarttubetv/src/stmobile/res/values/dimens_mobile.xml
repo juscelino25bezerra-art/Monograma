@@ -46,12 +46,12 @@
     <dimen name="mobile_settings_title_inset">20dp</dimen>
     <dimen name="mobile_settings_title_size">20sp</dimen>
     <dimen name="mobile_settings_row_min_height">56dp</dimen>
-    <dimen name="mobile_settings_row_inset">16dp</dimen>
-    <dimen name="mobile_settings_icon_gap">20dp</dimen>
-    <dimen name="mobile_settings_row_padding_vertical">14dp</dimen>
-    <dimen name="mobile_settings_row_title_size">16sp</dimen>
-    <dimen name="mobile_settings_row_summary_size">14sp</dimen>
-    <dimen name="mobile_settings_header_size">16sp</dimen>
+    <dimen name="mobile_settings_row_inset">20dp</dimen>
+    <dimen name="mobile_settings_icon_gap">18dp</dimen>
+    <dimen name="mobile_settings_row_padding_vertical">12dp</dimen>
+    <dimen name="mobile_settings_row_title_size">15sp</dimen>
+    <dimen name="mobile_settings_row_summary_size">13sp</dimen>
+    <dimen name="mobile_settings_header_size">13sp</dimen>
     <!-- YEWPLAY(nav): a barra flutuante (proposta, p. 8: raio 26dp, 12dp das bordas) e o
          mini-player que mora dentro dela. -->
     <dimen name="yew_capsule_margin">12dp</dimen>
