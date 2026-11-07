@@ -26,7 +26,7 @@ Coordinate exclusive device and Gradle ownership first. The harness never builds
 
 Resolve the actual APKs from `smarttubetv/build/outputs/apk/stmobile/benchmark/` and `macrobenchmark/build/outputs/apk/benchmark/`. Prefer the target arm64 APK for a Pixel. Inspect its package name, manifest (`debuggable=false`, shell profileable), signing certificate and SHA-256 before installing. Preserve an immutable copy of the previously installed APK if an exact rollback is needed. Install the target and test APK with `adb -s SERIAL install -r /absolute/path.apk`, one at a time; do not use a task that uninstalls the target or clears its data.
 
-On machines without `keystore.properties`, the target application ID is `io.github.juscelino25bezerra.monograma.debug`; pass that explicitly below. The test application ID is always `io.github.juscelino25bezerra.monograma.benchmark`.
+On machines without `keystore.properties`, the target application ID is `com.yewplay.debug`; pass that explicitly below. The test application ID is always `com.yewplay.benchmark`.
 
 With the chosen Pixel awake, unlocked and exclusively owned, run:
 

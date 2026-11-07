@@ -1,4 +1,4 @@
-O Monograma é um cliente não oficial do YouTube para celulares e tablets Android. É um fork do NewTube, de aleixrodriala, que por sua vez é construído sobre o SmartTube, o cliente para Android TV de yuliskov. Mantém o motor do SmartTube e a interface de toque, o player Media3 e os downloads do NewTube, com identidade visual própria e tradução completa para português do Brasil.
+O YewPlay é um cliente não oficial do YouTube para celulares e tablets Android. É um fork do NewTube, de aleixrodriala, que por sua vez é construído sobre o SmartTube, o cliente para Android TV de yuliskov. Mantém o motor do SmartTube e a interface de toque, o player Media3 e os downloads do NewTube, com identidade visual própria e tradução completa para português do Brasil.
 
 <b>Sua conta em segundos</b>
 Faça login com um código, como numa TV: a página do Google abre, você permite o acesso e pronto. Inscrições, histórico, playlists, Assistir mais tarde e recomendações vêm da sua conta. Não precisa de microG, GmsCore, root nem app modificado. O login é opcional.
@@ -26,4 +26,4 @@ Conecte ao SmartTube na TV com o código de controle remoto, transmita direto pa
 
 Dados do SponsorBlock e do DeArrow © seus colaboradores, CC BY-NC-SA 4.0.
 
-O Monograma é um projeto independente. Não tem afiliação, patrocínio ou endosso do Google, do YouTube nem dos desenvolvedores do SmartTube ou do NewTube. YouTube e Android são marcas do Google LLC.
+O YewPlay é um projeto independente. Não tem afiliação, patrocínio ou endosso do Google, do YouTube nem dos desenvolvedores do SmartTube ou do NewTube. YouTube e Android são marcas do Google LLC.

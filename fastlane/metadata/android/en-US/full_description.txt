@@ -1,4 +1,4 @@
-Monograma is an unofficial YouTube client for Android phones and tablets, a fork of NewTube by aleixrodriala, which is built on SmartTube, the Android TV client by yuliskov. It keeps SmartTube's engine and NewTube's touch interface, Media3 player and offline saving, with its own visual identity and a complete Brazilian Portuguese translation.
+YewPlay is an unofficial YouTube client for Android phones and tablets, a fork of NewTube by aleixrodriala, which is built on SmartTube, the Android TV client by yuliskov. It keeps SmartTube's engine and NewTube's touch interface, Media3 player and offline saving, with its own visual identity and a complete Brazilian Portuguese translation.
 
 <b>Your account, in seconds</b>
 Sign in with a code, the way a TV does: Google's own page opens, you allow access, and you're back. Your subscriptions, history, playlists, Watch later and recommendations load from your account. It doesn't need microG, GmsCore, root or a patched app. Signing in is optional.
@@ -26,4 +26,4 @@ Pair with SmartTube on the TV using its Remote control code, play straight to a 
 
 SponsorBlock and DeArrow data © their contributors, CC BY-NC-SA 4.0.
 
-Monograma is an independent project. It is not affiliated with, sponsored or endorsed by Google, YouTube, or the developers of SmartTube or NewTube. YouTube and Android are trademarks of Google LLC.
+YewPlay is an independent project. It is not affiliated with, sponsored or endorsed by Google, YouTube, or the developers of SmartTube or NewTube. YouTube and Android are trademarks of Google LLC.

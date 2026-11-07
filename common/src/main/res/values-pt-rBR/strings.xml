@@ -748,7 +748,7 @@
   <string name="remove_from_search_history">Remover do histórico de pesquisa</string>
   <string name="sidebar_notification">Mostrar notificação na barra lateral</string>
   <string name="color_scheme_dark_blue_oled">Azul Escuro (OLED)</string>
-  <!-- MONOGRAMA: textos que aparecem no celular e ainda não tinham tradução. -->
+  <!-- YEWPLAY: textos que aparecem no celular e ainda não tinham tradução. -->
   <string name="header_downloads">Downloads</string>
   <string name="dialog_download">Baixar</string>
   <string name="msg_sign_in_to_save">Faça login para salvar vídeos em playlists</string>
