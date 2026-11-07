@@ -27,7 +27,7 @@ public final class SabrProofDecoderTest {
     @Test
     public void localFixtureDecodesVideoAndAudioToBuffers() throws IOException {
         Context target = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("io.github.juscelino25bezerra.monograma", target.getPackageName());
+        assertEquals("com.yewplay", target.getPackageName());
         byte[] data = readFixture(target);
 
         verifyAndReport(SabrProofDecoder.decode(data, true), true);

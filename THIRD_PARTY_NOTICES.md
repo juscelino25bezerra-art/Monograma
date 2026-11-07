@@ -39,6 +39,13 @@ separately from their code, and NewTube uses it under those terms:
 - **filepicker-lib** (`filepicker-lib/`) — **Apache-2.0**.
   See [`filepicker-lib/LICENSE`](filepicker-lib/LICENSE).
 
+- **Bricolage Grotesque** and **Instrument Sans** (`smarttubetv/src/stmobile/res/font/`) — SIL
+  Open Font License 1.1. YewPlay's title and interface typefaces. See
+  [`docs/licenses/BricolageGrotesque-OFL.txt`](docs/licenses/BricolageGrotesque-OFL.txt) and
+  [`docs/licenses/InstrumentSans-OFL.txt`](docs/licenses/InstrumentSans-OFL.txt).
+- **Phosphor Icons** (the `ic_*` vector drawables in `smarttubetv/src/stmobile/res/drawable/`) —
+  © 2023 Phosphor Icons, **MIT License**. See [`docs/licenses/Phosphor-MIT.txt`](docs/licenses/Phosphor-MIT.txt).
+
 ## Submodules
 
 - **MediaServiceCore** and **SharedModules** — © yuliskov, **MIT** (same license

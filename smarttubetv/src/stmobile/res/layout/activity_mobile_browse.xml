@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Home shell. One bottom nav (Home / Subscriptions / History / You) is the only structural
-     navigation: the You tab hosts the account row, every extra BrowsePresenter section
-     (Playlists, Music, ...) and the Settings entry, so there is no drawer and no settings
-     icon in the top bar. -->
+<!-- Home shell. YEWPLAY(nav): a barra flutuante (mobile_nav_capsule) com quatro destinos -
+     Início, Busca, Inscrições, Biblioteca - e o mini-player dentro dela. A Biblioteca (o antigo
+     painel Você) reúne Histórico, Downloads, playlists, a conta e as Configurações; as outras
+     seções do YouTube (Música, Jogos, Ao vivo...) viram as abas de filtro do Início. -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,7 +21,7 @@
     <ImageButton
         android:id="@+id/mobile_title_back"
         android:layout_width="48dp"
-        android:layout_height="@dimen/mobile_title_bar_height"
+        android:layout_height="@dimen/yew_title_height"
         android:layout_marginStart="4dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/mobile_dialog_back"
@@ -31,19 +31,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- YEWPLAY(visual): o título da tela em Bricolage 32sp ("Início", "Inscrições",
+         "Biblioteca"); numa subtela, a seta e o nome menor (BrowseTopBar). -->
     <TextView
         android:id="@+id/mobile_title_bar"
         android:layout_width="0dp"
-        android:layout_height="@dimen/mobile_title_bar_height"
+        android:layout_height="@dimen/yew_title_height"
         android:background="?attr/newtubeColorBackground"
         android:ellipsize="end"
         android:gravity="center_vertical|start"
         android:maxLines="1"
-        android:paddingStart="16dp"
+        android:paddingStart="@dimen/yew_side_margin"
         android:text="@string/app_name"
-        android:textColor="@color/mobile_color_on_surface"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.Yew.ScreenTitle"
         app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
         app:layout_constraintStart_toEndOf="@id/mobile_title_back"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +53,7 @@
     <ImageButton
         android:id="@+id/mobile_cast_button"
         android:layout_width="48dp"
-        android:layout_height="@dimen/mobile_title_bar_height"
+        android:layout_height="@dimen/yew_title_height"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/mobile_cast_button"
         android:padding="12dp"
@@ -61,17 +61,57 @@
         app:layout_constraintEnd_toStartOf="@id/mobile_search_button"
         app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
 
+    <!-- YEWPLAY(nav): a busca virou um destino da barra; o botão fica (GONE) para o código que
+         ainda o configura. -->
     <ImageButton
         android:id="@+id/mobile_search_button"
         android:layout_width="48dp"
-        android:layout_height="@dimen/mobile_title_bar_height"
-        android:layout_marginEnd="4dp"
+        android:layout_height="@dimen/yew_title_height"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/mobile_search_button"
         android:padding="12dp"
         android:src="@drawable/ic_mobile_search"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/mobile_settings_button"
+        app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
+
+    <!-- YEWPLAY(nav): Configurações no topo da Biblioteca (proposta, p. 13). -->
+    <ImageButton
+        android:id="@+id/mobile_settings_button"
+        android:layout_width="48dp"
+        android:layout_height="@dimen/yew_title_height"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/header_settings"
+        android:padding="12dp"
+        android:src="@drawable/ic_mobile_settings"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
+
+    <!-- YEWPLAY(nav): as abas de filtro do Início - "Tudo" e as seções do YouTube (Música,
+         Jogos, Ao vivo...), em texto com um ponto rubi embaixo da ativa (FilterTabs). GONE nos
+         outros destinos; tudo abaixo se ancora aqui, e um GONE encosta no título. -->
+    <HorizontalScrollView
+        android:id="@+id/mobile_filter_scroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/mobile_filter_tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/yew_filter_inset"
+            android:paddingEnd="@dimen/yew_filter_inset" />
+    </HorizontalScrollView>
 
     <!-- Pull-to-refresh drives BrowsePresenter.refresh() - also the natural retry
          gesture when a section shows the error placeholder (the error overlay doesn't
@@ -80,17 +120,18 @@
         android:id="@+id/mobile_content_swipe"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar">
+        app:layout_constraintTop_toBottomOf="@id/mobile_filter_scroll">
 
+        <!-- YEWPLAY(nav): a lista passa por baixo da barra flutuante; BrowseNavCapsule dá a ela o
+             respiro do fim (paddingBottom) na altura da barra. -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mobile_content_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingHorizontal="@dimen/mobile_card_spacing"
             android:paddingBottom="@dimen/mobile_card_spacing"
             android:scrollbars="vertical"
             tools:listitem="@layout/item_video_card" />
@@ -102,10 +143,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintBottom_toTopOf="@id/mobile_nav_capsule"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar" />
+        app:layout_constraintTop_toBottomOf="@id/mobile_filter_scroll" />
 
     <!--
          The empty/error placeholder is anchored to the title bar / bottom nav / parent
@@ -124,15 +165,15 @@
         android:orientation="vertical"
         android:padding="24dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        app:layout_constraintBottom_toTopOf="@id/mobile_nav_capsule"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar">
+        app:layout_constraintTop_toBottomOf="@id/mobile_filter_scroll">
 
         <ImageView
             android:id="@+id/mobile_error_icon"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_marginBottom="16dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_mobile_empty" />
@@ -164,10 +205,12 @@
         android:layout_height="0dp"
         android:background="?attr/newtubeColorBackground"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/yew_capsule_clearance"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mobile_title_bar"
+        app:layout_constraintTop_toBottomOf="@id/mobile_filter_scroll"
         tools:visibility="visible">
 
         <LinearLayout
@@ -254,112 +297,76 @@
 
     </ScrollView>
 
-    <!-- YouTube-style FLOATING mini-player: just the live video (no bar), a rounded card
-         hovering over the grid's bottom-right corner above the bottom nav. GONE by default;
-         it floats OVER content (like YouTube), so the grid keeps its bottom-nav constraint.
-         The video is NOT a PlayerView: the card re-parents the playback activity's
-         session-long SurfaceTexture into a code-managed TextureView inside the frame below
-         (see MobileBrowseActivity#attachMiniTexture + MiniPlayerBridge.getSessionTexture) -
-         the codec's surface never changes, so the hand-off never freezes playback. The
-         freeze ImageView shows the last captured frame during attach/detach beats.
-         Tap video = expand; overlaid play/pause + X; 2dp progress. -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mobile_mini_player"
-        android:contentDescription="@string/mobile_mini_expand"
-        android:layout_width="180dp"
-        android:layout_height="102dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="12dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone"
-        app:cardBackgroundColor="@android:color/black"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@id/mobile_bottom_nav"
+    <!--
+      YEWPLAY(nav): a barra flutuante da proposta - uma cápsula de raio 26dp a 12dp das bordas, que
+      guarda o mini-player (em cima, quando há um vídeo minimizado) e os quatro destinos. O item
+      ativo usa o ícone preenchido, rótulo em marfim e um traço rubi acima (mobile_nav_indicator,
+      posicionado por BrowseNavCapsule); sem pílula de fundo. O mini-player mantém o id e o
+      funcionamento de antes (a textura do player adotada em mobile_mini_player_frame).
+    -->
+    <LinearLayout
+        android:id="@+id/mobile_nav_capsule"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/yew_capsule_margin"
+        android:layout_marginEnd="@dimen/yew_capsule_margin"
+        android:layout_marginBottom="@dimen/yew_capsule_margin"
+        android:background="@drawable/bg_yew_capsule"
+        android:elevation="10dp"
+        android:orientation="vertical"
+        android:outlineProvider="background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible">
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mobile_mini_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contentDescription="@string/mobile_mini_expand"
+            android:focusable="true"
+            android:visibility="gone"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            tools:visibility="visible">
+
+            <include layout="@layout/mobile_mini_player_row" />
+        </com.google.android.material.card.MaterialCardView>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="@dimen/yew_nav_height">
 
-            <!-- NEWTUBE(issue #9): an AspectRatioFrameLayout (FIT), given the video's shape by
-                 MiniPlayerBridge.fitToVideo: other shapes are letterboxed, not stretched. -->
-            <androidx.media3.ui.AspectRatioFrameLayout
-                android:id="@+id/mobile_mini_player_frame"
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/mobile_bottom_nav"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center">
+                android:background="@android:color/transparent"
+                app:elevation="0dp"
+                app:itemIconSize="22dp"
+                app:itemIconTint="@color/yew_nav_item"
+                app:itemPaddingTop="11dp"
+                app:itemPaddingBottom="9dp"
+                app:itemRippleColor="@android:color/transparent"
+                app:itemTextAppearanceActive="@style/YewNavText.Active"
+                app:itemTextAppearanceActiveBoldEnabled="false"
+                app:itemTextAppearanceInactive="@style/YewNavText"
+                app:itemTextColor="@color/yew_nav_item"
+                app:labelVisibilityMode="labeled" />
 
-                <ImageView
-                    android:id="@+id/mobile_mini_freeze"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitXY"
-                    android:visibility="gone" />
-
-            </androidx.media3.ui.AspectRatioFrameLayout>
-
-            <ImageButton
-                android:id="@+id/mobile_mini_play_pause"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:background="@drawable/bg_mini_scrim_circle"
-                android:contentDescription="@string/mobile_mini_play_pause"
-                android:padding="9dp"
-                android:src="@drawable/ic_player_pause" />
-
-            <!-- 48dp touch target, wholly inside the card (a child outside its parent gets no touches), around the same 40dp circle (was 28dp, then 40dp - NEWTUBE(touch)). -->
-            <ImageButton
-                android:id="@+id/mobile_mini_close"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="top|end"
-                android:layout_margin="0dp"
-                android:background="@drawable/bg_mini_scrim_circle_touch"
-                android:contentDescription="@string/mobile_mini_close"
-                android:padding="15dp"
-                android:src="@drawable/ic_sheet_close"
-                android:tint="@color/mobile_player_on_video" />
-
-            <ProgressBar
-                android:id="@+id/mobile_mini_progress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_gravity="bottom"
-                android:max="1000"
-                android:progressBackgroundTint="@color/mobile_color_progress_track"
-                android:progressTint="@color/mobile_color_progress"
-                tools:progress="400" />
-
+            <View
+                android:id="@+id/mobile_nav_indicator"
+                android:layout_width="18dp"
+                android:layout_height="3dp"
+                android:layout_gravity="top|start"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_yew_nav_indicator"
+                android:importantForAccessibility="no"
+                android:visibility="invisible" />
         </FrameLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Matched against the real YouTube app on a Pixel 9 (2026-07): their icon/label row
-         measures ~51dp with 24dp icons and ~10sp labels, content centered, gesture inset
-         absorbed below. Stock M2 wrap_content (56dp row) is the closest the widget allows;
-         the view pads itself by the gesture-navigation inset (paddingBottomSystemWindowInsets)
-         so the bar paints through to the display edge without squeezing the row. -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/mobile_bottom_nav"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/newtubeColorBackground"
-        app:itemIconSize="24dp"
-        app:itemIconTint="@color/mobile_bottom_nav_item"
-        app:itemTextAppearanceActive="@style/MobileBottomNavText"
-        app:itemTextAppearanceActiveBoldEnabled="false"
-        app:itemTextAppearanceInactive="@style/MobileBottomNavText"
-        app:paddingBottomSystemWindowInsets="true"
-        app:itemTextColor="@color/mobile_bottom_nav_item"
-        app:labelVisibilityMode="labeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

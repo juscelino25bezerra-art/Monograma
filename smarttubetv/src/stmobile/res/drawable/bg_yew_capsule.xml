@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(nav): a barra flutuante - Grafite claro (Papel escuro no claro), raio 26dp e um fio. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="?attr/newtubeColorCard" />
+    <corners android:radius="@dimen/yew_capsule_radius" />
+    <stroke android:width="1dp" android:color="@color/mobile_color_divider" />
+</shape>

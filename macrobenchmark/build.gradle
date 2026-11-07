@@ -12,11 +12,11 @@ android {
         // Requiring API 34+ prevents that fallback on a phone with an existing account.
         minSdk = 34
         targetSdk = project.ext.targetSdkVersion
-        testApplicationId = 'io.github.juscelino25bezerra.monograma.benchmark'
+        testApplicationId = 'com.yewplay.benchmark'
         testInstrumentationRunner = 'androidx.test.runner.AndroidJUnitRunner'
         missingDimensionStrategy 'default', 'stmobile'
         testInstrumentationRunnerArguments['targetPackage'] = rootProject.file('keystore.properties').exists()
-                ? 'io.github.juscelino25bezerra.monograma' : 'io.github.juscelino25bezerra.monograma.debug'
+                ? 'com.yewplay' : 'com.yewplay.debug'
     }
 
     compileOptions {

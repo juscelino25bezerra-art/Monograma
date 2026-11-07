@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="update_urls">
-        <!-- MONOGRAMA: updates come from this fork's own releases, never from upstream NewTube.
-             release.yml attaches monograma.json to every tagged release; until the first release
+        <!-- YEWPLAY: updates come from this fork's own releases, never from upstream NewTube.
+             release.yml attaches yewplay.json to every tagged release; until the first release
              exists the check simply reports that it couldn't reach the feed. -->
-        <item>https://github.com/juscelino25bezerra-art/Monograma/releases/latest/download/monograma.json</item>
+        <item>https://github.com/juscelino25bezerra-art/YewPlay/releases/latest/download/yewplay.json</item>
     </string-array>
 </resources>

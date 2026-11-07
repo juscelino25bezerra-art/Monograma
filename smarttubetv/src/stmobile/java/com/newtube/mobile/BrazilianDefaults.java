@@ -8,7 +8,7 @@ import com.liskovsoft.sharedutils.prefs.GlobalPreferences;
 import java.util.Locale;
 
 /**
- * MONOGRAMA(pt-BR): defaults that follow Brazilian conventions.
+ * YEWPLAY(pt-BR): defaults that follow Brazilian conventions.
  *
  * <p>The shared {@code DateHelper} treats every "pt" locale as a 12-hour one, so in pt-BR the app
  * showed "2:30 PM". This turns the existing 24-hour setting (Settings -> Appearance and language)
@@ -16,7 +16,7 @@ import java.util.Locale;
  * the setting off keeps it off. The shared module (a submodule fork) is left untouched.
  */
 final class BrazilianDefaults {
-    private static final String PREFS = "monograma_locale_defaults";
+    private static final String PREFS = "yewplay_locale_defaults";
     private static final String KEY_24H_APPLIED = "ptbr_24h_applied";
 
     private BrazilianDefaults() {
@@ -35,7 +35,7 @@ final class BrazilianDefaults {
             prefs.edit().putBoolean(KEY_24H_APPLIED, true).apply();
         } catch (RuntimeException e) {
             // A default is never worth a crash at startup.
-            android.util.Log.w("Monograma", "pt-BR defaults skipped", e);
+            android.util.Log.w("YewPlay", "pt-BR defaults skipped", e);
         }
     }
 

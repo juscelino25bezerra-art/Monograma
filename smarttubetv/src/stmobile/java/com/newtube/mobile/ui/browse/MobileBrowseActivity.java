@@ -119,6 +119,8 @@ public class MobileBrowseActivity extends MobileActivity
      * {@link #ITEM_ID_OFFSET} + any real section id, so it can never collide with one.
      */
     private static final int YOU_ITEM_ID = 2_000_000;
+    /** YEWPLAY(nav): the Search destination - opens the search screen, never stays lit. */
+    private static final int SEARCH_ITEM_ID = 2_000_001;
     private static final int REQUEST_POST_NOTIFICATIONS = 1;
     /** Intent action (download notifications) that lands on the Downloads tab. */
     public static final String ACTION_OPEN_DOWNLOADS = "com.newtube.mobile.OPEN_DOWNLOADS";
@@ -129,17 +131,15 @@ public class MobileBrowseActivity extends MobileActivity
      * this codebase); the parallel {@link #PREFERRED_SECTION_TITLE_RES} array is a
      * title-string fallback in case a section ever arrives with a non-standard id.
      */
+    // YEWPLAY(nav): two section destinations; Search and Library (YOU_ITEM_ID) complete the four.
+    // History and Downloads live in the Library now (proposta, p. 13).
     private static final int[] PREFERRED_SECTION_IDS = {
             MediaGroup.TYPE_HOME,
             MediaGroup.TYPE_SUBSCRIPTIONS,
-            MediaGroup.TYPE_HISTORY,
-            VideoDownloads.SECTION_ID,
     };
     private static final int[] PREFERRED_SECTION_TITLE_RES = {
             R.string.header_home,
             R.string.header_subscriptions,
-            R.string.header_history,
-            R.string.header_downloads,
     };
 
     private BrowsePresenter mPresenter;
@@ -234,6 +234,12 @@ public class MobileBrowseActivity extends MobileActivity
      * submits the newest {@link #mCurrentVideos} when it lands.
      */
     private FeedSwapWarmup mFeedSwap;
+    /** YEWPLAY(nav): the floating capsule (rubi trace, list end padding, mini video target). */
+    private BrowseNavCapsule mNavCapsule;
+    /** YEWPLAY(nav): Settings on the Library's top bar. */
+    private View mSettingsButton;
+    /** YEWPLAY(nav): the Início filter tabs. */
+    private FilterTabs mFilterTabs;
     /** NEWTUBE(feed-swap): the grid's item animator, parked while a swap is laid out. */
     private RecyclerView.ItemAnimator mParkedItemAnimator;
     private boolean mFeedSwapPinTop;
@@ -241,8 +247,8 @@ public class MobileBrowseActivity extends MobileActivity
 
     @Override
     protected boolean shouldInsetContentForNavigationBar() {
-        // BottomNavigationView paints through the gesture area and applies that inset internally.
-        return false;
+        // YEWPLAY(nav): the floating capsule sits above the gesture area, 12dp off every edge.
+        return true;
     }
 
     @Override
@@ -320,8 +326,60 @@ public class MobileBrowseActivity extends MobileActivity
         mMiniPlayPause = findViewById(R.id.mobile_mini_play_pause);
         mMiniProgress = findViewById(R.id.mobile_mini_progress);
         setupMiniPlayerBar();
-        // NEWTUBE(mini-inset): the last card can scroll clear of the docked mini-player.
-        com.newtube.mobile.ui.playback.MiniPlayerListInset.attach(mMiniPlayerBar, mContentGrid);
+        // YEWPLAY(nav): the mini-player lives inside the floating capsule, which keeps the list's
+        // end clear of itself (BrowseNavCapsule) - the old corner-card inset is not needed.
+        mNavCapsule = new BrowseNavCapsule(findViewById(R.id.mobile_browse_root), mContentGrid);
+        mSettingsButton = findViewById(R.id.mobile_settings_button);
+        mSettingsButton.setOnClickListener(v -> openSettings());
+        mFilterTabs = new FilterTabs(findViewById(R.id.mobile_filter_scroll), findViewById(R.id.mobile_filter_tabs),
+                this::onFilterTabChosen);
+    }
+
+    /** YEWPLAY(nav): an Início filter tab - Home itself or one of the YouTube sections. */
+    private void onFilterTabChosen(int sectionId) {
+        mSectionFromYou = false;
+        hideYouPanel();
+        onSectionChosen(sectionId);
+    }
+
+    /**
+     * YEWPLAY(nav): the Início tabs - "Tudo" (Home), then every enabled section that is neither a
+     * destination nor the user's own (Música, Jogos, Ao vivo, Notícias...).
+     */
+    private List<FilterTabs.Tab> homeTabs() {
+        List<FilterTabs.Tab> tabs = new ArrayList<>();
+        tabs.add(new FilterTabs.Tab(MediaGroup.TYPE_HOME, getString(R.string.yew_filter_all)));
+        List<BrowseSection> navSections = selectNavSections();
+        for (BrowseSection section : mSections) {
+            if (isHomeTabSection(section, navSections)) {
+                tabs.add(new FilterTabs.Tab(section.getId(), section.getTitle()));
+            }
+        }
+        return tabs;
+    }
+
+    private static boolean isHomeTabSection(BrowseSection section, List<BrowseSection> navSections) {
+        return section.isEnabled() && !navSections.contains(section)
+                && section.getId() != MediaGroup.TYPE_SETTINGS && section.getId() != MediaGroup.TYPE_SHORTS
+                && section.getId() != MediaGroup.TYPE_HISTORY && section.getId() != VideoDownloads.SECTION_ID
+                && !(section.getData() instanceof Video) && !isPersonalSection(section.getId());
+    }
+
+    /** The section on screen is Home or one of its filter tabs. */
+    private boolean isOnHomeDestination() {
+        if (mCurrentSectionId == MediaGroup.TYPE_HOME) {
+            return true;
+        }
+        if (mSectionFromYou) {
+            return false;
+        }
+        List<BrowseSection> navSections = selectNavSections();
+        for (BrowseSection section : mSections) {
+            if (section.getId() == mCurrentSectionId) {
+                return isHomeTabSection(section, navSections);
+            }
+        }
+        return false;
     }
 
     private void setupSwipeRefresh() {
@@ -504,6 +562,7 @@ public class MobileBrowseActivity extends MobileActivity
 
         MiniPlayerBridge.fitToVideo(mMiniPlayerFrame); // NEWTUBE(issue #9): letterbox, never stretch
         attachMiniTexture();
+        MiniPlayerBridge.bindRowText(mMiniPlayerBar); // YEWPLAY(nav): title and channel in the row
         stopMiniSwipe();
         mMiniPlayerBar.animate().cancel(); // a closing card (closeMiniPlayer) comes back whole
         mMiniPlayerBar.setAlpha(1f);
@@ -526,6 +585,12 @@ public class MobileBrowseActivity extends MobileActivity
     public int getMiniCardBottomOffsetPx() {
         // The card floats above the 56dp Material bottom-nav row (see activity_mobile_browse.xml).
         return Math.round(56 * getResources().getDisplayMetrics().density);
+    }
+
+    /** YEWPLAY(nav): the minimize lands on the mini row's video box inside the capsule. */
+    @Override
+    public boolean getMiniVideoTargetOnScreen(@NonNull android.graphics.Rect out) {
+        return mNavCapsule != null && mNavCapsule.videoTargetOnScreen(out);
     }
 
     /**
@@ -933,6 +998,12 @@ public class MobileBrowseActivity extends MobileActivity
 
     private void setupBottomNav() {
         mBottomNav.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == SEARCH_ITEM_ID) {
+                if (!mSuppressNavCallback) {
+                    SearchPresenter.instance(this).startSearch(null);
+                }
+                return false; // YEWPLAY(nav): Search opens its screen; the lit destination stays
+            }
             if (!mSuppressNavCallback) {
                 onNavItemChosen(item.getItemId());
             }
@@ -942,6 +1013,10 @@ public class MobileBrowseActivity extends MobileActivity
         // YouTube; at the top it does what it always did (repaint + refresh the section).
         mBottomNav.setOnItemReselectedListener(item -> {
             if (mSuppressNavCallback) {
+                return;
+            }
+            if (item.getItemId() == SEARCH_ITEM_ID) {
+                SearchPresenter.instance(this).startSearch(null);
                 return;
             }
             if (item.getItemId() != YOU_ITEM_ID && mContentGrid != null
@@ -1027,7 +1102,51 @@ public class MobileBrowseActivity extends MobileActivity
 
         boolean subScreen = mSectionFromYou && !mYouShowing
                 && mBottomNav.getMenu().findItem(toMenuItemId(mCurrentSectionId)) == null;
-        mTopBar.show(subScreen, getCurrentSectionTitle());
+        refreshDestinationChrome(subScreen);
+    }
+
+    /**
+     * YEWPLAY(nav): the top of the screen for the destination on it - its name in the large
+     * title ("Início", "Inscrições", "Biblioteca"), the Início filter tabs, Cast on Início,
+     * Settings on the Library - and the rubi trace over its tab. A Library sub-screen (Histórico,
+     * Downloads...) gets the back arrow and its own name instead.
+     */
+    private void refreshDestinationChrome(boolean subScreen) {
+        if (mTopBar == null || mNavCapsule == null) {
+            return;
+        }
+        boolean home = !subScreen && !mYouShowing && isOnHomeDestination();
+        CharSequence title;
+        if (subScreen) {
+            title = getCurrentSectionTitle();
+        } else if (mYouShowing) {
+            title = getString(R.string.yew_nav_library);
+        } else if (home) {
+            title = getString(R.string.yew_nav_home);
+        } else {
+            title = getCurrentSectionTitle();
+        }
+        mTopBar.show(subScreen, title);
+        mCastButton.setVisibility(home ? View.VISIBLE : View.GONE);
+        mSettingsButton.setVisibility(mYouShowing ? View.VISIBLE : View.GONE);
+        if (home) {
+            mFilterTabs.setTabs(homeTabs());
+            mFilterTabs.select(mCurrentSectionId);
+        }
+        mFilterTabs.show(home);
+        int lit;
+        if (mYouShowing) {
+            lit = YOU_ITEM_ID;
+        } else if (subScreen) {
+            lit = YOU_ITEM_ID; // a Library sub-screen belongs to the Library
+        } else if (home) {
+            lit = toMenuItemId(MediaGroup.TYPE_HOME);
+        } else if (mBottomNav.getMenu().findItem(toMenuItemId(mCurrentSectionId)) != null) {
+            lit = toMenuItemId(mCurrentSectionId);
+        } else {
+            lit = View.NO_ID;
+        }
+        mNavCapsule.setSelected(lit);
     }
 
     /**
@@ -1081,35 +1200,55 @@ public class MobileBrowseActivity extends MobileActivity
                 pinned.add(section);
                 continue;
             }
-            (isPersonalSection(section.getId()) ? personal : explore).add(section);
+            // YEWPLAY(nav): the YouTube feeds (Música, Jogos...) are the Início filter tabs now.
+            if (isHomeTabSection(section, navSections)) {
+                explore.add(section);
+                continue;
+            }
+            personal.add(section);
         }
 
-        for (BrowseSection section : personal) {
-            addYouSectionRow(section);
+        // YEWPLAY(nav): the Library (proposta, p. 15) - Histórico and Downloads first, then the
+        // rest of the user's own sections; pinned channels and playlists under their own title.
+        // Settings is the gear in the top bar.
+        java.util.Collections.sort(personal, (a, b) -> Integer.compare(libraryRank(a.getId()), libraryRank(b.getId())));
+        for (int i = 0; i < personal.size(); i++) {
+            addYouSectionRow(personal.get(i), i == personal.size() - 1);
         }
 
         if (!pinned.isEmpty()) {
             addYouGroupLabel(getString(R.string.mobile_you_pinned));
-            for (BrowseSection section : pinned) {
-                addYouSectionRow(section);
+            for (int i = 0; i < pinned.size(); i++) {
+                addYouSectionRow(pinned.get(i), i == pinned.size() - 1);
             }
         }
-
-        if (!explore.isEmpty()) {
-            addYouGroupLabel(getString(R.string.mobile_you_explore));
-            for (BrowseSection section : explore) {
-                addYouSectionRow(section);
-            }
-        }
-
-        addYouDivider();
-        addYouRow(R.drawable.ic_mobile_settings, getString(R.string.header_settings),
-                this::openSettings);
     }
 
-    private void addYouSectionRow(BrowseSection section) {
+    /** YEWPLAY(nav): the Library's order. */
+    private static int libraryRank(int sectionId) {
+        switch (sectionId) {
+            case MediaGroup.TYPE_HISTORY:
+                return 0;
+            case VideoDownloads.SECTION_ID:
+                return 1;
+            case MediaGroup.TYPE_USER_PLAYLISTS:
+                return 2;
+            case MediaGroup.TYPE_CHANNEL_UPLOADS:
+                return 3;
+            case MediaGroup.TYPE_MY_VIDEOS:
+                return 4;
+            case MediaGroup.TYPE_PLAYBACK_QUEUE:
+                return 5;
+            default:
+                return 6;
+        }
+    }
+
+    private void addYouSectionRow(BrowseSection section, boolean last) {
         int sectionId = section.getId();
-        View row = addYouRow(section.getResId(), section.getTitle(), () -> {
+        int icon = sectionId == MediaGroup.TYPE_HISTORY ? R.drawable.ic_nav_history_outline
+                : sectionId == VideoDownloads.SECTION_ID ? R.drawable.ic_nav_downloads_outline : section.getResId();
+        View row = addYouRow(icon, section.getTitle(), () -> {
             mSectionFromYou = true;
             hideYouPanel();
             onSectionChosen(sectionId);
@@ -1121,9 +1260,17 @@ public class MobileBrowseActivity extends MobileActivity
             }
             return true;
         });
+        row.findViewById(R.id.yew_library_row_divider).setVisibility(last ? View.GONE : View.VISIBLE);
+        if (sectionId == VideoDownloads.SECTION_ID) {
+            int count = DownloadRegistry.instance(this).itemsNewestFirst().size();
+            if (count > 0) {
+                TextView counter = row.findViewById(R.id.yew_library_row_count);
+                counter.setText(getResources().getQuantityString(R.plurals.yew_library_items, count, count));
+                counter.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
-    /** Small secondary-color group label, official-You-page style. */
     // ---------------------------------------------------------------------------------
     // Updates (NEWTUBE update-flow)
     // ---------------------------------------------------------------------------------
@@ -1216,15 +1363,15 @@ public class MobileBrowseActivity extends MobileActivity
                 hasNotes ? () -> MobileUpdateActivity.startWhatsNew(this) : null, MobileSnackbar.NOTICE_DURATION_MS);
     }
 
+    /** YEWPLAY(nav): a Library section title - Bricolage, like the proposal's "Suas playlists". */
     private void addYouGroupLabel(CharSequence text) {
         TextView label = new TextView(this);
         label.setText(text);
-        label.setTextColor(getColorInt(R.color.mobile_color_on_surface_secondary));
-        label.setTextSize(14);
-        label.setTypeface(label.getTypeface(), android.graphics.Typeface.BOLD);
+        label.setTextAppearance(R.style.TextAppearance_Yew_SectionTitle);
+        androidx.core.view.ViewCompat.setAccessibilityHeading(label, true);
         int pad = Math.round(20 * getResources().getDisplayMetrics().density);
-        int padV = Math.round(10 * getResources().getDisplayMetrics().density);
-        label.setPadding(pad, padV, pad, padV / 2);
+        label.setPadding(pad, Math.round(24 * getResources().getDisplayMetrics().density), pad,
+                Math.round(6 * getResources().getDisplayMetrics().density));
         mYouRows.addView(label);
     }
 
@@ -1242,7 +1389,7 @@ public class MobileBrowseActivity extends MobileActivity
     }
 
     private View addYouRow(int iconRes, CharSequence title, Runnable action) {
-        View row = LayoutInflater.from(this).inflate(R.layout.item_mobile_you_row, mYouRows, false);
+        View row = LayoutInflater.from(this).inflate(R.layout.item_yew_library_row, mYouRows, false);
 
         ImageView icon = row.findViewById(R.id.mobile_you_row_icon);
         if (iconRes > 0) {
@@ -1274,7 +1421,8 @@ public class MobileBrowseActivity extends MobileActivity
         boolean switched = mCurrentSectionId != sectionId;
         mCurrentSectionId = sectionId;
         paintCachedSnapshot(sectionId, switched);
-        syncNavHighlight(sectionId);
+        syncNavHighlight(isOnHomeDestination() ? MediaGroup.TYPE_HOME : sectionId);
+        onYouPanelToggled(); // YEWPLAY(nav): title, filter tabs and the rubi trace follow
 
         if (mPresenter != null) {
             mPresenter.onSectionFocused(sectionId);
@@ -1416,12 +1564,18 @@ public class MobileBrowseActivity extends MobileActivity
     // ---------------------------------------------------------------------------------
 
     /** Home and Subscriptions mix channels, so their cards show whose video it is, like YouTube. */
+    /**
+     * YEWPLAY(visual): the proposal's items carry no avatar - the large item names the channel in
+     * bold on its meta line, the compact one under the title - so no list shows card avatars.
+     */
     private static boolean showsChannelAvatars(int sectionId) {
-        return sectionId == MediaGroup.TYPE_HOME || sectionId == MediaGroup.TYPE_SUBSCRIPTIONS;
+        return false;
     }
 
     private void syncChannelAvatars() {
         mAdapter.setChannelAvatars(showsChannelAvatars(mCurrentSectionId) ? this::onChannelAvatarClicked : null);
+        // YEWPLAY(visual): the large item on Início and its filter tabs, the compact one elsewhere.
+        mAdapter.setRowLayout(!isOnHomeDestination());
     }
 
     /** The loading skeleton's avatar circles, where the cards will have avatars. */
@@ -1619,6 +1773,7 @@ public class MobileBrowseActivity extends MobileActivity
         for (BrowseSection section : mSections) {
             if (section.getId() == VideoDownloads.SECTION_ID) {
                 mPendingDownloadsOpen = false;
+                mSectionFromYou = true; // YEWPLAY(nav): Downloads is a Library sub-screen now
                 hideYouPanel();
                 onSectionChosen(VideoDownloads.SECTION_ID);
                 return;
@@ -1696,7 +1851,7 @@ public class MobileBrowseActivity extends MobileActivity
         }
         String newSignature = signature.toString();
 
-        if (newSignature.equals(mNavSignature) && menu.size() == navSections.size() + 1) {
+        if (newSignature.equals(mNavSignature) && menu.size() == navSections.size() + 2) {
             // Same tabs as on screen: only re-assert the highlight (the section may have moved).
             mSuppressNavCallback = true;
             reassertNavHighlight(menu, false);
@@ -1709,19 +1864,22 @@ public class MobileBrowseActivity extends MobileActivity
 
         menu.clear();
 
+        // YEWPLAY(nav): Início, Busca, Inscrições, Biblioteca - Search sits second.
         for (int i = 0; i < navSections.size(); i++) {
             BrowseSection section = navSections.get(i);
 
-            android.view.MenuItem item = menu.add(Menu.NONE, toMenuItemId(section.getId()), i, section.getTitle());
+            android.view.MenuItem item = menu.add(Menu.NONE, toMenuItemId(section.getId()), i == 0 ? 0 : i + 1,
+                    section.getId() == MediaGroup.TYPE_HOME ? getString(R.string.yew_nav_home) : section.getTitle());
 
             int icon = navIconOrResFor(section);
             if (icon > 0) {
                 item.setIcon(icon);
             }
         }
+        menu.add(Menu.NONE, SEARCH_ITEM_ID, 1, R.string.yew_nav_search).setIcon(R.drawable.ic_nav_search);
 
-        // The synthetic You tab always sits last (account + extra sections + settings).
-        menu.add(Menu.NONE, YOU_ITEM_ID, navSections.size(), R.string.mobile_nav_you)
+        // The Library (the old You tab) always sits last: history, downloads, playlists, account.
+        menu.add(Menu.NONE, YOU_ITEM_ID, navSections.size() + 1, R.string.yew_nav_library)
                 .setIcon(R.drawable.ic_nav_you);
 
         // Re-assert the highlight after clear()/add() wiped it, so the current tab stays lit.
@@ -1730,6 +1888,7 @@ public class MobileBrowseActivity extends MobileActivity
         mSuppressNavCallback = false;
 
         refreshUpdateBadge();
+        mBottomNav.post(this::onYouPanelToggled); // YEWPLAY(nav): the trace and the Início tabs
 
         // Long-press on a section tab opens the section-management menu (Refresh / Rename /
         // Move / Mark watched / Clear history, ...) - the touch equivalent of the TV D-pad
@@ -2064,6 +2223,12 @@ public class MobileBrowseActivity extends MobileActivity
         // parent surface), like YouTube's You-tab sub-screens.
         if (mSectionFromYou && !mYouShowing) {
             showYouPanel();
+            return;
+        }
+
+        // YEWPLAY(nav): on an Início filter tab (Música, Jogos...), back goes to "Tudo".
+        if (!mYouShowing && mCurrentSectionId != MediaGroup.TYPE_HOME && isOnHomeDestination()) {
+            onSectionChosen(MediaGroup.TYPE_HOME);
             return;
         }
 

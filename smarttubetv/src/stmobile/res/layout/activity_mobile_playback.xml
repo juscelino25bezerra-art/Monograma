@@ -655,10 +655,11 @@
                     android:layout_marginTop="12dp"
                     android:paddingHorizontal="@dimen/mobile_watch_content_padding"
                     android:ellipsize="end"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/bricolage_bold"
+                    android:letterSpacing="-0.01"
                     android:maxLines="3"
                     android:textColor="@color/mobile_color_on_surface"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     tools:text="A great video title that may wrap across a couple of lines" />
 
                 <!-- views + date + expand-description affordance -->
@@ -713,194 +714,107 @@
                      push an action off a narrow screen. -->
                 <!-- NEWTUBE(touch): no top margin - the meta row above (48dp tall now) and the pills'
                      own 6dp inset hold the old spacing. -->
+                <!-- YEWPLAY(player): as ações rotuladas da proposta (p. 16) - ícone em cima, rótulo
+                     embaixo, sem pílula: curtidas, Baixar, Ouvir (segundo plano), Salvar, Janela
+                     (picture-in-picture); Não curti e Compartilhar seguem na mesma fileira, que
+                     rola. Mesmos ids de antes, para MobilePlaybackActivity. -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginTop="4dp"
                     android:overScrollMode="never"
                     android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/mobile_watch_content_padding">
-
-                    <!-- padding 0: an inset background otherwise becomes the view's padding. -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/mobile_watch_pill_bg_touch"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="0dp">
-
-                        <LinearLayout
-                            android:id="@+id/mobile_watch_like"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/mobile_watch_segment_ripple"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="12dp"
-                            android:paddingVertical="14dp">
-
-                            <ImageView
-                                android:id="@+id/mobile_watch_like_icon"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@string/mobile_watch_like"
-                                android:src="@drawable/ic_watch_thumb_up_outline" />
-
-                            <TextView
-                                android:id="@+id/mobile_watch_like_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:text="@string/mobile_watch_count_placeholder"
-                                android:textColor="@color/mobile_color_on_surface"
-                                android:textSize="14sp"
-                                tools:text="12K" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="18dp"
-                            android:background="@color/mobile_color_divider" />
-
-                        <LinearLayout
-                            android:id="@+id/mobile_watch_dislike"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/mobile_watch_segment_ripple"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingStart="12dp"
-                            android:paddingEnd="14dp"
-                            android:paddingVertical="14dp">
-
-                            <ImageView
-                                android:id="@+id/mobile_watch_dislike_icon"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:contentDescription="@string/mobile_watch_dislike"
-                                android:src="@drawable/ic_watch_thumb_down_outline" />
-
-                            <TextView
-                                android:id="@+id/mobile_watch_dislike_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:text="@string/mobile_watch_count_placeholder"
-                                android:textColor="@color/mobile_color_on_surface"
-                                android:textSize="14sp"
-                                tools:text="123" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
+                    android:paddingHorizontal="8dp">
 
                     <LinearLayout
-                        android:id="@+id/mobile_watch_share"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/mobile_watch_pill_bg_touch"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="14dp">
-
+                        android:id="@+id/mobile_watch_like"
+                        style="@style/YewWatchAction">
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:contentDescription="@string/mobile_watch_share"
-                            android:src="@drawable/ic_watch_share" />
-
+                            android:id="@+id/mobile_watch_like_icon"
+                            style="@style/YewWatchActionIcon"
+                            android:contentDescription="@string/mobile_watch_like"
+                            android:src="@drawable/ic_watch_thumb_up_outline" />
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/mobile_watch_share"
-                            android:textColor="@color/mobile_color_on_surface"
-                            android:textSize="14sp" />
-
+                            android:id="@+id/mobile_watch_like_count"
+                            style="@style/YewWatchActionLabel"
+                            android:text="@string/mobile_watch_count_placeholder" />
                     </LinearLayout>
-
-                    <!-- Download. Opens the quality picker; once the video is on the device the
-                         pill reads "Downloaded" and opens the download's own menu. -->
                     <LinearLayout
                         android:id="@+id/mobile_watch_download"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/mobile_watch_pill_bg_touch"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="14dp">
-
+                        style="@style/YewWatchAction">
                         <ImageView
                             android:id="@+id/mobile_watch_download_icon"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            style="@style/YewWatchActionIcon"
                             android:contentDescription="@string/dialog_download"
                             android:src="@drawable/ic_watch_download" />
-
                         <TextView
                             android:id="@+id/mobile_watch_download_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/dialog_download"
-                            android:textColor="@color/mobile_color_on_surface"
-                            android:textSize="14sp" />
-
+                            style="@style/YewWatchActionLabel"
+                            android:text="@string/dialog_download" />
                     </LinearLayout>
-
-                    <!-- Save to playlist. Same action as gear -> More -> Save to playlist; it lives
-                         here too because that is where YouTube puts it and where people look. -->
+                    <LinearLayout
+                        android:id="@+id/mobile_watch_listen"
+                        style="@style/YewWatchAction">
+                        <ImageView
+                            style="@style/YewWatchActionIcon"
+                            android:contentDescription="@string/yew_watch_listen"
+                            android:src="@drawable/ic_player_background" />
+                        <TextView
+                            style="@style/YewWatchActionLabel"
+                            android:text="@string/yew_watch_listen" />
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/mobile_watch_save"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/mobile_watch_pill_bg_touch"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="14dp">
-
+                        style="@style/YewWatchAction">
                         <ImageView
                             android:id="@+id/mobile_watch_save_icon"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            style="@style/YewWatchActionIcon"
                             android:contentDescription="@string/mobile_watch_save"
-                            android:src="@drawable/ic_player_playlist_add"
-                            android:tint="@color/mobile_color_on_surface" />
-
+                            android:src="@drawable/ic_player_playlist_add" />
                         <TextView
                             android:id="@+id/mobile_watch_save_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/mobile_watch_save"
-                            android:textColor="@color/mobile_color_on_surface"
-                            android:textSize="14sp" />
-
+                            style="@style/YewWatchActionLabel"
+                            android:text="@string/mobile_watch_save" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/mobile_watch_window"
+                        style="@style/YewWatchAction">
+                        <ImageView
+                            style="@style/YewWatchActionIcon"
+                            android:contentDescription="@string/yew_watch_window"
+                            android:src="@drawable/ic_player_pip" />
+                        <TextView
+                            style="@style/YewWatchActionLabel"
+                            android:text="@string/yew_watch_window" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/mobile_watch_dislike"
+                        style="@style/YewWatchAction">
+                        <ImageView
+                            android:id="@+id/mobile_watch_dislike_icon"
+                            style="@style/YewWatchActionIcon"
+                            android:contentDescription="@string/mobile_watch_dislike"
+                            android:src="@drawable/ic_watch_thumb_down_outline" />
+                        <TextView
+                            android:id="@+id/mobile_watch_dislike_count"
+                            style="@style/YewWatchActionLabel"
+                            android:text="@string/mobile_watch_count_placeholder" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/mobile_watch_share"
+                        style="@style/YewWatchAction">
+                        <ImageView
+                            style="@style/YewWatchActionIcon"
+                            android:contentDescription="@string/mobile_watch_share"
+                            android:src="@drawable/ic_watch_share" />
+                        <TextView
+                            style="@style/YewWatchActionLabel"
+                            android:text="@string/mobile_watch_share" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -940,7 +854,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
-                            android:fontFamily="sans-serif-medium"
+                            android:fontFamily="@font/instrument_semibold"
                             android:maxLines="1"
                             android:textColor="@color/mobile_color_on_surface"
                             android:textSize="15sp"
@@ -967,7 +881,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:backgroundTint="@color/mobile_color_inverse_surface"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/instrument_semibold"
                         android:insetTop="4dp"
                         android:insetBottom="4dp"
                         android:letterSpacing="0"
@@ -978,7 +892,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/mobile_color_on_inverse_surface"
                         android:textSize="14sp"
-                        app:cornerRadius="20dp" />
+                        app:cornerRadius="12dp" />
 
                 </LinearLayout>
 
@@ -1011,7 +925,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/instrument_semibold"
                         android:text="@string/mobile_comments_entry"
                         android:textColor="@color/mobile_color_on_surface"
                         android:textSize="14sp" />
@@ -1067,7 +981,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_weight="1"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/instrument_semibold"
                         android:text="@string/mobile_live_chat_entry"
                         android:textColor="@color/mobile_color_on_surface"
                         android:textSize="14sp" />
@@ -1166,18 +1080,40 @@
 
                 </LinearLayout>
 
-                <!-- Related / up next -->
-                <TextView
-                    android:id="@+id/mobile_watch_related_label"
+                <!-- Related / up next. YEWPLAY(player): título de seção em Bricolage com a chave
+                     "Automático" (proposta p. 16) - a reprodução contínua do app (modo Todos x
+                     Pausar). A linha some junto com o título (MobilePlaybackActivity). -->
+                <LinearLayout
+                    android:id="@+id/mobile_watch_related_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/mobile_watch_content_padding"
-                    android:paddingTop="18dp"
-                    android:paddingBottom="6dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/mobile_watch_content_padding"
+                    android:paddingTop="14dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="2dp">
+
+                <TextView
+                    android:id="@+id/mobile_watch_related_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/mobile_watch_related"
-                    android:textColor="@color/mobile_color_on_surface"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium" />
+                    android:textAppearance="@style/TextAppearance.Yew.SectionTitle" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/mobile_watch_autoplay"
+                    style="@style/Widget.Yew.Switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:paddingHorizontal="8dp"
+                    android:switchPadding="10dp"
+                    android:text="@string/yew_watch_autoplay"
+                    android:textColor="@color/mobile_color_on_surface_secondary"
+                    android:textSize="13sp" />
+
+                </LinearLayout>
 
                 <include
                     layout="@layout/mobile_watch_related_skeleton"

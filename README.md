@@ -1,15 +1,15 @@
 <div align="center">
 
-# Monograma
+# YewPlay
 
 ### Um cliente de YouTube para celulares Android, em português.
 
-O Monograma é um fork do [NewTube](https://github.com/aleixrodriala/newtube), que por sua vez é
+O YewPlay é um fork do [NewTube](https://github.com/aleixrodriala/newtube), que por sua vez é
 construído sobre o [SmartTube](https://github.com/yuliskov/SmartTube) de [@yuliskov](https://github.com/yuliskov).
 Faça login com um código, ouça em segundo plano, baixe vídeos para assistir offline e transmita
 para o SmartTube na TV.
 
-[![Última versão](https://img.shields.io/github/v/release/juscelino25bezerra-art/Monograma?style=flat-square&label=vers%C3%A3o&color=FF5A4E)](https://github.com/juscelino25bezerra-art/Monograma/releases/latest)
+[![Última versão](https://img.shields.io/github/v/release/juscelino25bezerra-art/YewPlay?style=flat-square&label=vers%C3%A3o&color=FF5A4E)](https://github.com/juscelino25bezerra-art/YewPlay/releases/latest)
 [![Android 7.0+](https://img.shields.io/badge/Android-7.0%2B-FF5A4E?style=flat-square)](#download)
 [![Licença: MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-FF5A4E?style=flat-square)](LICENSE)
 
@@ -19,7 +19,7 @@ para o SmartTube na TV.
 > **Por baixo, o trabalho é do SmartTube e do NewTube.** O motor que conversa com o YouTube, o
 > login e as integrações com SponsorBlock, DeArrow e Return YouTube Dislike vêm do
 > [SmartTube](https://github.com/yuliskov/SmartTube). A interface de toque, o player e os
-> downloads vêm do [NewTube](https://github.com/aleixrodriala/newtube). O Monograma muda a
+> downloads vêm do [NewTube](https://github.com/aleixrodriala/newtube). O YewPlay muda a
 > identidade visual, traduz tudo para português do Brasil e ajusta a experiência. É um projeto
 > independente, sem endosso dos desenvolvedores do SmartTube ou do NewTube.
 
@@ -27,34 +27,34 @@ para o SmartTube na TV.
 
 - Nome, ícone e identidade visual próprios
 - Tradução completa para português do Brasil, com vírgula decimal e relógio de 24 horas
-- Pacote próprio (`io.github.juscelino25bezerra.monograma`): instala ao lado do NewTube, do
+- Pacote próprio (`com.yewplay`): instala ao lado do NewTube, do
   SmartTube e do app oficial
 - Atualizações vêm das versões deste repositório
 
 ## Download
 
-Baixe na página de [versões](https://github.com/juscelino25bezerra-art/Monograma/releases/latest).
+Baixe na página de [versões](https://github.com/juscelino25bezerra-art/YewPlay/releases/latest).
 
 | Seu aparelho | Arquivo |
 |:--|:--|
-| Quase todo celular dos últimos ~8 anos | `Monograma_<versão>_arm64-v8a.apk` |
-| Celulares 32 bits mais antigos | `Monograma_<versão>_armeabi-v7a.apk` |
-| Não sabe (qualquer celular ARM) | `Monograma_<versão>_universal.apk` (maior) |
-| Aparelhos x86 e emuladores | `Monograma_<versão>_x86.apk` |
+| Quase todo celular dos últimos ~8 anos | `YewPlay_<versão>_arm64-v8a.apk` |
+| Celulares 32 bits mais antigos | `YewPlay_<versão>_armeabi-v7a.apk` |
+| Não sabe (qualquer celular ARM) | `YewPlay_<versão>_universal.apk` (maior) |
+| Aparelhos x86 e emuladores | `YewPlay_<versão>_x86.apk` |
 
 - **Requer Android 7.0 ou mais recente.**
 - **Atualizações:** o app verifica sozinho se há versão nova. Com o
   [Obtainium](https://obtainium.imranr.dev), escolha *Adicionar app* e cole
-  `https://github.com/juscelino25bezerra-art/Monograma`.
+  `https://github.com/juscelino25bezerra-art/YewPlay`.
 - **Confira o que você instala:** cada versão lista o SHA-256 de todos os arquivos, e os APKs são
   gerados pelo GitHub Actions a partir da tag:
-  `gh attestation verify <arquivo>.apk -R juscelino25bezerra-art/Monograma`.
+  `gh attestation verify <arquivo>.apk -R juscelino25bezerra-art/YewPlay`.
 
 ## Compilar
 
 ```
 ANDROID_HOME=<sdk> ./gradlew :smarttubetv:assembleStmobileDebug
-# -> smarttubetv/build/outputs/renamed_apks/stmobileDebug/Monograma_<versão>_<abi>.apk
+# -> smarttubetv/build/outputs/renamed_apks/stmobileDebug/YewPlay_<versão>_<abi>.apk
 ```
 
 Instruções completas em [docs/BUILDING.md](docs/BUILDING.md). Contexto técnico para quem for mexer
@@ -83,11 +83,11 @@ em [docs/UPSTREAM_README_NewTube.md](docs/UPSTREAM_README_NewTube.md) e
 ## Licença
 
 [MIT](LICENSE), a mesma do SmartTube e do NewTube. © yuliskov (SmartTube), colaboradores do
-NewTube e do Monograma. Os avisos de copyright originais são mantidos.
+NewTube e do YewPlay. Os avisos de copyright originais são mantidos.
 
 ---
 
-*O Monograma é um projeto independente e não oficial. Não tem afiliação, financiamento,
+*O YewPlay é um projeto independente e não oficial. Não tem afiliação, financiamento,
 autorização ou endosso do Google LLC, do YouTube, nem dos desenvolvedores do SmartTube ou do
 NewTube, e não hospeda conteúdo. Salve apenas o que a lei e os termos da plataforma permitem.
 YouTube, Android e Google são marcas do Google LLC.*

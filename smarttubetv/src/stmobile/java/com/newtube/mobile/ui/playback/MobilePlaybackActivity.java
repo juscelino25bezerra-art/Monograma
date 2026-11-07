@@ -1045,6 +1045,15 @@ public class MobilePlaybackActivity extends MobileActivity
         });
         mWatchSubscribe.setOnClickListener(v -> onSubscribeTapped());
         mWatchShare.setOnClickListener(v -> shareCurrentVideo());
+        // YEWPLAY(player): Ouvir abre a escolha do segundo plano / só áudio; Janela entra em PiP
+        // (some quando o aparelho não tem picture-in-picture).
+        findViewById(R.id.mobile_watch_listen).setOnClickListener(v -> openBackgroundModeDialog());
+        View watchWindow = findViewById(R.id.mobile_watch_window);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !Helpers.isPictureInPictureSupported(this)) {
+            watchWindow.setVisibility(View.GONE);
+        } else {
+            watchWindow.setOnClickListener(v -> enterPipFromMenu());
+        }
         // Save opens the same add/remove-from-playlist sheet as gear -> More -> Save to playlist.
         mWatchSave.setOnClickListener(v -> {
             if (!WatchActionFeedback.blockIfSignedOut(this, R.string.msg_sign_in_to_save)) {
@@ -4447,6 +4456,38 @@ public class MobilePlaybackActivity extends MobileActivity
                 || QueuePlaybackMode.coversQueueOf(getVideo());
     }
 
+    /**
+     * YEWPLAY(player): "A seguir" e a chave Automático aparecem e somem juntos. A chave é a
+     * reprodução contínua: ligada = modo Todos (o padrão do app), desligada = Pausar no fim.
+     * Embaralhar, repetir um ou uma lista também contam como "ligada" e não são sobrescritos ao
+     * abrir a página - só um toque na chave grava o modo.
+     */
+    private void setRelatedHeaderVisible(boolean visible) {
+        View header = findViewById(R.id.mobile_watch_related_header);
+        if (header != null) {
+            header.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+        if (visible) {
+            syncAutoplaySwitch();
+        }
+    }
+
+    private void syncAutoplaySwitch() {
+        android.widget.CompoundButton autoplay = findViewById(R.id.mobile_watch_autoplay);
+        if (autoplay == null) {
+            return;
+        }
+        int mode = PlayerData.instance(this).getPlaybackMode();
+        autoplay.setOnCheckedChangeListener(null);
+        autoplay.setChecked(mode != PlayerConstants.PLAYBACK_MODE_PAUSE
+                && mode != PlayerConstants.PLAYBACK_MODE_CLOSE);
+        autoplay.setOnCheckedChangeListener((button, on) -> {
+            int newMode = on ? PlayerConstants.PLAYBACK_MODE_ALL : PlayerConstants.PLAYBACK_MODE_PAUSE;
+            PlayerData.instance(this).setPlaybackMode(newMode);
+            setButtonState(R.id.action_repeat, newMode);
+        });
+    }
+
     private void toggleShuffleMode() {
         // Off when anything is shuffling - including a queue-scoped shuffle, which the write below
         // clears (PlayerData.setPlaybackMode drops the override). Reading only the stored mode
@@ -5738,6 +5779,21 @@ public class MobilePlaybackActivity extends MobileActivity
         video.set(0, 0, mVideoArea.getWidth(), mVideoArea.getHeight());
         mContainer.offsetDescendantRectToMyCoords(mVideoArea, video);
 
+        // YEWPLAY(nav): a host that knows where its mini video box sits (the YewPlay mini-player
+        // is a row with a small video at its start) gets the video landed exactly there.
+        Rect target = new Rect();
+        if (host != null && video.width() > 0 && host.getMiniVideoTargetOnScreen(target) && target.width() > 0) {
+            int[] origin = new int[2];
+            mContainer.getLocationOnScreen(origin);
+            float fit = target.width() / (float) video.width();
+            mMorphScaleX = fit;
+            mMorphScaleY = fit;
+            float landedH = video.height() * fit;
+            mMorphTx = (target.left - origin[0]) - video.left;
+            mMorphTy = (target.centerY() - origin[1] - landedH / 2f) - video.top;
+            return;
+        }
+
         float scale = video.width() > 0 ? cardW / video.width() : 0.44f;
         float cardH = video.height() * scale; // 16:9 video -> ~the card's 102dp
         float targetX = mContainer.getWidth() - margin - cardW;
@@ -6569,7 +6625,7 @@ public class MobilePlaybackActivity extends MobileActivity
             if (mWatchRelatedLabel != null) {
                 // NEWTUBE(watch-jump): held over the skeleton instead of inserted above it later.
                 mWatchRelatedLabel.setText(R.string.mobile_watch_related);
-                mWatchRelatedLabel.setVisibility(View.VISIBLE);
+                setRelatedHeaderVisible(true);
             }
             // A new video is loading: the video itself starts first (by design), so show the
             // pulsing "up next" skeleton until the related feed lands.
@@ -6600,9 +6656,9 @@ public class MobilePlaybackActivity extends MobileActivity
         if (mWatchRelatedLabel != null) {
             if (offline) {
                 mWatchRelatedLabel.setText(R.string.mobile_watch_offline);
-                mWatchRelatedLabel.setVisibility(View.VISIBLE);
+                setRelatedHeaderVisible(true);
             } else {
-                mWatchRelatedLabel.setVisibility(View.GONE);
+                setRelatedHeaderVisible(false);
             }
         }
         // Nothing came for this page at all: drop what was held for it (online too - a failed
@@ -6693,7 +6749,7 @@ public class MobilePlaybackActivity extends MobileActivity
             } else {
                 Glide.with(this)
                         .load(iconUrl)
-                        .circleCrop()
+                        .transform(com.newtube.mobile.ui.common.YewAvatar.get()) // YEWPLAY: rounded square
                         .placeholder(R.drawable.ic_watch_channel_placeholder)
                         .error(R.drawable.ic_watch_channel_placeholder)
                         // NEWTUBE(motion): cross-fade from the placeholder (network loads only).
@@ -8451,7 +8507,7 @@ public class MobilePlaybackActivity extends MobileActivity
         }
         if (mWatchRelatedLabel != null && !mRelatedVideos.isEmpty()) {
             mWatchRelatedLabel.setText(R.string.mobile_watch_related);
-            mWatchRelatedLabel.setVisibility(View.VISIBLE);
+            setRelatedHeaderVisible(true);
         }
     }
 

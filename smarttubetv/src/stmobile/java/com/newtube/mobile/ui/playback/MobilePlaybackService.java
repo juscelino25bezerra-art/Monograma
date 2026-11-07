@@ -337,7 +337,7 @@ public class MobilePlaybackService extends Service {
                 new NotificationContextWrapper(this), NOTIFICATION_ID, CHANNEL_ID)
                 .setChannelNameResourceId(R.string.mobile_playback_channel_name)
                 .setChannelDescriptionResourceId(R.string.mobile_playback_channel_desc)
-                .setSmallIconResourceId(R.drawable.ic_notification_play)
+                .setSmallIconResourceId(R.drawable.ic_stat_yewplay)
                 .setMediaDescriptionAdapter(new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public CharSequence getCurrentContentTitle(Player player) {
