@@ -494,4 +494,7 @@
     <string name="yew_about_group_updates">Version and updates</string>
     <string name="yew_about_group_help">Help and project</string>
     <string name="yew_about_group_legal">Legal</string>
+    <!-- YEWPLAY(downloads): as abas da tela Downloads. -->
+    <string name="yew_downloads_videos">Videos</string>
+    <string name="yew_downloads_audios">Audio</string>
 </resources>

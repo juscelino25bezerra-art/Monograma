@@ -386,4 +386,7 @@
     <string name="yew_about_group_updates">Versão e atualizações</string>
     <string name="yew_about_group_help">Ajuda e projeto</string>
     <string name="yew_about_group_legal">Informações legais</string>
+    <!-- YEWPLAY(downloads): as abas da tela Downloads. -->
+    <string name="yew_downloads_videos">Vídeos</string>
+    <string name="yew_downloads_audios">Áudios</string>
 </resources>
