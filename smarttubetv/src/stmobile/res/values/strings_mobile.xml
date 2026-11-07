@@ -482,4 +482,8 @@
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>
     </plurals>
+    <!-- YEWPLAY(player): ações da página do vídeo - Ouvir é o segundo plano, Janela o picture-in-picture. -->
+    <string name="yew_watch_listen">Listen</string>
+    <string name="yew_watch_window">Window</string>
+    <string name="yew_watch_autoplay">Autoplay</string>
 </resources>
