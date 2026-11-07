@@ -1047,7 +1047,7 @@ public class MobilePlaybackActivity extends MobileActivity
         mWatchShare.setOnClickListener(v -> shareCurrentVideo());
         // YEWPLAY(player): Ouvir abre a escolha do segundo plano / só áudio; Janela entra em PiP
         // (some quando o aparelho não tem picture-in-picture).
-        findViewById(R.id.mobile_watch_listen).setOnClickListener(v -> openBackgroundModeDialog());
+        findViewById(R.id.mobile_watch_listen).setOnClickListener(v -> openListenScreen());
         View watchWindow = findViewById(R.id.mobile_watch_window);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !Helpers.isPictureInPictureSupported(this)) {
             watchWindow.setVisibility(View.GONE);
@@ -4806,6 +4806,13 @@ public class MobilePlaybackActivity extends MobileActivity
             // OpenFirstFrame already knows whether it was this open's; the texture may have it.
             maybeLiftStillAtFrame();
             onVideoShapeKnown();
+            if (sListenOnStart) {
+                // YEWPLAY(playlist): the playlist's headphones button - straight to Ouvir.
+                sListenOnStart = false;
+                if (mContainer != null) {
+                    mContainer.postDelayed(MobilePlaybackActivity.this::openListenScreen, 350);
+                }
+            }
         }
     };
 
@@ -6340,6 +6347,69 @@ public class MobilePlaybackActivity extends MobileActivity
     }
 
     /** X tapped on the Browse mini bar: stop playback and quietly retire this hidden activity. */
+    /** YEWPLAY(playlist): open Ouvir as soon as the next playback starts (the playlist's headphones). */
+    private static boolean sListenOnStart;
+
+    public static void requestListenOnStart() {
+        sListenOnStart = true;
+    }
+
+    /** YEWPLAY(listen): the Ouvir screen's buttons, routed to the same paths as the player's. */
+    void onListenAction(int action) {
+        switch (action) {
+            case MiniPlayerBridge.LISTEN_PREVIOUS:
+                if (mPresenter != null) {
+                    mPresenter.onPreviousClicked();
+                }
+                break;
+            case MiniPlayerBridge.LISTEN_NEXT:
+                nextFromMiniPlayer();
+                break;
+            case MiniPlayerBridge.LISTEN_SHUFFLE:
+                toggleShuffleMode();
+                break;
+            case MiniPlayerBridge.LISTEN_REPEAT:
+                openPlayerOption(R.id.action_repeat, true);
+                break;
+            case MiniPlayerBridge.LISTEN_SAVE:
+                openPlayerOption(R.id.action_playlist_add, false);
+                break;
+            case MiniPlayerBridge.LISTEN_SHARE:
+                shareCurrentVideo();
+                break;
+            case MiniPlayerBridge.LISTEN_QUEUE:
+                openPlayerOption(R.id.action_playback_queue, false);
+                break;
+            case MiniPlayerBridge.LISTEN_BACKGROUND_MODE:
+                openBackgroundModeDialog();
+                break;
+            default:
+                break;
+        }
+    }
+
+    boolean isShufflingForListen() {
+        return isShuffling();
+    }
+
+    void applySpeedFromListen(float speed) {
+        applySpeed(speed);
+    }
+
+    /**
+     * YEWPLAY(listen): Ouvir (proposta p. 16) - o áudio ganha tela própria. O player vira uma
+     * sessão mini (o mesmo caminho de abrir um canal) e a tela Ouvir o controla.
+     */
+    private void openListenScreen() {
+        if (mIsInPip || mPipEnterPending || getVideo() == null) {
+            openBackgroundModeDialog();
+            return;
+        }
+        MiniPlayerBridge.prepareNavigation(this);
+        startActivity(new android.content.Intent(this, MobileListenActivity.class));
+        overridePendingTransition(R.anim.yew_listen_enter, 0);
+    }
+
     /** YEWPLAY(mini): "próximo" vindo da barra flutuante. */
     void nextFromMiniPlayer() {
         if (mPresenter != null) {

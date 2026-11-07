@@ -79,4 +79,6 @@
     <dimen name="yew_engraving_height">170dp</dimen>
     <!-- YEWPLAY(subs): avatar da fileira de canais de Inscrições. -->
     <dimen name="yew_strip_avatar">52dp</dimen>
+    <!-- YEWPLAY(playlist): a capa em mosaico do topo da playlist. -->
+    <dimen name="yew_playlist_cover">112dp</dimen>
 </resources>

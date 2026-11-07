@@ -539,4 +539,13 @@
         <item quantity="one">%1$d new</item>
         <item quantity="other">%1$d new</item>
     </plurals>
+    <!-- YEWPLAY(listen): a tela Ouvir (proposta p. 16). -->
+    <string name="yew_listen_close">Close</string>
+    <string name="yew_listen_now_playing">Now playing</string>
+    <string name="yew_listen_previous">Previous</string>
+    <string name="yew_listen_timer">Sleep timer</string>
+    <string name="yew_listen_show_video">Show video</string>
+    <string name="yew_listen_audio_mode">Background playback</string>
+    <string name="yew_playlist_play">Play</string>
+    <string name="yew_playlist_shuffle">Shuffle</string>
 </resources>

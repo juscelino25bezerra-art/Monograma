@@ -27,11 +27,25 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
     interface Callbacks {
         void onPlayAll();
         void onShuffle();
+        /** YEWPLAY(playlist): the headphones button - play from the top and open Ouvir. */
+        void onListen();
     }
 
     private final Callbacks mCallbacks;
     private Video mPlaylist;
     private boolean mActionsEnabled;
+    private java.util.List<String> mMosaic = java.util.Collections.emptyList();
+
+    /** YEWPLAY(playlist): the first four thumbnails, for the mosaic cover. */
+    void setMosaic(java.util.List<String> urls) {
+        if (urls.equals(mMosaic)) {
+            return;
+        }
+        mMosaic = new java.util.ArrayList<>(urls);
+        if (mPlaylist != null) {
+            notifyItemChanged(0);
+        }
+    }
 
     PlaylistHeaderAdapter(Callbacks callbacks) {
         mCallbacks = callbacks;
@@ -84,7 +98,7 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
 
     @Override
     public void onBindViewHolder(@NonNull HeaderHolder holder, int position) {
-        holder.bind(mPlaylist, mActionsEnabled);
+        holder.bind(mPlaylist, mActionsEnabled, mMosaic);
     }
 
     static class HeaderHolder extends RecyclerView.ViewHolder {
@@ -95,6 +109,9 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
         private final TextView mMeta;
         private final MaterialButton mPlayAll;
         private final MaterialButton mShuffle;
+        private final MaterialButton mListen;
+        private final View mMosaicGrid;
+        private final ImageView[] mTiles = new ImageView[4];
 
         HeaderHolder(@NonNull View itemView, Callbacks callbacks) {
             super(itemView);
@@ -109,9 +126,16 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
 
             mPlayAll.setOnClickListener(v -> callbacks.onPlayAll());
             mShuffle.setOnClickListener(v -> callbacks.onShuffle());
+            mListen = itemView.findViewById(R.id.yew_playlist_listen);
+            mListen.setOnClickListener(v -> callbacks.onListen());
+            mMosaicGrid = itemView.findViewById(R.id.yew_playlist_mosaic);
+            int[] ids = {R.id.yew_mosaic_0, R.id.yew_mosaic_1, R.id.yew_mosaic_2, R.id.yew_mosaic_3};
+            for (int i = 0; i < 4; i++) {
+                mTiles[i] = itemView.findViewById(ids[i]);
+            }
         }
 
-        void bind(Video playlist, boolean actionsEnabled) {
+        void bind(Video playlist, boolean actionsEnabled, java.util.List<String> mosaic) {
             if (playlist == null) {
                 return;
             }
@@ -131,10 +155,19 @@ class PlaylistHeaderAdapter extends RecyclerView.Adapter<PlaylistHeaderAdapter.H
 
             mPlayAll.setEnabled(actionsEnabled);
             mShuffle.setEnabled(actionsEnabled);
+            mListen.setEnabled(actionsEnabled);
 
             String coverUrl = playlist.getCardImageUrl();
             Glide.with(itemView.getContext().getApplicationContext()).load(coverUrl).centerCrop().into(mCover);
-            Glide.with(itemView.getContext().getApplicationContext()).load(coverUrl).centerCrop().into(mBackdrop);
+            // YEWPLAY(playlist): the mosaic once four thumbnails are known; one cover until then.
+            boolean mosaicReady = mosaic.size() >= 4;
+            mMosaicGrid.setVisibility(mosaicReady ? View.VISIBLE : View.GONE);
+            mCover.setVisibility(mosaicReady ? View.GONE : View.VISIBLE);
+            if (mosaicReady) {
+                for (int i = 0; i < 4; i++) {
+                    Glide.with(itemView.getContext().getApplicationContext()).load(mosaic.get(i)).centerCrop().into(mTiles[i]);
+                }
+            }
         }
 
         private CharSequence joinMeta(CharSequence first, CharSequence second) {

@@ -432,4 +432,13 @@
         <item quantity="many">%1$d novos</item>
         <item quantity="other">%1$d novos</item>
     </plurals>
+    <!-- YEWPLAY(listen): a tela Ouvir (proposta p. 16). -->
+    <string name="yew_listen_close">Fechar</string>
+    <string name="yew_listen_now_playing">Tocando agora</string>
+    <string name="yew_listen_previous">Anterior</string>
+    <string name="yew_listen_timer">Timer para dormir</string>
+    <string name="yew_listen_show_video">Ver o vídeo</string>
+    <string name="yew_listen_audio_mode">Reprodução em segundo plano</string>
+    <string name="yew_playlist_play">Reproduzir</string>
+    <string name="yew_playlist_shuffle">Aleatório</string>
 </resources>

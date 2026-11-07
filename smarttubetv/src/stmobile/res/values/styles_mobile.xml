@@ -497,6 +497,36 @@
         <item name="android:importantForAccessibility">no</item>
     </style>
 
+    <!-- YEWPLAY(playlist): um quarto da capa em mosaico (proposta p. 15). -->
+    <style name="YewMosaicTile">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_rowWeight">1</item>
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <!-- YEWPLAY(listen): controles da tela Ouvir (proposta p. 16). -->
+    <style name="YewListenControl">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:tint">@color/mobile_color_on_surface</item>
+    </style>
+    <style name="YewListenTool">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:tint">@color/mobile_color_on_surface_secondary</item>
+    </style>
+
     <!-- YEWPLAY(nav): rótulos da barra flutuante; o ativo em SemiBold. -->
     <style name="YewNavText" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">11.5sp</item>

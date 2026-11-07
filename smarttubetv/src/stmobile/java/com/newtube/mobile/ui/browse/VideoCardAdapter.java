@@ -104,6 +104,17 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
     private ListDecorator mDecorator;
     private OnVideoClickListener mStripChannelListener;
+    private boolean mNumbered;
+
+    /** YEWPLAY(playlist): number the rows 1, 2, 3... (playlists, proposta p. 15). */
+    public void setNumbered(boolean numbered) {
+        if (mNumbered != numbered) {
+            mNumbered = numbered;
+            if (getItemCount() > 0) {
+                notifyDataSetChanged();
+            }
+        }
+    }
 
     /** YEWPLAY(subs): what a tap on a channel of the Inscrições strip does. */
     public void setStripChannelListener(OnVideoClickListener listener) {
@@ -259,6 +270,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         } else {
             ((VideoViewHolder) holder).bind(getItem(position), mLongClickListener);
             ((VideoViewHolder) holder).bindChannelAvatar(mChannelClickListener);
+            ((VideoViewHolder) holder).bindNumber(mNumbered ? position + 1 : 0);
         }
     }
 
@@ -472,6 +484,14 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                     mOverflow.setContentDescription(context.getString(R.string.mobile_player_more));
                     mOverflow.setOnClickListener(v -> openMenu());
                 }
+            }
+        }
+
+        void bindNumber(int number) {
+            View view = itemView.findViewById(R.id.yew_row_number);
+            if (view instanceof TextView) {
+                ((TextView) view).setText(number > 0 ? String.valueOf(number) : null);
+                view.setVisibility(number > 0 ? View.VISIBLE : View.GONE);
             }
         }
 

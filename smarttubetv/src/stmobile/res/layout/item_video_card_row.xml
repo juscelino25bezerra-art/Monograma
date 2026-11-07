@@ -29,6 +29,20 @@
         android:paddingHorizontal="8dp"
         android:paddingVertical="8dp">
 
+        <!-- YEWPLAY(playlist): o número do item numa playlist (proposta p. 15). -->
+        <TextView
+            android:id="@+id/yew_row_number"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="12.5sp"
+            android:visibility="gone"
+            tools:text="1"
+            tools:visibility="visible" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/video_thumbnail_frame"
             android:layout_width="@dimen/yew_compact_thumb_width"
