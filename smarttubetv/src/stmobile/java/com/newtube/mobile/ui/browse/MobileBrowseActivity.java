@@ -1576,6 +1576,8 @@ public class MobileBrowseActivity extends MobileActivity
         mAdapter.setChannelAvatars(showsChannelAvatars(mCurrentSectionId) ? this::onChannelAvatarClicked : null);
         // YEWPLAY(visual): the large item on Início and its filter tabs, the compact one elsewhere.
         mAdapter.setRowLayout(!isOnHomeDestination());
+        // YEWPLAY(home): the editorial item heads Início's "Tudo" only, not its other filter tabs.
+        mAdapter.setHeroFirst(mCurrentSectionId == MediaGroup.TYPE_HOME && !mYouShowing);
     }
 
     /** The loading skeleton's avatar circles, where the cards will have avatars. */

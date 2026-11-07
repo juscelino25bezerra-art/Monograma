@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(home): o degradê do destaque do Início - transparente no alto, quase grafite embaixo,
+     para o título branco se ler sobre qualquer miniatura (fixo nos dois temas: fica sobre a foto). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:centerColor="#5918141A"
+        android:centerY="0.55"
+        android:endColor="#F218141A"
+        android:startColor="#0018141A" />
+</shape>
