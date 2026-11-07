@@ -77,4 +77,6 @@
     <dimen name="yew_capsule_clearance">88dp</dimen>
     <!-- YEWPLAY(empty): altura da gravura de teixo nos estados vazios (proposta p. 17). -->
     <dimen name="yew_engraving_height">170dp</dimen>
+    <!-- YEWPLAY(subs): avatar da fileira de canais de Inscrições. -->
+    <dimen name="yew_strip_avatar">52dp</dimen>
 </resources>

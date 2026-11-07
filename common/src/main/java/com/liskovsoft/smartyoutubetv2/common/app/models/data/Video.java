@@ -133,6 +133,11 @@ public final class Video {
     public long yewStorageUsed = -1;
     public long yewStorageFree = -1;
 
+    /** YEWPLAY(subs): the channel strip pseudo-item of Inscrições - one video per channel, newest first. */
+    public java.util.List<Video> yewStrip;
+    /** YEWPLAY(subs): the strip's channels with something from today (the rubi dot). */
+    public java.util.Set<String> yewStripNew;
+
     /** YEWPLAY(lists): a section header pseudo-item. */
     public static Video yewHeader(String key, String title, String end, boolean action) {
         Video video = new Video();
@@ -145,7 +150,7 @@ public final class Video {
 
     /** YEWPLAY(lists): whether this item is a header or storage pseudo-item, not content. */
     public boolean isYewPseudo() {
-        return yewHeader != null || yewStorageUsed >= 0;
+        return yewHeader != null || yewStorageUsed >= 0 || yewStrip != null;
     }
     private int startSegmentNum;
     private long liveDurationMs = -1;

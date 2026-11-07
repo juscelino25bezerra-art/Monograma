@@ -422,4 +422,14 @@
     <string name="yew_downloads_resume_all">Retomar tudo</string>
     <string name="yew_storage_used">%1$s usados pelo app</string>
     <string name="yew_storage_free">%1$s livres</string>
+    <!-- YEWPLAY(subs): o feed de Inscrições por dia (proposta p. 15). -->
+    <string name="yew_day_today">Hoje</string>
+    <string name="yew_day_yesterday">Ontem</string>
+    <string name="yew_day_week">Esta semana</string>
+    <string name="yew_day_earlier">Antes</string>
+    <plurals name="yew_subs_new">
+        <item quantity="one">%1$d novo</item>
+        <item quantity="many">%1$d novos</item>
+        <item quantity="other">%1$d novos</item>
+    </plurals>
 </resources>

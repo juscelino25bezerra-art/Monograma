@@ -46,6 +46,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private static final int VIEW_TYPE_HEADER = 4;
     /** YEWPLAY(downloads): the storage pseudo-item at the top of Downloads. */
     private static final int VIEW_TYPE_STORAGE = 5;
+    /** YEWPLAY(subs): the channel strip at the top of Inscrições. */
+    private static final int VIEW_TYPE_STRIP = 6;
 
     public interface OnVideoClickListener {
         void onVideoClick(Video video);
@@ -101,6 +103,12 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     }
 
     private ListDecorator mDecorator;
+    private OnVideoClickListener mStripChannelListener;
+
+    /** YEWPLAY(subs): what a tap on a channel of the Inscrições strip does. */
+    public void setStripChannelListener(OnVideoClickListener listener) {
+        mStripChannelListener = listener;
+    }
 
     public void setListDecorator(ListDecorator decorator) {
         mDecorator = decorator;
@@ -128,6 +136,9 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         Video item = getItem(position);
         if (item.yewStorageUsed >= 0) {
             return VIEW_TYPE_STORAGE;
+        }
+        if (item.yewStrip != null) {
+            return VIEW_TYPE_STRIP;
         }
         if (item.yewHeader != null) {
             return VIEW_TYPE_HEADER;
@@ -182,6 +193,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                 && (mRowLayout || getItemViewType(position) == VIEW_TYPE_CHANNEL
                         || getItemViewType(position) == VIEW_TYPE_HEADER
                         || getItemViewType(position) == VIEW_TYPE_STORAGE
+                        || getItemViewType(position) == VIEW_TYPE_STRIP
                         || getItemViewType(position) == VIEW_TYPE_VIDEO_HERO);
     }
 
@@ -220,6 +232,9 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         if (viewType == VIEW_TYPE_HEADER) {
             return new HeaderViewHolder(inflater.inflate(R.layout.item_yew_list_header, parent, false), mClickListener);
         }
+        if (viewType == VIEW_TYPE_STRIP) {
+            return new StripViewHolder(inflater.inflate(R.layout.item_yew_channel_strip, parent, false));
+        }
         if (viewType == VIEW_TYPE_STORAGE) {
             return new StorageViewHolder(inflater.inflate(R.layout.item_yew_storage, parent, false));
         }
@@ -235,6 +250,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) holder).bind(getItem(position));
+        } else if (holder instanceof StripViewHolder) {
+            ((StripViewHolder) holder).bind(getItem(position), mStripChannelListener);
         } else if (holder instanceof StorageViewHolder) {
             ((StorageViewHolder) holder).bind(getItem(position));
         } else if (holder instanceof ChannelViewHolder) {
@@ -850,6 +867,69 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             long total = storage.yewStorageUsed + Math.max(0, storage.yewStorageFree);
             mBar.setProgress(total > 0 ? (int) Math.max(storage.yewStorageUsed > 0 ? 8 : 0,
                     storage.yewStorageUsed * 1000 / total) : 0);
+        }
+    }
+
+    /**
+     * YEWPLAY(subs): the avatars row of Inscrições (proposta p. 15) - rounded-square avatars with the
+     * channel's name under them and a rubi dot on channels with something new today. A tap opens
+     * the channel, like a card's avatar.
+     */
+    static class StripViewHolder extends RecyclerView.ViewHolder {
+        private final android.widget.LinearLayout mRow;
+
+        StripViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mRow = itemView.findViewById(R.id.yew_strip_row);
+        }
+
+        void bind(Video strip, OnVideoClickListener onChannel) {
+            Context context = itemView.getContext();
+            mRow.removeAllViews();
+            LayoutInflater inflater = LayoutInflater.from(context);
+            int size = context.getResources().getDimensionPixelSize(R.dimen.yew_strip_avatar);
+            for (Video video : strip.yewStrip) {
+                View cell = inflater.inflate(R.layout.item_yew_channel_strip_cell, mRow, false);
+                ImageView avatar = cell.findViewById(R.id.yew_strip_avatar);
+                TextView initials = cell.findViewById(R.id.yew_strip_initials);
+                TextView name = cell.findViewById(R.id.yew_strip_name);
+                String author = video.getAuthor() != null ? video.getAuthor() : "";
+                name.setText(author);
+                initials.setText(initialsOf(author));
+                String channelId = ChannelAvatars.channelIdOf(video);
+                cell.findViewById(R.id.yew_strip_dot).setVisibility(strip.yewStripNew != null && channelId != null
+                        && strip.yewStripNew.contains(channelId) ? View.VISIBLE : View.GONE);
+                String url = ChannelAvatars.get(video);
+                if (url != null) {
+                    initials.setVisibility(View.GONE);
+                    Glide.with(context)
+                            .load(ChannelAvatars.sized(url, size))
+                            .override(size)
+                            .transform(com.newtube.mobile.ui.common.YewAvatar.get())
+                            .placeholder(R.drawable.bg_card_avatar_placeholder)
+                            .into(avatar);
+                } else {
+                    ChannelAvatars.request(video);
+                    initials.setVisibility(View.VISIBLE);
+                    avatar.setImageResource(R.drawable.bg_card_avatar_placeholder);
+                }
+                cell.setContentDescription(author);
+                cell.setOnClickListener(onChannel == null ? null : v -> onChannel.onVideoClick(video));
+                mRow.addView(cell);
+            }
+        }
+
+        private static String initialsOf(String name) {
+            StringBuilder out = new StringBuilder();
+            for (String part : name.trim().split("\\s+")) {
+                if (!part.isEmpty() && Character.isLetterOrDigit(part.codePointAt(0))) {
+                    out.appendCodePoint(Character.toUpperCase(part.codePointAt(0)));
+                }
+                if (out.length() >= 2) {
+                    break;
+                }
+            }
+            return out.toString();
         }
     }
 }

@@ -423,6 +423,69 @@ public class MobileBrowseActivity extends MobileActivity
         return out;
     }
 
+    /**
+     * YEWPLAY(subs): Inscrições as in the proposal (p. 15) - the channels row on top (newest first,
+     * a rubi dot on those with something from today), then the feed under Hoje / Ontem / Esta
+     * semana / Antes. A video whose age can't be read stays in the group above it.
+     */
+    private List<Video> decorateSubscriptions(List<Video> list) {
+        List<Video> videos = new ArrayList<>(list.size());
+        for (Video video : list) {
+            if (!video.isYewPseudo()) {
+                videos.add(video);
+            }
+        }
+        if (videos.isEmpty() || videos.get(0).isChannel()) {
+            return list; // the signed-out/empty states and the channels list keep their own shape
+        }
+        int[] days = new int[videos.size()];
+        int day = FeedDays.TODAY;
+        int todayCount = 0;
+        java.util.LinkedHashMap<String, Video> channels = new java.util.LinkedHashMap<>();
+        java.util.Set<String> fresh = new java.util.HashSet<>();
+        for (int i = 0; i < videos.size(); i++) {
+            Video video = videos.get(i);
+            int parsed = FeedDays.of(video);
+            if (parsed != FeedDays.UNKNOWN) {
+                day = Math.max(day, parsed); // the feed is newest first: never go back up
+            }
+            days[i] = day;
+            String channelId = com.newtube.mobile.ui.common.ChannelAvatars.channelIdOf(video);
+            String key = channelId != null ? channelId : video.getAuthor();
+            if (key != null && !channels.containsKey(key) && channels.size() < 30) {
+                channels.put(key, video);
+            }
+            if (day == FeedDays.TODAY) {
+                todayCount++;
+                if (channelId != null) {
+                    fresh.add(channelId);
+                }
+            }
+        }
+        List<Video> out = new ArrayList<>(videos.size() + 5);
+        if (channels.size() > 1) {
+            Video strip = new Video();
+            strip.videoId = "yew:strip";
+            strip.yewStrip = new ArrayList<>(channels.values());
+            strip.yewStripNew = fresh;
+            out.add(strip);
+        }
+        int shown = -1;
+        for (int i = 0; i < videos.size(); i++) {
+            if (days[i] != shown) {
+                shown = days[i];
+                int title = shown == FeedDays.TODAY ? R.string.yew_day_today
+                        : shown == FeedDays.YESTERDAY ? R.string.yew_day_yesterday
+                        : shown == FeedDays.THIS_WEEK ? R.string.yew_day_week : R.string.yew_day_earlier;
+                String end = shown == FeedDays.TODAY && todayCount > 0
+                        ? getResources().getQuantityString(R.plurals.yew_subs_new, todayCount, todayCount) : null;
+                out.add(Video.yewHeader("day:" + shown, getString(title), end, false));
+            }
+            out.add(videos.get(i));
+        }
+        return out;
+    }
+
     /** YEWPLAY(downloads): "Pausar tudo" / "Retomar tudo" in the Baixando header. */
     private void onYewHeaderAction(Video header) {
         boolean pause = "yew:active:pause".equals(header.videoId);
@@ -989,8 +1052,10 @@ public class MobileBrowseActivity extends MobileActivity
     private void setupContentGrid() {
         mLayoutManager = new GridLayoutManager(this, computeSpanCount());
         mAdapter = new VideoCardAdapter(this::onVideoClicked, this::onVideoLongClicked);
+        mAdapter.setStripChannelListener(this::onChannelAvatarClicked);
         // YEWPLAY(downloads): Baixando / Concluídos e o espaço usado, só na tela Downloads.
-        mAdapter.setListDecorator(list -> isDownloadsSectionShowing() ? decorateDownloads(list) : list);
+        mAdapter.setListDecorator(list -> isDownloadsSectionShowing() ? decorateDownloads(list)
+                : mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS && !mYouShowing ? decorateSubscriptions(list) : list);
 
         // Channel rows (rare on Home, possible in some sections) span the whole grid width
         // when landscape/tablet layouts use 2+ columns.
