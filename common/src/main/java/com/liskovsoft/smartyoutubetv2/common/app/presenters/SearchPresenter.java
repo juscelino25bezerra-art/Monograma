@@ -447,6 +447,18 @@ public class SearchPresenter extends BasePresenter<SearchView> implements VideoG
         }
     }
 
+    /** YEWPLAY(search): o filtro por tipo das abas da Busca (0 = Tudo, ou um SearchOptions.TYPE_*). */
+    public void setTypeFilter(int type) {
+        if (mTypeOptions != type) {
+            mTypeOptions = type;
+            loadSearchResult();
+        }
+    }
+
+    public int getTypeFilter() {
+        return mTypeOptions;
+    }
+
     private void loadSearchResult() {
         if (getView() == null) {
             return;

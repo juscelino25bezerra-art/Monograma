@@ -8,16 +8,37 @@
 
     <!-- YEWPLAY(settings): título grande (Bricolage, proposta p. 18) numa linha própria, abaixo
          da seta de voltar, como os títulos de tela do Início e da Biblioteca. -->
-    <ImageButton
-        android:id="@+id/settings_back"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="4dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/mobile_dialog_back"
-        android:padding="12dp"
-        android:src="@drawable/ic_mobile_back_arrow" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp">
+
+        <ImageButton
+            android:id="@+id/settings_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_dialog_back"
+            android:padding="12dp"
+            android:src="@drawable/ic_mobile_back_arrow" />
+
+        <!-- YEWPLAY(settings): a busca da proposta (p. 17) é a lupa no topo, não um campo; o id é o
+             do campo antigo, então quem abre a busca (SettingsSearchFragment) não muda. -->
+        <ImageButton
+            android:id="@+id/settings_search_field"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_settings_search_hint"
+            android:padding="12dp"
+            android:src="@drawable/ic_yew_magnifier"
+            android:tint="@color/mobile_color_on_surface"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/settings_title"
@@ -32,45 +53,6 @@
         android:paddingBottom="10dp"
         android:textAppearance="@style/TextAppearance.Yew.ScreenTitle"
         tools:text="Settings" />
-
-    <!-- "Search settings" on the top level, pinned under the title: a tap opens the search page
-         (SettingsSearchFragment). Gone on every other page. -->
-    <LinearLayout
-        android:id="@+id/settings_search_field"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginStart="@dimen/yew_side_margin"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="@dimen/yew_side_margin"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/mobile_settings_search_bar"
-        android:clickable="true"
-        android:contentDescription="@string/mobile_settings_search_hint"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_mobile_search"
-            android:tint="@color/mobile_color_on_surface_secondary" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:importantForAccessibility="no"
-            android:paddingStart="16dp"
-            android:text="@string/mobile_settings_search_hint"
-            android:textColor="@color/mobile_color_on_surface_secondary"
-            android:textSize="15sp" />
-
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/settings_list"

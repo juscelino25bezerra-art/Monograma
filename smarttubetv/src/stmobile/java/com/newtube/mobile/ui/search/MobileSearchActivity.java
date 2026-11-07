@@ -89,7 +89,8 @@ public class MobileSearchActivity extends MobileActivity
     private MobileMiniPlayerController mMiniPlayer;
 
     private EditText mSearchInput;
-    private ImageButton mBackButton;
+    private View mBackButton;
+    private com.newtube.mobile.ui.browse.FilterTabs mTypeTabs;
     private ImageButton mClearButton;
     private ImageButton mMicButton;
     private RecyclerView mSuggestions;
@@ -168,6 +169,27 @@ public class MobileSearchActivity extends MobileActivity
         mBackButton = findViewById(R.id.mobile_search_back);
         mClearButton = findViewById(R.id.mobile_search_clear);
         mMicButton = findViewById(R.id.mobile_search_mic);
+        // YEWPLAY(search): abas por tipo (proposta p. 14). "Músicas" não existe nos filtros do
+        // YouTube que o app usa, então a quinta aba é Filmes.
+        mTypeTabs = new com.newtube.mobile.ui.browse.FilterTabs(findViewById(R.id.mobile_search_filter_scroll),
+                findViewById(R.id.mobile_search_filter_tabs), type -> {
+                    mTypeTabs.select(type);
+                    if (mPresenter != null) {
+                        mPresenter.setTypeFilter(type);
+                    }
+                });
+        java.util.List<com.newtube.mobile.ui.browse.FilterTabs.Tab> typeTabs = new java.util.ArrayList<>();
+        typeTabs.add(new com.newtube.mobile.ui.browse.FilterTabs.Tab(0, getString(R.string.yew_filter_all)));
+        typeTabs.add(new com.newtube.mobile.ui.browse.FilterTabs.Tab(
+                com.liskovsoft.mediaserviceinterfaces.data.SearchOptions.TYPE_VIDEO, getString(R.string.yew_search_type_videos)));
+        typeTabs.add(new com.newtube.mobile.ui.browse.FilterTabs.Tab(
+                com.liskovsoft.mediaserviceinterfaces.data.SearchOptions.TYPE_CHANNEL, getString(R.string.yew_search_type_channels)));
+        typeTabs.add(new com.newtube.mobile.ui.browse.FilterTabs.Tab(
+                com.liskovsoft.mediaserviceinterfaces.data.SearchOptions.TYPE_PLAYLIST, getString(R.string.yew_search_type_playlists)));
+        typeTabs.add(new com.newtube.mobile.ui.browse.FilterTabs.Tab(
+                com.liskovsoft.mediaserviceinterfaces.data.SearchOptions.TYPE_MOVIE, getString(R.string.yew_search_type_movies)));
+        mTypeTabs.setTabs(typeTabs);
+        mTypeTabs.select(0);
         mSuggestions = findViewById(R.id.mobile_search_suggestions);
         mGrid = findViewById(R.id.mobile_search_grid);
         // NEWTUBE(mini-inset): the last row can scroll clear of the docked mini-player card.
@@ -403,6 +425,10 @@ public class MobileSearchActivity extends MobileActivity
         if (mClearButton != null) {
             mClearButton.setVisibility(TextUtils.isEmpty(mSearchInput.getText()) ? View.GONE : View.VISIBLE);
         }
+        if (mMicButton != null) {
+            // YEWPLAY(search): o microfone e o X dividem o fim do campo.
+            mMicButton.setVisibility(TextUtils.isEmpty(mSearchInput.getText()) ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void submitSearch(String query) {
@@ -439,6 +465,10 @@ public class MobileSearchActivity extends MobileActivity
         mSearchInput.clearFocus();
         mSuggestions.setVisibility(View.GONE);
         mTagAdapter.clearTags();
+        if (mTypeTabs != null) {
+            mTypeTabs.select(mPresenter.getTypeFilter());
+            mTypeTabs.show(true);
+        }
         mPresenter.onSearch(normalized);
     }
 

@@ -402,4 +402,9 @@
     <string name="yew_empty_signin_title">Faça login para ver</string>
     <string name="yew_library_saved_playlists">Playlists salvas</string>
     <string name="yew_mini_next">Próximo</string>
+    <string name="yew_search_cancel">Cancelar</string>
+    <string name="yew_search_type_videos">Vídeos</string>
+    <string name="yew_search_type_channels">Canais</string>
+    <string name="yew_search_type_playlists">Playlists</string>
+    <string name="yew_search_type_movies">Filmes</string>
 </resources>

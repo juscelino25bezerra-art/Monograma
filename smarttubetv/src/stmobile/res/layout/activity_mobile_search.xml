@@ -24,6 +24,9 @@
     android:background="?attr/newtubeColorBackground"
     android:orientation="vertical">
 
+    <!-- YEWPLAY(search): o topo da Busca na proposta (p. 14): campo grande com a lupa dentro e o X
+         de limpar, "Cancelar" em texto ao lado (volta, como a seta antiga) e, depois de buscar, as
+         abas por tipo com o ponto rubi. O microfone fica dentro do campo enquanto ele está vazio. -->
     <LinearLayout
         android:id="@+id/mobile_search_toolbar"
         android:layout_width="match_parent"
@@ -31,57 +34,98 @@
         android:background="?attr/newtubeColorBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="4dp">
+        android:paddingStart="@dimen/yew_side_margin"
+        android:paddingEnd="8dp">
 
-        <ImageButton
-            android:id="@+id/mobile_search_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/mobile_back"
-            android:padding="12dp"
-            android:src="@drawable/ic_mobile_back_arrow" />
-
-        <EditText
-            android:id="@+id/mobile_search_input"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="44dp"
-            android:layout_marginHorizontal="4dp"
             android:layout_weight="1"
             android:background="@drawable/mobile_search_field_background"
-            android:hint="@string/mobile_search_hint"
-            android:imeOptions="actionSearch"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:maxLines="1"
-            android:paddingHorizontal="16dp"
-            android:singleLine="true"
-            android:textColor="@color/mobile_color_on_surface"
-            android:textColorHint="@color/mobile_color_on_surface_secondary"
-            android:textSize="18sp" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="14dp">
 
-        <!-- Clear the query; visible only while the field has text. -->
-        <ImageButton
-            android:id="@+id/mobile_search_clear"
-            android:layout_width="48dp"
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_yew_magnifier"
+                android:tint="@color/mobile_color_on_surface_secondary" />
+
+            <EditText
+                android:id="@+id/mobile_search_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/mobile_search_hint"
+                android:imeOptions="actionSearch"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingEnd="4dp"
+                android:singleLine="true"
+                android:textColor="@color/mobile_color_on_surface"
+                android:textColorHint="@color/mobile_color_on_surface_secondary"
+                android:textSize="15sp" />
+
+            <!-- Clear the query; visible only while the field has text. -->
+            <ImageButton
+                android:id="@+id/mobile_search_clear"
+                android:layout_width="40dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mobile_search_clear"
+                android:padding="11dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_yew_x_circle"
+                android:tint="@color/mobile_color_on_surface_secondary"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/mobile_search_mic"
+                android:layout_width="40dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mobile_search_voice"
+                android:padding="11dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_mobile_mic"
+                android:tint="@color/mobile_color_on_surface_secondary" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mobile_search_back"
+            android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/mobile_search_clear"
-            android:padding="12dp"
-            android:src="@drawable/ic_sheet_close"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <ImageButton
-            android:id="@+id/mobile_search_mic"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/mobile_search_voice"
-            android:padding="12dp"
-            android:src="@drawable/ic_mobile_mic" />
+            android:fontFamily="@font/instrument_medium"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:text="@string/yew_search_cancel"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="14.5sp" />
 
     </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/mobile_search_filter_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/mobile_search_filter_tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/yew_filter_inset" />
+    </HorizontalScrollView>
 
     <FrameLayout
         android:layout_width="match_parent"

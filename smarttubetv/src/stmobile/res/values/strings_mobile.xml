@@ -510,4 +510,9 @@
     <string name="yew_empty_signin_title">Sign in to see this</string>
     <string name="yew_library_saved_playlists">Saved playlists</string>
     <string name="yew_mini_next">Next</string>
+    <string name="yew_search_cancel">Cancel</string>
+    <string name="yew_search_type_videos">Videos</string>
+    <string name="yew_search_type_channels">Channels</string>
+    <string name="yew_search_type_playlists">Playlists</string>
+    <string name="yew_search_type_movies">Movies</string>
 </resources>
