@@ -398,7 +398,9 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                         live ? R.color.mobile_color_badge_live_bg : R.color.mobile_color_badge_bg)));
                 android.view.ViewGroup.LayoutParams lp = mBadge.getLayoutParams();
                 if (lp instanceof android.widget.FrameLayout.LayoutParams) {
-                    int gravity = android.view.Gravity.BOTTOM | (live ? android.view.Gravity.START : android.view.Gravity.END);
+                    // YEWPLAY(home): on the hero the text sits at the bottom of the image, so its badge goes up top.
+                    int vertical = "hero".equals(itemView.getTag()) ? android.view.Gravity.TOP : android.view.Gravity.BOTTOM;
+                    int gravity = vertical | (live ? android.view.Gravity.START : android.view.Gravity.END);
                     if (((android.widget.FrameLayout.LayoutParams) lp).gravity != gravity) {
                         ((android.widget.FrameLayout.LayoutParams) lp).gravity = gravity;
                         mBadge.setLayoutParams(lp);
