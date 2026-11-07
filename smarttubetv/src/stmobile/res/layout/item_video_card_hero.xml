@@ -82,7 +82,7 @@
             android:layout_height="48dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/bg_yew_hero_overflow"
             android:contentDescription="@string/mobile_player_more"
             android:padding="12dp"
             android:src="@drawable/ic_mobile_more_vert"
