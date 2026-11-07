@@ -151,6 +151,10 @@ public final class DownloadsBridge implements VideoDownloads.Handler {
                 card.badge = mContext.getString(R.string.mobile_download_state_processing);
                 card.percentWatched = 100;
                 break;
+            case DownloadItem.STATE_PAUSED:
+                card.badge = null;
+                card.percentWatched = -1;
+                break;
             case DownloadItem.STATE_FAILED:
                 card.badge = mContext.getString(R.string.mobile_download_badge_failed);
                 card.percentWatched = -1;

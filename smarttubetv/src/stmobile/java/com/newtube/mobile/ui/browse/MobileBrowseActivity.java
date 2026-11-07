@@ -366,6 +366,78 @@ public class MobileBrowseActivity extends MobileActivity
         return id == DOWNLOADS_TAB_ALL || id == DOWNLOADS_TAB_VIDEO || id == DOWNLOADS_TAB_AUDIO;
     }
 
+    /**
+     * YEWPLAY(downloads): the Downloads list of the proposal (p. 16) - the space the app uses on
+     * top, then "Baixando" (with Pausar tudo / Retomar tudo) and "Concluídos" (with the count).
+     */
+    private List<Video> decorateDownloads(List<Video> list) {
+        if (list.isEmpty()) {
+            return list;
+        }
+        DownloadsBridge bridge = DownloadsBridge.instance(this);
+        List<Video> pending = new ArrayList<>();
+        List<Video> done = new ArrayList<>();
+        long used = 0;
+        boolean running = false;
+        boolean paused = false;
+        for (Video video : list) {
+            if (video.isYewPseudo()) {
+                continue;
+            }
+            DownloadItem item = bridge.itemFor(video);
+            if (item == null || item.isDone()) {
+                done.add(video);
+                if (item != null) {
+                    used += Math.max(0, item.bytesTotal);
+                }
+            } else {
+                pending.add(video);
+                used += Math.max(0, item.bytesDone);
+                running |= item.state == DownloadItem.STATE_DOWNLOADING || item.state == DownloadItem.STATE_QUEUED;
+                paused |= item.isPaused();
+            }
+        }
+        List<Video> out = new ArrayList<>(list.size() + 3);
+        Video storage = new Video();
+        storage.videoId = "yew:storage";
+        storage.yewStorageUsed = used;
+        try {
+            storage.yewStorageFree = new android.os.StatFs(
+                    android.os.Environment.getExternalStorageDirectory().getPath()).getAvailableBytes();
+        } catch (RuntimeException e) {
+            storage.yewStorageFree = -1;
+        }
+        out.add(storage);
+        if (!pending.isEmpty()) {
+            String end = running ? getString(R.string.yew_downloads_pause_all)
+                    : paused ? getString(R.string.yew_downloads_resume_all) : null;
+            out.add(Video.yewHeader(running ? "active:pause" : "active:resume",
+                    getString(R.string.yew_downloads_active), end, end != null));
+            out.addAll(pending);
+        }
+        if (!done.isEmpty()) {
+            out.add(Video.yewHeader("done", getString(R.string.yew_downloads_done),
+                    getResources().getQuantityString(R.plurals.yew_library_items, done.size(), done.size()), false));
+            out.addAll(done);
+        }
+        return out;
+    }
+
+    /** YEWPLAY(downloads): "Pausar tudo" / "Retomar tudo" in the Baixando header. */
+    private void onYewHeaderAction(Video header) {
+        boolean pause = "yew:active:pause".equals(header.videoId);
+        if (!pause && !"yew:active:resume".equals(header.videoId)) {
+            return;
+        }
+        for (DownloadItem item : DownloadRegistry.instance(this).itemsNewestFirst()) {
+            if (pause && (item.state == DownloadItem.STATE_DOWNLOADING || item.state == DownloadItem.STATE_QUEUED)) {
+                com.newtube.mobile.downloads.MobileDownloadService.pause(this, item);
+            } else if (!pause && item.isPaused()) {
+                com.newtube.mobile.downloads.MobileDownloadService.retry(this, item);
+            }
+        }
+    }
+
     /** YEWPLAY(downloads): Tudo, Vídeos, Áudios. */
     private List<FilterTabs.Tab> downloadsTabs() {
         List<FilterTabs.Tab> tabs = new ArrayList<>();
@@ -917,6 +989,8 @@ public class MobileBrowseActivity extends MobileActivity
     private void setupContentGrid() {
         mLayoutManager = new GridLayoutManager(this, computeSpanCount());
         mAdapter = new VideoCardAdapter(this::onVideoClicked, this::onVideoLongClicked);
+        // YEWPLAY(downloads): Baixando / Concluídos e o espaço usado, só na tela Downloads.
+        mAdapter.setListDecorator(list -> isDownloadsSectionShowing() ? decorateDownloads(list) : list);
 
         // Channel rows (rare on Home, possible in some sections) span the whole grid width
         // when landscape/tablet layouts use 2+ columns.
@@ -1690,6 +1764,10 @@ public class MobileBrowseActivity extends MobileActivity
         if (mPresenter == null) {
             return;
         }
+        if (video.isYewPseudo()) {
+            onYewHeaderAction(video);
+            return;
+        }
 
         // NEWTUBE(downloads): a card that is still downloading (or failed) has no file to play
         // yet - its tap opens the download's own menu (cancel / retry / delete). A finished one
@@ -2003,6 +2081,9 @@ public class MobileBrowseActivity extends MobileActivity
             VideoGroup sync = VideoGroup.from(DownloadsBridge.instance(this).syncCards());
             sync.setAction(VideoGroup.ACTION_SYNC);
             updateSection(sync);
+            // YEWPLAY(downloads): an item can move from Baixando to Concluídos (or the header's
+            // Pausar/Retomar can change) without the set changing - repaint the headers.
+            mAdapter.submitList(new ArrayList<>(mCurrentVideos));
         } else {
             mPresenter.refresh(false);
         }
@@ -2570,7 +2651,11 @@ public class MobileBrowseActivity extends MobileActivity
                         // again "a snapshot awaiting fresh content": drop the swap, keep the screen.
                         cancelFeedSwap();
                         mCurrentVideos.clear();
-                        mCurrentVideos.addAll(mAdapter.getCurrentList());
+                        for (Video kept : mAdapter.getCurrentList()) {
+                            if (!kept.isYewPseudo()) {
+                                mCurrentVideos.add(kept);
+                            }
+                        }
                         mAwaitingFreshContent = true;
                     }
                     if (emptyReplace && FeedSwapWarmup.keepScreenOnClear(mAwaitingFreshContent, swapPending)) {

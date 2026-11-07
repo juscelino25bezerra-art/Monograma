@@ -515,4 +515,19 @@
     <string name="yew_search_type_channels">Channels</string>
     <string name="yew_search_type_playlists">Playlists</string>
     <string name="yew_search_type_movies">Movies</string>
+    <!-- YEWPLAY(downloads): a tela Downloads da proposta (p. 16). -->
+    <string name="yew_download_paused">Paused</string>
+    <string name="yew_download_paused_of">Paused, %1$s of %2$s</string>
+    <string name="yew_download_of">%1$s of %2$s</string>
+    <string name="yew_download_speed">%1$s, %2$s/s</string>
+    <string name="yew_download_format_video">Video MP4 %1$s, %2$s</string>
+    <string name="yew_download_format_audio">Audio M4A, %1$s</string>
+    <string name="yew_download_pause">Pause</string>
+    <string name="yew_download_resume">Resume</string>
+    <string name="yew_downloads_active">Downloading</string>
+    <string name="yew_downloads_done">Finished</string>
+    <string name="yew_downloads_pause_all">Pause all</string>
+    <string name="yew_downloads_resume_all">Resume all</string>
+    <string name="yew_storage_used">%1$s used by the app</string>
+    <string name="yew_storage_free">%1$s free</string>
 </resources>

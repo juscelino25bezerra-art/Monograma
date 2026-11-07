@@ -49,6 +49,20 @@ public final class DownloadMenu {
                         MobileDownloadService.retry(context, item);
                     }));
         }
+        if (item.state == DownloadItem.STATE_DOWNLOADING || item.state == DownloadItem.STATE_QUEUED) {
+            dialog.appendSingleButton(UiOptionItem.from(context.getString(R.string.yew_download_pause),
+                    optionItem -> {
+                        dialog.closeDialog();
+                        MobileDownloadService.pause(context, item);
+                    }));
+        }
+        if (item.isPaused()) {
+            dialog.appendSingleButton(UiOptionItem.from(context.getString(R.string.yew_download_resume),
+                    optionItem -> {
+                        dialog.closeDialog();
+                        MobileDownloadService.retry(context, item);
+                    }));
+        }
         if (item.isActive()) {
             dialog.appendSingleButton(UiOptionItem.from(context.getString(R.string.mobile_download_cancel),
                     optionItem -> {

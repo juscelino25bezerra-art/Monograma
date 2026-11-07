@@ -42,6 +42,10 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private static final int VIEW_TYPE_VIDEO_ROW = 2;
     /** YEWPLAY(home): the first video of Início's "Tudo", large and with its text over the image. */
     private static final int VIEW_TYPE_VIDEO_HERO = 3;
+    /** YEWPLAY(lists): a section header pseudo-item ({@link Video#yewHeader}). */
+    private static final int VIEW_TYPE_HEADER = 4;
+    /** YEWPLAY(downloads): the storage pseudo-item at the top of Downloads. */
+    private static final int VIEW_TYPE_STORAGE = 5;
 
     public interface OnVideoClickListener {
         void onVideoClick(Video video);
@@ -91,12 +95,43 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         }
     };
 
+    /** YEWPLAY(lists): adds header pseudo-items to a submitted list (Downloads, Inscrições). */
+    public interface ListDecorator {
+        java.util.List<Video> decorate(java.util.List<Video> list);
+    }
+
+    private ListDecorator mDecorator;
+
+    public void setListDecorator(ListDecorator decorator) {
+        mDecorator = decorator;
+    }
+
+    private java.util.List<Video> decorated(java.util.List<Video> list) {
+        return mDecorator != null && list != null ? mDecorator.decorate(list) : list;
+    }
+
+    @Override
+    public void submitList(java.util.List<Video> list) {
+        super.submitList(decorated(list));
+    }
+
+    @Override
+    public void submitList(java.util.List<Video> list, Runnable commitCallback) {
+        super.submitList(decorated(list), commitCallback);
+    }
+
     @Override
     public int getItemViewType(int position) {
         // isChannel() alone also matches playlists delivered in the playlist-as-channel shape
         // (videoId/playlistId null + a VL... channelId — the standard shape of the user
         // Playlists section): those must stay thumbnail cards, not round-avatar channel rows.
         Video item = getItem(position);
+        if (item.yewStorageUsed >= 0) {
+            return VIEW_TYPE_STORAGE;
+        }
+        if (item.yewHeader != null) {
+            return VIEW_TYPE_HEADER;
+        }
         if (item.isChannel() && !item.isPlaylistAsChannel()) {
             return VIEW_TYPE_CHANNEL;
         }
@@ -145,6 +180,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     public boolean isFullSpan(int position) {
         return position >= 0 && position < getItemCount()
                 && (mRowLayout || getItemViewType(position) == VIEW_TYPE_CHANNEL
+                        || getItemViewType(position) == VIEW_TYPE_HEADER
+                        || getItemViewType(position) == VIEW_TYPE_STORAGE
                         || getItemViewType(position) == VIEW_TYPE_VIDEO_HERO);
     }
 
@@ -180,6 +217,12 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == VIEW_TYPE_HEADER) {
+            return new HeaderViewHolder(inflater.inflate(R.layout.item_yew_list_header, parent, false), mClickListener);
+        }
+        if (viewType == VIEW_TYPE_STORAGE) {
+            return new StorageViewHolder(inflater.inflate(R.layout.item_yew_storage, parent, false));
+        }
         if (viewType == VIEW_TYPE_CHANNEL) {
             return new ChannelViewHolder(inflater.inflate(R.layout.item_mobile_channel_card, parent, false), mClickListener);
         }
@@ -190,7 +233,11 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ChannelViewHolder) {
+        if (holder instanceof HeaderViewHolder) {
+            ((HeaderViewHolder) holder).bind(getItem(position));
+        } else if (holder instanceof StorageViewHolder) {
+            ((StorageViewHolder) holder).bind(getItem(position));
+        } else if (holder instanceof ChannelViewHolder) {
             ((ChannelViewHolder) holder).bind(getItem(position), mLongClickListener);
         } else {
             ((VideoViewHolder) holder).bind(getItem(position), mLongClickListener);
@@ -268,6 +315,12 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         private final TextView mMeta;
         private final View mOverflow;
         private final ImageView mAvatar; // null on layouts without one
+        // YEWPLAY(downloads): only on the compact row layout.
+        private final View mDownloadRow;
+        private final ProgressBar mDownloadProgress;
+        private final TextView mDownloadPercent;
+        private final TextView mMeta2;
+        private OnVideoLongClickListener mLongClick;
         private Video mVideo;
         private String mBoundThumbUrl;
         private String mBoundAvatarUrl;
@@ -283,6 +336,10 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             mMeta = itemView.findViewById(R.id.video_meta);
             mOverflow = itemView.findViewById(R.id.video_overflow);
             mAvatar = itemView.findViewById(R.id.video_channel_avatar);
+            mDownloadRow = itemView.findViewById(R.id.yew_download_progress_row);
+            mDownloadProgress = itemView.findViewById(R.id.yew_download_progress);
+            mDownloadPercent = itemView.findViewById(R.id.yew_download_percent);
+            mMeta2 = itemView.findViewById(R.id.video_meta2);
 
             itemView.setOnClickListener(v -> {
                 if (mVideo != null && clickListener != null) {
@@ -329,6 +386,82 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             bindProgress(video);
             bindReadiness(video);
             bindThumbnail(context, video);
+            bindDownload(context, video, longClickListener);
+        }
+
+        /**
+         * YEWPLAY(downloads): a Downloads row as in the proposal (p. 16). Unfinished: title, the
+         * rubi bar with its percentage, "82 de 180 MB, 2,1 MB/s" and a pause/resume button where the
+         * ⋮ was. Finished: the format ("Vídeo MP4 1080p, 175,7 MB") and the date, with the ⋮.
+         * {@code longClickListener} is null on a partial (sync) rebind: the ⋮ wiring is kept.
+         */
+        private void bindDownload(Context context, Video video, @androidx.annotation.Nullable OnVideoLongClickListener longClickListener) {
+            if (longClickListener != null) {
+                mLongClick = longClickListener;
+            }
+            if (mDownloadRow == null || mMeta2 == null) {
+                return;
+            }
+            com.newtube.mobile.downloads.DownloadItem item = video.downloadId != null
+                    ? com.newtube.mobile.downloads.DownloadsBridge.instance(context).itemFor(video) : null;
+            boolean pending = item != null && !item.isDone();
+            mDownloadRow.setVisibility(pending && !item.isFailed() ? View.VISIBLE : View.GONE);
+            mMeta2.setVisibility(item != null ? View.VISIBLE : View.GONE);
+            if (item == null) {
+                mMeta.setVisibility(View.VISIBLE);
+                if (mOverflow instanceof ImageView && longClickListener != null) {
+                    ((ImageView) mOverflow).setImageResource(R.drawable.ic_mobile_more_vert);
+                }
+                return;
+            }
+            if (pending) {
+                int percent = Math.max(0, item.progressPercent());
+                mDownloadProgress.setIndeterminate(item.progressPercent() < 0 && !item.isPaused());
+                mDownloadProgress.setProgress(percent);
+                mDownloadPercent.setText(item.progressPercent() >= 0 ? percent + "%" : "");
+                mMeta2.setText(com.newtube.mobile.downloads.DownloadRowText.progress(context, item));
+                // The channel line is the meta; the progress text is the second line.
+                mMeta.setText(item.author != null ? item.author : "");
+                mMeta.setVisibility(item.author != null && !item.author.isEmpty() ? View.VISIBLE : View.GONE);
+                boolean canToggle = item.state == com.newtube.mobile.downloads.DownloadItem.STATE_DOWNLOADING
+                        || item.state == com.newtube.mobile.downloads.DownloadItem.STATE_QUEUED || item.isPaused();
+                if (mOverflow instanceof ImageView) {
+                    ImageView button = (ImageView) mOverflow;
+                    button.setVisibility(canToggle || item.isFailed() ? View.VISIBLE : View.GONE);
+                    button.setImageResource(item.isPaused() ? R.drawable.ic_yew_play
+                            : item.isFailed() ? R.drawable.ic_mobile_more_vert : R.drawable.ic_yew_pause);
+                    button.setContentDescription(context.getString(item.isPaused()
+                            ? R.string.yew_download_resume : R.string.yew_download_pause));
+                    if (!canToggle) {
+                        button.setOnClickListener(v -> openMenu());
+                    } else {
+                        button.setOnClickListener(v -> {
+                            com.newtube.mobile.ui.common.Haptics.tick(v);
+                            if (item.isPaused()) {
+                                com.newtube.mobile.downloads.MobileDownloadService.retry(context, item);
+                            } else {
+                                com.newtube.mobile.downloads.MobileDownloadService.pause(context, item);
+                            }
+                        });
+                    }
+                }
+            } else {
+                mMeta.setVisibility(View.VISIBLE);
+                mMeta.setText(com.newtube.mobile.downloads.DownloadRowText.format(context, item));
+                mMeta2.setText(com.newtube.mobile.downloads.DownloadRowText.date(context, item));
+                if (mOverflow instanceof ImageView) {
+                    mOverflow.setVisibility(View.VISIBLE);
+                    ((ImageView) mOverflow).setImageResource(R.drawable.ic_mobile_more_vert);
+                    mOverflow.setContentDescription(context.getString(R.string.mobile_player_more));
+                    mOverflow.setOnClickListener(v -> openMenu());
+                }
+            }
+        }
+
+        private void openMenu() {
+            if (mVideo != null && mLongClick != null) {
+                mLongClick.onVideoLongClick(mVideo);
+            }
         }
 
         /**
@@ -348,6 +481,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             bindBadge(context, video);
             bindProgress(video);
             bindReadiness(video);
+            bindDownload(context, video, null);
 
             String thumbnailUrl = thumbnailUrl(context, video);
             if (thumbnailUrl == null ? mBoundThumbUrl != null : !thumbnailUrl.equals(mBoundThumbUrl)) {
@@ -665,6 +799,57 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         void unbind() {
             mVideo = null;
             Glide.with(itemView.getContext().getApplicationContext()).clear(mAvatar);
+        }
+    }
+
+    /** YEWPLAY(lists): "Baixando" / "Pausar tudo", "Concluídos" / "10 itens", "Hoje" / "8 novos". */
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private final TextView mTitle;
+        private final TextView mEnd;
+        private final OnVideoClickListener mClick;
+
+        HeaderViewHolder(@NonNull View itemView, OnVideoClickListener click) {
+            super(itemView);
+            mTitle = itemView.findViewById(R.id.yew_header_title);
+            mEnd = itemView.findViewById(R.id.yew_header_end);
+            mClick = click;
+        }
+
+        void bind(Video header) {
+            mTitle.setText(header.yewHeader);
+            mEnd.setText(header.yewHeaderEnd);
+            mEnd.setVisibility(header.yewHeaderEnd != null && !header.yewHeaderEnd.isEmpty() ? View.VISIBLE : View.GONE);
+            mEnd.setClickable(header.yewHeaderAction);
+            mEnd.setFocusable(header.yewHeaderAction);
+            mEnd.setOnClickListener(header.yewHeaderAction && mClick != null ? v -> {
+                com.newtube.mobile.ui.common.Haptics.tick(v);
+                mClick.onVideoClick(header);
+            } : null);
+        }
+    }
+
+    /** YEWPLAY(downloads): "1,4 GB usados pelo app ... 38 GB livres" and the thin bar. */
+    static class StorageViewHolder extends RecyclerView.ViewHolder {
+        private final TextView mUsed;
+        private final TextView mFree;
+        private final ProgressBar mBar;
+
+        StorageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mUsed = itemView.findViewById(R.id.yew_storage_used);
+            mFree = itemView.findViewById(R.id.yew_storage_free);
+            mBar = itemView.findViewById(R.id.yew_storage_bar);
+        }
+
+        void bind(Video storage) {
+            Context context = itemView.getContext();
+            mUsed.setText(context.getString(R.string.yew_storage_used,
+                    com.newtube.mobile.downloads.DownloadOptions.formatBytes(storage.yewStorageUsed)));
+            mFree.setText(storage.yewStorageFree >= 0 ? context.getString(R.string.yew_storage_free,
+                    com.newtube.mobile.downloads.DownloadOptions.formatBytes(storage.yewStorageFree)) : "");
+            long total = storage.yewStorageUsed + Math.max(0, storage.yewStorageFree);
+            mBar.setProgress(total > 0 ? (int) Math.max(storage.yewStorageUsed > 0 ? 8 : 0,
+                    storage.yewStorageUsed * 1000 / total) : 0);
         }
     }
 }

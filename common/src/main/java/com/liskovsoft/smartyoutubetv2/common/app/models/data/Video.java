@@ -119,6 +119,34 @@ public final class Video {
      * audio track and the 720p file - stay two cards.
      */
     public String downloadId;
+    /**
+     * YEWPLAY(lists): set only on a pseudo-item that is a section header of a phone list
+     * ("Baixando", "Concluídos" in Downloads; "Hoje", "Ontem" in Inscrições). {@link #videoId}
+     * carries a unique "yew:..." key so the adapter's diff keeps headers apart.
+     */
+    public String yewHeader;
+    /** YEWPLAY(lists): the header's trailing text ("10 itens", "Pausar tudo"). */
+    public String yewHeaderEnd;
+    /** YEWPLAY(lists): the trailing text is an action (tapping it reaches the click listener). */
+    public boolean yewHeaderAction;
+    /** YEWPLAY(downloads): a storage pseudo-item - bytes the app uses and bytes free (-1 = none). */
+    public long yewStorageUsed = -1;
+    public long yewStorageFree = -1;
+
+    /** YEWPLAY(lists): a section header pseudo-item. */
+    public static Video yewHeader(String key, String title, String end, boolean action) {
+        Video video = new Video();
+        video.videoId = "yew:" + key;
+        video.yewHeader = title;
+        video.yewHeaderEnd = end;
+        video.yewHeaderAction = action;
+        return video;
+    }
+
+    /** YEWPLAY(lists): whether this item is a header or storage pseudo-item, not content. */
+    public boolean isYewPseudo() {
+        return yewHeader != null || yewStorageUsed >= 0;
+    }
     private int startSegmentNum;
     private long liveDurationMs = -1;
     private long durationMs = -1;

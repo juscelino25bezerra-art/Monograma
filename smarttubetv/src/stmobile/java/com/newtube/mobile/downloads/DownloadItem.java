@@ -20,6 +20,8 @@ public final class DownloadItem {
     public static final int STATE_PROCESSING = 2;
     public static final int STATE_DONE = 3;
     public static final int STATE_FAILED = 4;
+    /** YEWPLAY(downloads): parado pelo usuário; as partes ficam e "Retomar" continua de onde parou. */
+    public static final int STATE_PAUSED = 5;
 
     public final String id;
     public final String videoId;
@@ -56,6 +58,10 @@ public final class DownloadItem {
     public transient volatile long videoLength = -1;
     public transient volatile long audioLength = -1;
     public transient volatile boolean cancelRequested;
+    /** YEWPLAY(downloads): pedido de pausa; o job para no próximo tique e guarda as partes. */
+    public transient volatile boolean pauseRequested;
+    /** YEWPLAY(downloads): velocidade medida pelo job, em bytes por segundo (0 = sem medida). */
+    public transient volatile long bytesPerSecond;
 
     public DownloadItem(String id, String videoId, String title, @Nullable String author,
                         @Nullable String thumbUrl, int kind, @Nullable String qualityLabel,
@@ -98,6 +104,10 @@ public final class DownloadItem {
 
     public boolean isDone() {
         return state == STATE_DONE;
+    }
+
+    public boolean isPaused() {
+        return state == STATE_PAUSED;
     }
 
     public boolean isFailed() {
