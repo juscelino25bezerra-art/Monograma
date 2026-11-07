@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(home): o degradê do destaque do Início - um véu leve no alto (para a duração e o ⋮
+     brancos se lerem), limpo no meio e quase grafite embaixo, sob o título. Fixo nos dois temas:
+     fica sobre a foto. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="top" android:height="72dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:endColor="#0018141A"
+                android:startColor="#7318141A" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:centerColor="#5918141A"
+                android:centerY="0.55"
+                android:endColor="#F218141A"
+                android:startColor="#0018141A" />
+        </shape>
+    </item>
+</layer-list>

@@ -634,16 +634,17 @@
         <item name="android:orientation">vertical</item>
         <item name="android:layout_marginBottom">20dp</item>
     </style>
+    <!-- YEWPLAY(skeleton): a miniatura do item grande, de ponta a ponta e sem cantos. -->
     <style name="MobileSkeletonFeedThumb">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">204dp</item>
-        <item name="android:background">@drawable/bg_skeleton_block</item>
+        <item name="android:background">@drawable/bg_skeleton_square</item>
     </style>
     <style name="MobileSkeletonFeedLineWide">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">15dp</item>
-        <item name="android:layout_marginTop">12dp</item>
-        <item name="android:layout_marginEnd">48dp</item>
+        <item name="android:layout_marginTop">14dp</item>
+        <item name="android:layout_marginEnd">68dp</item>
         <item name="android:background">@drawable/bg_skeleton_block</item>
     </style>
     <!-- NEWTUBE(feed-avatars): avatar + text lines under the thumb; the avatar shows on Home and
@@ -652,6 +653,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">@dimen/yew_side_margin</item>
     </style>
     <style name="MobileSkeletonFeedAvatar">
         <item name="android:layout_width">@dimen/mobile_card_avatar_size</item>
@@ -668,6 +670,41 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:orientation">vertical</item>
+    </style>
+    <!-- YEWPLAY(skeleton): o item compacto das listas carregando (item_video_card_row). -->
+    <style name="YewSkeletonRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">@dimen/yew_side_margin</item>
+        <item name="android:paddingEnd">@dimen/yew_side_margin</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">9dp</item>
+    </style>
+    <style name="YewSkeletonRowThumb">
+        <item name="android:layout_width">@dimen/yew_compact_thumb_width</item>
+        <item name="android:layout_height">@dimen/yew_compact_thumb_height</item>
+        <item name="android:layout_marginEnd">14dp</item>
+        <item name="android:background">@drawable/bg_skeleton_thumb</item>
+    </style>
+    <style name="YewSkeletonRowLineWide">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">13dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:background">@drawable/bg_skeleton_block</item>
+    </style>
+    <style name="YewSkeletonRowLineMid">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">13dp</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginEnd">36dp</item>
+        <item name="android:background">@drawable/bg_skeleton_block</item>
+    </style>
+    <style name="YewSkeletonRowLineNarrow">
+        <item name="android:layout_width">96dp</item>
+        <item name="android:layout_height">11dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">@drawable/bg_skeleton_block</item>
     </style>
     <style name="MobileSkeletonFeedLineNarrow">
         <item name="android:layout_width">180dp</item>

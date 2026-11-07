@@ -159,6 +159,21 @@ public final class DownloadRegistry {
         notifyChanged();
     }
 
+    public synchronized int indexOf(DownloadItem item) {
+        return mItems.indexOf(item);
+    }
+
+    /** YEWPLAY(undo): puts a just-removed item back where it was (Desfazer). */
+    public void restore(DownloadItem item, int index) {
+        synchronized (this) {
+            if (mItems.contains(item)) {
+                return;
+            }
+            mItems.add(Math.max(0, Math.min(index, mItems.size())), item);
+        }
+        notifyChanged();
+    }
+
     public void remove(DownloadItem item) {
         synchronized (this) {
             mItems.remove(item);

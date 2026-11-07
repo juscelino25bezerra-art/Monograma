@@ -160,9 +160,18 @@ public final class SettingsPages {
         return context.getString(R.string.app_name) + " " + AppInfoHelpers.getAppVersionName(context);
     }
 
+    /**
+     * YEWPLAY(about): Sobre numa tela só (proposta) - the hero (icon, name, version, origin, the
+     * license in one sentence and what the name means), then the rows in named groups instead of
+     * one list split by hairlines.
+     */
     private static Page about(Context context) {
         List<SettingsRow> rows = new ArrayList<>();
 
+        rows.add(SettingsRow.hero(context.getString(R.string.app_name),
+                context.getString(R.string.yew_about_version, AppInfoHelpers.getAppVersionName(context))));
+
+        rows.add(SettingsRow.header(context.getString(R.string.yew_about_group_updates)));
         if (AppUpdatePresenter.isInAppUpdatesDisabled()) {
             // Store build (-Pfdroid): the version stays, the update row and switch go.
             rows.add(SettingsRow.action(context.getString(R.string.mobile_settings_version), versionLine(context), page -> { }));
@@ -175,7 +184,7 @@ public final class SettingsPages {
                     checker::isUpdateCheckEnabled, checker::setUpdateCheckEnabled));
         }
 
-        rows.add(SettingsRow.divider());
+        rows.add(SettingsRow.header(context.getString(R.string.yew_about_group_help)));
         rows.add(SettingsRow.action(context.getString(R.string.diagnostic_log_send),
                 context.getString(R.string.diagnostic_log_send_desc),
                 page -> DiagnosticLog.share(page.requireContext())));
@@ -185,6 +194,8 @@ public final class SettingsPages {
         rows.add(SettingsRow.action(context.getString(R.string.about_source_code),
                 context.getString(R.string.about_source_code_url).replace("https://", ""),
                 page -> Utils.openLinkExt(page.requireContext(), context.getString(R.string.about_source_code_url))));
+
+        rows.add(SettingsRow.header(context.getString(R.string.yew_about_group_legal)));
         rows.add(SettingsRow.action(context.getString(R.string.about_license),
                 context.getString(R.string.about_license_name),
                 page -> Utils.openLinkExt(page.requireContext(), context.getString(R.string.about_license_url))));

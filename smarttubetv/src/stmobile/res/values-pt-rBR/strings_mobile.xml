@@ -378,4 +378,18 @@
     <string name="yew_watch_listen">Ouvir</string>
     <string name="yew_watch_window">Janela</string>
     <string name="yew_watch_autoplay">Automático</string>
+    <!-- YEWPLAY(about): a tela Sobre numa tela só. -->
+    <string name="yew_about_version">Versão %1$s</string>
+    <string name="yew_about_origin">Feito a partir do NewTube e do SmartTube</string>
+    <string name="yew_about_free"><b>Livre e sem anúncios.</b> O código é aberto sob a licença MIT, e o app não exige conta.</string>
+    <string name="yew_about_name_meaning"><b>Yew é o teixo,</b> árvore que vive séculos e cresce a partir das próprias raízes. O YewPlay cresce a partir do NewTube e do SmartTube.</string>
+    <string name="yew_about_group_updates">Versão e atualizações</string>
+    <string name="yew_about_group_help">Ajuda e projeto</string>
+    <string name="yew_about_group_legal">Informações legais</string>
+    <!-- YEWPLAY(downloads): as abas da tela Downloads. -->
+    <string name="yew_downloads_videos">Vídeos</string>
+    <string name="yew_downloads_audios">Áudios</string>
+    <string name="yew_download_deleted">Download excluído</string>
+    <!-- YEWPLAY(library): títulos da Biblioteca. -->
+    <string name="yew_library_continue">Continue de onde parou</string>
 </resources>

@@ -59,6 +59,7 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         for (int i = 0; i < mRows.size(); i++) {
             SettingsRow row = mRows.get(i);
             if (row.kind != SettingsRow.KIND_HEADER && row.kind != SettingsRow.KIND_NOTE
+                    && row.kind != SettingsRow.KIND_HERO
                     && title.equals(String.valueOf(row.title))) {
                 return i;
             }
@@ -87,6 +88,8 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return new TextHolder(inflater.inflate(R.layout.item_mobile_settings_note, parent, false));
             case SettingsRow.KIND_DIVIDER:
                 return new RecyclerView.ViewHolder(inflater.inflate(R.layout.item_mobile_settings_divider, parent, false)) {};
+            case SettingsRow.KIND_HERO:
+                return new HeroHolder(inflater.inflate(R.layout.item_yew_about_hero, parent, false));
             default:
                 return new RowHolder(inflater.inflate(R.layout.item_mobile_settings_row, parent, false));
         }
@@ -95,7 +98,9 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SettingsRow row = mRows.get(position);
-        if (holder instanceof TextHolder) {
+        if (holder instanceof HeroHolder) {
+            ((HeroHolder) holder).bind(row);
+        } else if (holder instanceof TextHolder) {
             ((TextHolder) holder).text.setText(row.title);
         } else if (holder instanceof RowHolder) {
             ((RowHolder) holder).bind(row, mListener);
@@ -114,6 +119,24 @@ final class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextHolder(@NonNull View itemView) {
             super(itemView);
             text = (TextView) itemView;
+        }
+    }
+
+    /** YEWPLAY(about): icon, name in Bricolage, version and origin (item_yew_about_hero). */
+    private static final class HeroHolder extends RecyclerView.ViewHolder {
+        private final TextView name;
+        private final TextView version;
+
+        HeroHolder(@NonNull View itemView) {
+            super(itemView);
+            name = itemView.findViewById(R.id.yew_about_name);
+            version = itemView.findViewById(R.id.yew_about_version);
+        }
+
+        void bind(SettingsRow row) {
+            name.setText(row.title);
+            CharSequence text = row.summaryText();
+            version.setText(text != null ? text : "");
         }
     }
 

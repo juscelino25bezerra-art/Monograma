@@ -98,6 +98,8 @@ tap_text "Downloads"; shot 03b_downloads 4
 adb shell input keyevent KEYCODE_BACK; sleep 2
 tap_desc "Configurações"; shot 04_configuracoes 5
 adb shell input swipe 540 1900 540 700 900; shot 04b_configuracoes_baixo 3
+tap_text "Sobre"; shot 04c_sobre 4
+adb shell input keyevent KEYCODE_BACK; sleep 2
 adb shell input keyevent KEYCODE_BACK; sleep 2
 tap_text "Busca" last; shot 05_busca 5
 adb shell input keyevent KEYCODE_BACK; sleep 2

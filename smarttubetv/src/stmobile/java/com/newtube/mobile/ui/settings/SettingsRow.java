@@ -30,7 +30,9 @@ import java.util.function.Supplier;
  *     with the options, and picking one applies it and closes the dialog. This replaces the old
  *     inline radio lists that made a page twenty rows longer per setting;</li>
  *     <li>{@link #KIND_NOTE}: a small paragraph that explains the rows above it;</li>
- *     <li>{@link #KIND_DIVIDER}: the hairline between two groups.</li>
+ *     <li>{@link #KIND_DIVIDER}: the hairline between two groups;</li>
+ *     <li>{@link #KIND_HERO}: YEWPLAY(about) the top of the About page - icon, name, version and
+ *     where the app comes from (proposta, "Sobre numa tela só").</li>
  * </ul>
  */
 public final class SettingsRow {
@@ -40,6 +42,7 @@ public final class SettingsRow {
     public static final int KIND_CHOICE = 3;
     public static final int KIND_NOTE = 4;
     public static final int KIND_DIVIDER = 5;
+    public static final int KIND_HERO = 6;
 
     /** What a toggle or a choice does after it has been applied. */
     public interface Toggle {
@@ -91,6 +94,14 @@ public final class SettingsRow {
     public static SettingsRow header(CharSequence title) {
         SettingsRow row = new SettingsRow(KIND_HEADER);
         row.title = title;
+        return row;
+    }
+
+    /** YEWPLAY(about): the About page's header - app name as the title, version as the summary. */
+    public static SettingsRow hero(CharSequence name, CharSequence version) {
+        SettingsRow row = new SettingsRow(KIND_HERO);
+        row.title = name;
+        row.summary = () -> version;
         return row;
     }
 

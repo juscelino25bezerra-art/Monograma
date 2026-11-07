@@ -240,6 +240,14 @@ public class MobileBrowseActivity extends MobileActivity
     private View mSettingsButton;
     /** YEWPLAY(nav): the Início filter tabs. */
     private FilterTabs mFilterTabs;
+    /**
+     * YEWPLAY(downloads): the Downloads screen's filter tabs (proposta, "abas em Downloads") share
+     * the Início row; these ids can never be a section's.
+     */
+    private static final int DOWNLOADS_TAB_ALL = -9001;
+    private static final int DOWNLOADS_TAB_VIDEO = -9002;
+    private static final int DOWNLOADS_TAB_AUDIO = -9003;
+    private int mDownloadsFilter = DOWNLOADS_TAB_ALL;
     /** NEWTUBE(feed-swap): the grid's item animator, parked while a swap is laid out. */
     private RecyclerView.ItemAnimator mParkedItemAnimator;
     private boolean mFeedSwapPinTop;
@@ -337,6 +345,12 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** YEWPLAY(nav): an Início filter tab - Home itself or one of the YouTube sections. */
     private void onFilterTabChosen(int sectionId) {
+        if (isDownloadsTab(sectionId)) {
+            mDownloadsFilter = sectionId;
+            mFilterTabs.select(sectionId);
+            applyDownloadsFilter();
+            return;
+        }
         mSectionFromYou = false;
         hideYouPanel();
         onSectionChosen(sectionId);
@@ -346,6 +360,52 @@ public class MobileBrowseActivity extends MobileActivity
      * YEWPLAY(nav): the Início tabs - "Tudo" (Home), then every enabled section that is neither a
      * destination nor the user's own (Música, Jogos, Ao vivo, Notícias...).
      */
+    private static boolean isDownloadsTab(int id) {
+        return id == DOWNLOADS_TAB_ALL || id == DOWNLOADS_TAB_VIDEO || id == DOWNLOADS_TAB_AUDIO;
+    }
+
+    /** YEWPLAY(downloads): Tudo, Vídeos, Áudios. */
+    private List<FilterTabs.Tab> downloadsTabs() {
+        List<FilterTabs.Tab> tabs = new ArrayList<>();
+        tabs.add(new FilterTabs.Tab(DOWNLOADS_TAB_ALL, getString(R.string.yew_filter_all)));
+        tabs.add(new FilterTabs.Tab(DOWNLOADS_TAB_VIDEO, getString(R.string.yew_downloads_videos)));
+        tabs.add(new FilterTabs.Tab(DOWNLOADS_TAB_AUDIO, getString(R.string.yew_downloads_audios)));
+        return tabs;
+    }
+
+    /** YEWPLAY(downloads): whether a Downloads card passes the chosen tab; any other card does. */
+    private boolean passesDownloadsFilter(Video video) {
+        if (mDownloadsFilter == DOWNLOADS_TAB_ALL || video.downloadId == null || !isDownloadsSectionShowing()) {
+            return true;
+        }
+        DownloadItem item = DownloadRegistry.instance(this).find(video.downloadId);
+        if (item == null) {
+            return true;
+        }
+        return (mDownloadsFilter == DOWNLOADS_TAB_AUDIO) == item.isAudioOnly();
+    }
+
+    /** YEWPLAY(downloads): a tab change repaints the list from the registry; no refetch needed. */
+    private void applyDownloadsFilter() {
+        if (!isDownloadsSectionShowing()) {
+            return;
+        }
+        mCurrentVideos.clear();
+        mCurrentVideos.addAll(visibleFeedItems(DownloadsBridge.instance(this).listSectionVideos()));
+        mAdapter.submitList(new ArrayList<>(mCurrentVideos));
+        if (mCurrentVideos.isEmpty()) {
+            if (DownloadRegistry.instance(this).itemsNewestFirst().isEmpty()) {
+                showDownloadsEmptyState();
+            } else {
+                showEmptyAfterRemoval();
+            }
+        } else {
+            hideError();
+            mContentGrid.setVisibility(View.VISIBLE);
+            mContentGrid.scrollToPosition(0);
+        }
+    }
+
     private List<FilterTabs.Tab> homeTabs() {
         List<FilterTabs.Tab> tabs = new ArrayList<>();
         tabs.add(new FilterTabs.Tab(MediaGroup.TYPE_HOME, getString(R.string.yew_filter_all)));
@@ -1129,11 +1189,15 @@ public class MobileBrowseActivity extends MobileActivity
         mTopBar.show(subScreen, title);
         mCastButton.setVisibility(home ? View.VISIBLE : View.GONE);
         mSettingsButton.setVisibility(mYouShowing ? View.VISIBLE : View.GONE);
+        boolean downloads = subScreen && isDownloadsSectionShowing();
         if (home) {
             mFilterTabs.setTabs(homeTabs());
             mFilterTabs.select(mCurrentSectionId);
+        } else if (downloads) {
+            mFilterTabs.setTabs(downloadsTabs());
+            mFilterTabs.select(mDownloadsFilter);
         }
-        mFilterTabs.show(home);
+        mFilterTabs.show(home || downloads);
         int lit;
         if (mYouShowing) {
             lit = YOU_ITEM_ID;
@@ -1208,6 +1272,8 @@ public class MobileBrowseActivity extends MobileActivity
             personal.add(section);
         }
 
+        addContinueRow();
+
         // YEWPLAY(nav): the Library (proposta, p. 15) - Histórico and Downloads first, then the
         // rest of the user's own sections; pinned channels and playlists under their own title.
         // Settings is the gear in the top bar.
@@ -1222,6 +1288,81 @@ public class MobileBrowseActivity extends MobileActivity
                 addYouSectionRow(pinned.get(i), i == pinned.size() - 1);
             }
         }
+    }
+
+    /** YEWPLAY(library): how many "Continue de onde parou" cards, at most. */
+    private static final int CONTINUE_MAX = 10;
+
+    /**
+     * YEWPLAY(library): "Continue de onde parou" (proposta, p. 15) - the videos left half-way, newest
+     * first, from the local playback state (no network, works signed out). A video counts between 3%
+     * and 95% watched; lives and anything without a title stay out.
+     */
+    private List<Video> continueWatching() {
+        List<Video> result = new ArrayList<>();
+        com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService service =
+                com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService.instance(this);
+        if (service == null) {
+            return result;
+        }
+        List<com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService.State> states =
+                new ArrayList<>(service.getStates());
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (int i = states.size() - 1; i >= 0 && result.size() < CONTINUE_MAX; i--) {
+            com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService.State state = states.get(i);
+            Video video = state != null ? state.video : null;
+            if (video == null || video.videoId == null || !seen.add(video.videoId)) {
+                continue;
+            }
+            if (video.isLive || state.durationMs <= 0 || video.getTitle() == null || video.getTitle().length() == 0) {
+                continue;
+            }
+            float percent = state.positionMs * 100f / state.durationMs;
+            if (percent < 3f || percent > 95f) {
+                continue;
+            }
+            video.percentWatched = percent;
+            result.add(video);
+        }
+        return result;
+    }
+
+    /** YEWPLAY(library): the "Continue de onde parou" title and its horizontal row of cards. */
+    private void addContinueRow() {
+        List<Video> videos = continueWatching();
+        if (videos.isEmpty()) {
+            return;
+        }
+        addYouGroupLabel(getString(R.string.yew_library_continue));
+        float density = getResources().getDisplayMetrics().density;
+        android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this);
+        scroll.setHorizontalScrollBarEnabled(false);
+        scroll.setClipToPadding(false);
+        int side = Math.round(20 * density);
+        scroll.setPadding(side, Math.round(4 * density), side - Math.round(12 * density), Math.round(16 * density));
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (Video video : videos) {
+            View card = inflater.inflate(R.layout.item_yew_continue_card, row, false);
+            TextView title = card.findViewById(R.id.yew_continue_title);
+            title.setText(video.getTitle());
+            TextView meta = card.findViewById(R.id.yew_continue_meta);
+            CharSequence author = video.getAuthor() != null ? video.getAuthor() : video.getSecondTitle();
+            meta.setText(author);
+            meta.setVisibility(author == null || author.length() == 0 ? View.GONE : View.VISIBLE);
+            android.widget.ProgressBar progress = card.findViewById(R.id.yew_continue_progress);
+            progress.setProgress(Math.round(video.percentWatched));
+            ImageView thumb = card.findViewById(R.id.yew_continue_thumb);
+            String url = video.cardImageUrl != null ? video.cardImageUrl
+                    : "https://i.ytimg.com/vi/" + video.videoId + "/mqdefault.jpg";
+            com.bumptech.glide.Glide.with(this).load(url).into(thumb);
+            card.setContentDescription(video.getTitle());
+            card.setOnClickListener(v -> onVideoClicked(video));
+            row.addView(card);
+        }
+        scroll.addView(row);
+        mYouRows.addView(scroll);
     }
 
     /** YEWPLAY(nav): the Library's order. */
@@ -1465,6 +1606,7 @@ public class MobileBrowseActivity extends MobileActivity
         mContentGrid.animate().cancel();
         mContentGrid.setAlpha(1f);
         setSkeletonAvatars(showsChannelAvatars(sectionId));
+        setSkeletonShape(isOnHomeDestination());
         if (switched) {
             // NEWTUBE(motion): another section is a new page, not an edit of the old one. Through
             // the item animator it played as a shuffle (Pixel 9, History -> Home: the old cards
@@ -1576,6 +1718,8 @@ public class MobileBrowseActivity extends MobileActivity
         mAdapter.setChannelAvatars(showsChannelAvatars(mCurrentSectionId) ? this::onChannelAvatarClicked : null);
         // YEWPLAY(visual): the large item on Início and its filter tabs, the compact one elsewhere.
         mAdapter.setRowLayout(!isOnHomeDestination());
+        // YEWPLAY(home): the editorial item heads Início's "Tudo" only, not its other filter tabs.
+        mAdapter.setHeroFirst(mCurrentSectionId == MediaGroup.TYPE_HOME && !mYouShowing);
     }
 
     /** The loading skeleton's avatar circles, where the cards will have avatars. */
@@ -1584,6 +1728,23 @@ public class MobileBrowseActivity extends MobileActivity
         collectTagged(mFeedSkeleton, "avatar", avatars);
         for (View avatar : avatars) {
             avatar.setVisibility(shown ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    /**
+     * YEWPLAY(skeleton): the skeleton in the shape of the cards coming - the large item on Início,
+     * the compact one in every list (mobile_feed_skeleton).
+     */
+    private void setSkeletonShape(boolean large) {
+        List<View> views = new ArrayList<>();
+        collectTagged(mFeedSkeleton, "large", views);
+        for (View view : views) {
+            view.setVisibility(large ? View.VISIBLE : View.GONE);
+        }
+        views.clear();
+        collectTagged(mFeedSkeleton, "compact", views);
+        for (View view : views) {
+            view.setVisibility(large ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -1795,7 +1956,13 @@ public class MobileBrowseActivity extends MobileActivity
             return;
         }
 
-        List<DownloadItem> items = DownloadRegistry.instance(this).itemsNewestFirst();
+        // YEWPLAY(downloads): only the items the chosen tab shows count as "the set on screen".
+        List<DownloadItem> items = new ArrayList<>();
+        for (DownloadItem item : DownloadRegistry.instance(this).itemsNewestFirst()) {
+            if (mDownloadsFilter == DOWNLOADS_TAB_ALL || (mDownloadsFilter == DOWNLOADS_TAB_AUDIO) == item.isAudioOnly()) {
+                items.add(item);
+            }
+        }
         boolean sameSet = items.size() == mCurrentVideos.size();
         if (sameSet) {
             for (int i = 0; i < items.size(); i++) {
@@ -2648,7 +2815,7 @@ public class MobileBrowseActivity extends MobileActivity
      * has no Shorts, so none are shown in any section ({@link ShortsFilter}). Keep true playlists
      * (which use a similar service shape), and leave channel discovery to Search.
      */
-    private static List<Video> visibleFeedItems(List<Video> videos) {
+    private List<Video> visibleFeedItems(List<Video> videos) {
         List<Video> visible = new ArrayList<>();
         if (videos == null) {
             return visible;
@@ -2661,8 +2828,9 @@ public class MobileBrowseActivity extends MobileActivity
         return visible;
     }
 
-    private static boolean isVisibleFeedItem(Video video) {
+    private boolean isVisibleFeedItem(Video video) {
         return video != null
+                && passesDownloadsFilter(video)
                 && !ShortsFilter.isShort(video)
                 && (!video.isChannel() || video.isPlaylistAsChannel())
                 && !isSearchQueryTile(video);

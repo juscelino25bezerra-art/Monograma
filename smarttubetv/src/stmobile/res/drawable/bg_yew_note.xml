@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(about): o bloco "Livre e sem anúncios" da tela Sobre - Grafite claro (Papel escuro no
+     claro), raio 14dp, sem fio. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="?attr/newtubeColorSurface" />
+    <corners android:radius="14dp" />
+</shape>

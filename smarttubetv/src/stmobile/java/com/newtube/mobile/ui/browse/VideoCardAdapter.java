@@ -40,6 +40,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private static final int VIEW_TYPE_CHANNEL = 1;
     /** YEWPLAY(visual): the compact video item (item_video_card_row) - see {@link #setRowLayout}. */
     private static final int VIEW_TYPE_VIDEO_ROW = 2;
+    /** YEWPLAY(home): the first video of Início's "Tudo", large and with its text over the image. */
+    private static final int VIEW_TYPE_VIDEO_HERO = 3;
 
     public interface OnVideoClickListener {
         void onVideoClick(Video video);
@@ -61,6 +63,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     /** Held here; ChannelAvatars holds it weakly, so it goes away with this adapter. */
     private final ChannelAvatars.Listener mAvatarListener = this::onAvatarsChanged;
     private boolean mRowLayout;
+    private boolean mHeroFirst;
 
     public VideoCardAdapter(OnVideoClickListener clickListener) {
         this(clickListener, null);
@@ -96,6 +99,9 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         Video item = getItem(position);
         if (item.isChannel() && !item.isPlaylistAsChannel()) {
             return VIEW_TYPE_CHANNEL;
+        }
+        if (mHeroFirst && !mRowLayout && position == 0 && item.videoId != null) {
+            return VIEW_TYPE_VIDEO_HERO;
         }
         return mRowLayout ? VIEW_TYPE_VIDEO_ROW : VIEW_TYPE_VIDEO;
     }
@@ -138,7 +144,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     /** Full-span rows (channel results) for the grid's SpanSizeLookup in multi-column layouts. */
     public boolean isFullSpan(int position) {
         return position >= 0 && position < getItemCount()
-                && (mRowLayout || getItemViewType(position) == VIEW_TYPE_CHANNEL);
+                && (mRowLayout || getItemViewType(position) == VIEW_TYPE_CHANNEL
+                        || getItemViewType(position) == VIEW_TYPE_VIDEO_HERO);
     }
 
     /**
@@ -155,6 +162,20 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         }
     }
 
+    /**
+     * YEWPLAY(home): the editorial item (proposta, p. 12) - Início's first video spans the width,
+     * taller, with its title and meta over the image. Only on Início's "Tudo", never in the lists.
+     */
+    public void setHeroFirst(boolean hero) {
+        if (mHeroFirst == hero) {
+            return;
+        }
+        mHeroFirst = hero;
+        if (getItemCount() > 0) {
+            notifyItemChanged(0);
+        }
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -162,8 +183,9 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         if (viewType == VIEW_TYPE_CHANNEL) {
             return new ChannelViewHolder(inflater.inflate(R.layout.item_mobile_channel_card, parent, false), mClickListener);
         }
-        return new VideoViewHolder(inflater.inflate(viewType == VIEW_TYPE_VIDEO_ROW
-                ? R.layout.item_video_card_row : R.layout.item_video_card, parent, false), mClickListener);
+        int layout = viewType == VIEW_TYPE_VIDEO_ROW ? R.layout.item_video_card_row
+                : viewType == VIEW_TYPE_VIDEO_HERO ? R.layout.item_video_card_hero : R.layout.item_video_card;
+        return new VideoViewHolder(inflater.inflate(layout, parent, false), mClickListener);
     }
 
     @Override
@@ -301,7 +323,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             // "Channel · 1.2M views · 3 weeks ago" like YouTube; author-only when the
             // service didn't build the info line (e.g. some playlist rows).
             CharSequence meta = video.getSecondTitle();
-            mMeta.setText(meta == null || meta.length() == 0 ? video.getAuthor() : meta);
+            mMeta.setText(yewMeta(context, meta == null || meta.length() == 0 ? video.getAuthor() : meta, video.getAuthor()));
 
             bindBadge(context, video);
             bindProgress(video);
@@ -344,8 +366,11 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             android.text.SpannableString styled = new android.text.SpannableString(meta);
             styled.setSpan(com.newtube.mobile.ui.common.AppFonts.semiboldSpan(context), 0, author.length(),
                     android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            styled.setSpan(new android.text.style.ForegroundColorSpan(ContextCompat.getColor(context,
-                    R.color.mobile_color_on_surface)), 0, author.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            // YEWPLAY(home): over the hero's image the channel stays white in both themes.
+            int color = "hero".equals(itemView.getTag()) ? android.graphics.Color.WHITE
+                    : ContextCompat.getColor(context, R.color.mobile_color_on_surface);
+            styled.setSpan(new android.text.style.ForegroundColorSpan(color), 0, author.length(),
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             return styled;
         }
 
@@ -373,7 +398,11 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                         live ? R.color.mobile_color_badge_live_bg : R.color.mobile_color_badge_bg)));
                 android.view.ViewGroup.LayoutParams lp = mBadge.getLayoutParams();
                 if (lp instanceof android.widget.FrameLayout.LayoutParams) {
-                    int gravity = android.view.Gravity.BOTTOM | (live ? android.view.Gravity.START : android.view.Gravity.END);
+                    // YEWPLAY(home): on the hero the text sits at the bottom of the image and the ⋮ at the
+                    // top right, so its badge goes to the top left.
+                    boolean hero = "hero".equals(itemView.getTag());
+                    int gravity = hero ? android.view.Gravity.TOP | android.view.Gravity.START
+                            : android.view.Gravity.BOTTOM | (live ? android.view.Gravity.START : android.view.Gravity.END);
                     if (((android.widget.FrameLayout.LayoutParams) lp).gravity != gravity) {
                         ((android.widget.FrameLayout.LayoutParams) lp).gravity = gravity;
                         mBadge.setLayoutParams(lp);
