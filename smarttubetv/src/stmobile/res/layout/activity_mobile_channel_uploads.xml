@@ -45,6 +45,7 @@
 
         <TextView
             android:id="@+id/mobile_channel_uploads_title"
+        android:fontFamily="@font/bricolage_bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

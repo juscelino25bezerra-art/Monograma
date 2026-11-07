@@ -35,6 +35,7 @@
          "Biblioteca"); numa subtela, a seta e o nome menor (BrowseTopBar). -->
     <TextView
         android:id="@+id/mobile_title_bar"
+        android:fontFamily="@font/bricolage_bold"
         android:layout_width="0dp"
         android:layout_height="@dimen/yew_title_height"
         android:background="?attr/newtubeColorBackground"

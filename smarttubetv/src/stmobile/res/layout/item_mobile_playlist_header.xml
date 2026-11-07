@@ -70,6 +70,7 @@
 
         <TextView
             android:id="@+id/mobile_channel_uploads_header_title"
+        android:fontFamily="@font/bricolage_bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"

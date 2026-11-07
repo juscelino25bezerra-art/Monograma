@@ -45,11 +45,12 @@
 
             <TextView
                 android:id="@+id/update_sheet_title"
+        android:fontFamily="@font/bricolage_bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:accessibilityHeading="true"
                 android:textColor="@color/mobile_color_on_surface"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 tools:text="Update available" />
 

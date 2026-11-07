@@ -144,7 +144,15 @@
     </style>
 
     <!-- YEWPLAY(visual): títulos. Tela: Bricolage Bold 32sp, espaçamento -0,8 (proposta, p. 7);
-         seção: 19sp; título de vídeo em destaque: 17-22sp. -->
+         seção: Bold 20sp; título de vídeo em destaque: 17-22sp (SemiBold no item grande, Bold no
+         destaque editorial); a assinatura "YewPlay" em ExtraBold. Os arquivos são os cortes de
+         título da Bricolage (tamanho óptico 24pt SemiBold, 36pt Bold, 48pt ExtraBold), os mesmos do
+         YewPlay em Compose; o backup dos cortes anteriores está no branch
+         yewplay/backup-fontes-2026-11-07. -->
+    <!-- ATENÇÃO: o tema define android:fontFamily (Instrument Sans) e isso vence a fonte de um
+         textAppearance declarado no XML. Uma view com estes títulos também precisa de
+         android:fontFamily="@font/bricolage_bold" na própria tag (setTextAppearance em código
+         não tem o problema). -->
     <style name="TextAppearance.Yew.ScreenTitle" parent="">
         <item name="android:fontFamily">@font/bricolage_bold</item>
         <item name="android:textSize">32sp</item>
@@ -153,7 +161,7 @@
     </style>
     <style name="TextAppearance.Yew.SectionTitle" parent="">
         <item name="android:fontFamily">@font/bricolage_bold</item>
-        <item name="android:textSize">19sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:letterSpacing">-0.01</item>
         <item name="android:textColor">@color/mobile_color_on_surface</item>
     </style>
