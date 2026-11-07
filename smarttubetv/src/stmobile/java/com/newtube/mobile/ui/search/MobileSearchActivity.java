@@ -257,6 +257,7 @@ public class MobileSearchActivity extends MobileActivity
         mGrid.setHasFixedSize(true);
         mGrid.setItemViewCacheSize(8);
         mGrid.setLayoutManager(mLayoutManager);
+        mAdapter.setRowLayout(true); // YEWPLAY(visual): compact items (proposta, p. 14)
         mGrid.setAdapter(mAdapter);
         // Next cards' thumbnails decoded before they scroll in (no grey card + fade on a fling).
         com.newtube.mobile.ui.common.FeedThumbnailPreloader.attach(mGrid, mAdapter);
@@ -639,6 +640,12 @@ public class MobileSearchActivity extends MobileActivity
     public int getMiniCardBottomOffsetPx() {
         // Overlay card (mobile_mini_player_overlay.xml) sits flush at the content bottom.
         return 0;
+    }
+
+    /** YEWPLAY(nav): the minimize lands on this screen's mini bar video box. */
+    @Override
+    public boolean getMiniVideoTargetOnScreen(@androidx.annotation.NonNull android.graphics.Rect out) {
+        return mMiniPlayer != null && mMiniPlayer.videoTargetOnScreen(out);
     }
 
     // NOTE: back normally flows OnBackPressedDispatcher -> MobileActivity.finish() ->

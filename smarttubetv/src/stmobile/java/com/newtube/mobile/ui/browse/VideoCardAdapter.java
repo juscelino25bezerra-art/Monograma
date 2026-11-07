@@ -38,6 +38,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private static final int VIEW_TYPE_VIDEO = 0;
     /** Channel result row (round avatar + name + subs) — e.g. channels in search results. */
     private static final int VIEW_TYPE_CHANNEL = 1;
+    /** YEWPLAY(visual): the compact video item (item_video_card_row) - see {@link #setRowLayout}. */
+    private static final int VIEW_TYPE_VIDEO_ROW = 2;
 
     public interface OnVideoClickListener {
         void onVideoClick(Video video);
@@ -58,6 +60,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
     private OnVideoClickListener mChannelClickListener;
     /** Held here; ChannelAvatars holds it weakly, so it goes away with this adapter. */
     private final ChannelAvatars.Listener mAvatarListener = this::onAvatarsChanged;
+    private boolean mRowLayout;
 
     public VideoCardAdapter(OnVideoClickListener clickListener) {
         this(clickListener, null);
@@ -91,7 +94,10 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         // (videoId/playlistId null + a VL... channelId — the standard shape of the user
         // Playlists section): those must stay thumbnail cards, not round-avatar channel rows.
         Video item = getItem(position);
-        return item.isChannel() && !item.isPlaylistAsChannel() ? VIEW_TYPE_CHANNEL : VIEW_TYPE_VIDEO;
+        if (item.isChannel() && !item.isPlaylistAsChannel()) {
+            return VIEW_TYPE_CHANNEL;
+        }
+        return mRowLayout ? VIEW_TYPE_VIDEO_ROW : VIEW_TYPE_VIDEO;
     }
 
     /**
@@ -131,7 +137,22 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
     /** Full-span rows (channel results) for the grid's SpanSizeLookup in multi-column layouts. */
     public boolean isFullSpan(int position) {
-        return position >= 0 && position < getItemCount() && getItemViewType(position) == VIEW_TYPE_CHANNEL;
+        return position >= 0 && position < getItemCount()
+                && (mRowLayout || getItemViewType(position) == VIEW_TYPE_CHANNEL);
+    }
+
+    /**
+     * YEWPLAY(visual): compact items (thumbnail beside the text, proposta p. 21) - every list but
+     * Início, which keeps the large edge-to-edge item. Same view holder, same bindings.
+     */
+    public void setRowLayout(boolean rows) {
+        if (mRowLayout == rows) {
+            return;
+        }
+        mRowLayout = rows;
+        if (getItemCount() > 0) {
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
@@ -141,7 +162,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
         if (viewType == VIEW_TYPE_CHANNEL) {
             return new ChannelViewHolder(inflater.inflate(R.layout.item_mobile_channel_card, parent, false), mClickListener);
         }
-        return new VideoViewHolder(inflater.inflate(R.layout.item_video_card, parent, false), mClickListener);
+        return new VideoViewHolder(inflater.inflate(viewType == VIEW_TYPE_VIDEO_ROW
+                ? R.layout.item_video_card_row : R.layout.item_video_card, parent, false), mClickListener);
     }
 
     @Override
@@ -299,7 +321,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
             mTitle.setText(video.getTitle());
             CharSequence meta = video.getSecondTitle();
-            mMeta.setText(meta == null || meta.length() == 0 ? video.getAuthor() : meta);
+            mMeta.setText(yewMeta(context, meta == null || meta.length() == 0 ? video.getAuthor() : meta, video.getAuthor()));
 
             bindBadge(context, video);
             bindProgress(video);
@@ -309,6 +331,22 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             if (thumbnailUrl == null ? mBoundThumbUrl != null : !thumbnailUrl.equals(mBoundThumbUrl)) {
                 bindThumbnail(context, video);
             }
+        }
+
+        /**
+         * YEWPLAY(visual): the channel in SemiBold at the start of the meta line ("Tech Direto
+         * 112 mil visualizações, há 2 dias"), like the proposal's items.
+         */
+        private CharSequence yewMeta(Context context, CharSequence meta, @androidx.annotation.Nullable String author) {
+            if (meta == null || author == null || author.isEmpty() || !meta.toString().startsWith(author)) {
+                return meta;
+            }
+            android.text.SpannableString styled = new android.text.SpannableString(meta);
+            styled.setSpan(com.newtube.mobile.ui.common.AppFonts.semiboldSpan(context), 0, author.length(),
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            styled.setSpan(new android.text.style.ForegroundColorSpan(ContextCompat.getColor(context,
+                    R.color.mobile_color_on_surface)), 0, author.length(), android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return styled;
         }
 
         private void bindBadge(Context context, Video video) {
@@ -326,9 +364,21 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             if (badgeText == null || badgeText.isEmpty()) {
                 mBadge.setVisibility(View.GONE);
             } else {
-                mBadge.setText(badgeText);
-                mBadge.setBackgroundColor(ContextCompat.getColor(context,
-                        video.isLive || video.isUpcoming ? R.color.mobile_color_badge_live_bg : R.color.mobile_color_badge_bg));
+                // YEWPLAY(visual): "Ao vivo" in rubi at the bottom-left, with a dot; the duration
+                // stays a dark pill at the bottom-right. A tint keeps the badge's rounded shape
+                // (setBackgroundColor used to replace it with a square).
+                boolean live = video.isLive || video.isUpcoming;
+                mBadge.setText(video.isLive ? "\u25CF " + badgeText : badgeText);
+                mBadge.setBackgroundTintList(android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context,
+                        live ? R.color.mobile_color_badge_live_bg : R.color.mobile_color_badge_bg)));
+                android.view.ViewGroup.LayoutParams lp = mBadge.getLayoutParams();
+                if (lp instanceof android.widget.FrameLayout.LayoutParams) {
+                    int gravity = android.view.Gravity.BOTTOM | (live ? android.view.Gravity.START : android.view.Gravity.END);
+                    if (((android.widget.FrameLayout.LayoutParams) lp).gravity != gravity) {
+                        ((android.widget.FrameLayout.LayoutParams) lp).gravity = gravity;
+                        mBadge.setLayoutParams(lp);
+                    }
+                }
                 mBadge.setVisibility(View.VISIBLE);
             }
         }
@@ -497,7 +547,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
             Glide.with(context)
                     .load(url)
                     .override(size)
-                    .circleCrop()
+                    .transform(com.newtube.mobile.ui.common.YewAvatar.get()) // YEWPLAY: rounded square
                     .placeholder(R.drawable.bg_card_avatar_placeholder)
                     .error(R.drawable.bg_card_avatar_placeholder)
                     .transition(com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade(150))
@@ -577,7 +627,7 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
 
             Glide.with(itemView.getContext())
                     .load(video.getCardImageUrl())
-                    .circleCrop()
+                    .transform(com.newtube.mobile.ui.common.YewAvatar.get()) // YEWPLAY: rounded square
                     .placeholder(R.drawable.ic_watch_channel_placeholder)
                     .error(R.drawable.ic_watch_channel_placeholder)
                     .into(mAvatar);

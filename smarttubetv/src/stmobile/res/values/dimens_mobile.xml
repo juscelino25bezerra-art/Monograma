@@ -46,10 +46,33 @@
     <dimen name="mobile_settings_title_inset">20dp</dimen>
     <dimen name="mobile_settings_title_size">20sp</dimen>
     <dimen name="mobile_settings_row_min_height">56dp</dimen>
-    <dimen name="mobile_settings_row_inset">16dp</dimen>
-    <dimen name="mobile_settings_icon_gap">20dp</dimen>
-    <dimen name="mobile_settings_row_padding_vertical">14dp</dimen>
-    <dimen name="mobile_settings_row_title_size">16sp</dimen>
-    <dimen name="mobile_settings_row_summary_size">14sp</dimen>
-    <dimen name="mobile_settings_header_size">16sp</dimen>
+    <dimen name="mobile_settings_row_inset">20dp</dimen>
+    <dimen name="mobile_settings_icon_gap">18dp</dimen>
+    <dimen name="mobile_settings_row_padding_vertical">12dp</dimen>
+    <dimen name="mobile_settings_row_title_size">15sp</dimen>
+    <dimen name="mobile_settings_row_summary_size">13sp</dimen>
+    <dimen name="mobile_settings_header_size">13sp</dimen>
+    <!-- YEWPLAY(nav): a barra flutuante (proposta, p. 8: raio 26dp, 12dp das bordas) e o
+         mini-player que mora dentro dela. -->
+    <dimen name="yew_capsule_margin">12dp</dimen>
+    <dimen name="yew_capsule_radius">26dp</dimen>
+    <dimen name="yew_nav_height">60dp</dimen>
+    <dimen name="yew_mini_row_height">60dp</dimen>
+    <dimen name="yew_mini_row_padding">10dp</dimen>
+    <dimen name="yew_mini_video_width">64dp</dimen>
+    <dimen name="yew_mini_video_height">36dp</dimen>
+    <!-- Margem lateral de todas as telas (proposta, p. 8). -->
+    <dimen name="yew_side_margin">20dp</dimen>
+    <!-- O item de vídeo compacto (proposta, p. 21: 144x81dp, raio 10dp). -->
+    <dimen name="yew_compact_thumb_width">144dp</dimen>
+    <dimen name="yew_compact_thumb_height">81dp</dimen>
+    <dimen name="yew_compact_thumb_radius">10dp</dimen>
+    <!-- O título grande das telas (Bricolage 32sp) e o recuo das abas de filtro: o texto da
+         primeira aba alinha com a margem de 20dp. -->
+    <dimen name="yew_title_height">64dp</dimen>
+    <dimen name="yew_filter_inset">8dp</dimen>
+    <!-- YEWPLAY(nav): espaço livre embaixo de uma tela que rola por trás da barra flutuante
+         (60dp de navegação + 12dp de margem + folga); a Biblioteca cobre a tela toda para que a
+         grade do Início não apareça em volta da barra. -->
+    <dimen name="yew_capsule_clearance">88dp</dimen>
 </resources>

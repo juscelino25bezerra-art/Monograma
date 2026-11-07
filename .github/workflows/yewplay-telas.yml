@@ -1,0 +1,71 @@
+name: YewPlay telas
+
+# YEWPLAY: capturas das telas principais num emulador (Android 14, pt-BR, temas escuro e claro)
+# para conferir o visual contra a proposta sem um aparelho. Compila o APK de debug com libs
+# x86_64 (-PemulatorAbi), navega pelo texto dos botões (tools/screens/capture.sh) e imprime as
+# capturas no log (tools/screens/print_screens.py); também as guarda como artefato.
+
+on:
+  push:
+    branches: ["yewplay/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: yewplay-telas-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  screens:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Build the debug APK (x86_64)
+        run: ./gradlew --stacktrace :smarttubetv:assembleStmobileDebug -PemulatorAbi
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Capture the screens
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash tools/screens/capture.sh
+
+      - name: Print the screens
+        if: always()
+        run: |
+          pip install --quiet pillow
+          python3 tools/screens/print_screens.py build/screens
+
+      - name: Keep the screens
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: YewPlay-telas-${{ github.sha }}
+          path: build/screens/*.png
+          if-no-files-found: ignore
+          retention-days: 14

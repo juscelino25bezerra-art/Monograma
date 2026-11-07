@@ -68,8 +68,9 @@ public class PlayerTimeBar extends View implements TimeBar {
         void onReleaseToCancel(boolean armed);
     }
 
-    static final int PLAYED_COLOR = 0xFFFF0033;
-    static final int PLAYED_TAIL_COLOR = 0xFFFF2791;
+    // YEWPLAY(player): rubi (#E0364F) no lugar do vermelho do YouTube, mais claro no fim.
+    static final int PLAYED_COLOR = 0xFFE0364F;
+    static final int PLAYED_TAIL_COLOR = 0xFFF0607A;
     static final int BUFFERED_COLOR = 0x80FFFFFF;
     static final int UNPLAYED_COLOR = 0x33FFFFFF;
 

@@ -1,30 +1,30 @@
-# Privacy Policy for Monograma
+# Privacy Policy for YewPlay
 
 **Last updated:** November 4, 2026
 
-This Privacy Policy applies to **Monograma**, an open-source YouTube client for
-Android phones (package ID `io.github.juscelino25bezerra.monograma`). Monograma is an
+This Privacy Policy applies to **YewPlay**, an open-source YouTube client for
+Android phones (package ID `com.yewplay`). YewPlay is an
 independent, unofficial fork of NewTube, which is itself a fork of SmartTube. It is not affiliated with Google,
 YouTube, or the developers of SmartTube or NewTube.
 
 ## 1. Summary
 
-Monograma has **no backend of its own** and its developer collects **no personal
+YewPlay has **no backend of its own** and its developer collects **no personal
 data**. The app talks only to YouTube/Google, a small set of community services
 you can disable, and (for update checks) GitHub. There are no analytics, no
 trackers, no advertising, and no crash reporting.
 
 ## 2. Data the developer collects
 
-**None.** Monograma has no developer-controlled server, no account system of its
+**None.** YewPlay has no developer-controlled server, no account system of its
 own, and no telemetry or analytics frameworks (no Firebase, no Crashlytics, no
 Sentry, no ad SDKs). The developer does not receive, store, or have access to
 any information about you or your usage.
 
 ## 3. YouTube / Google
 
-- **Sign-in is optional.** You can use Monograma fully signed out. If you choose to
-  sign in, Monograma uses Google's official OAuth 2.0 **device-code flow** — you
+- **Sign-in is optional.** You can use YewPlay fully signed out. If you choose to
+  sign in, YewPlay uses Google's official OAuth 2.0 **device-code flow** — you
   authorize the app on Google's own page; your password is never seen by, or
   shared with, the developer.
 - **Tokens stay on your device.** Authentication tokens are stored in the
@@ -35,12 +35,12 @@ any information about you or your usage.
   made by the app before 1.15.1 still contain them.
 - **Direct connection.** Video streams, search, and account data are fetched
   directly from YouTube/Google servers to your device. Your use of YouTube's
-  services through Monograma is also subject to Google's and YouTube's own terms
+  services through YewPlay is also subject to Google's and YouTube's own terms
   and privacy policies.
 
 ## 4. Community services (optional, per-feature)
 
-When the corresponding feature is enabled, Monograma sends **only the ID of the
+When the corresponding feature is enabled, YewPlay sends **only the ID of the
 video you are viewing** to these community-run services to retrieve crowd-sourced
 data. These requests are read-only and contain no account tokens, names, emails,
 or other personal identifiers:
@@ -52,12 +52,12 @@ or other personal identifiers:
   counts. Off by default from version 1.10.3 (Settings → Player → Dislike counts).
 
 Each of these can be turned off in Settings. They are operated by their
-respective projects under their own privacy policies, not by Monograma.
+respective projects under their own privacy policies, not by YewPlay.
 
 ## 5. Update checks
 
-Unless you installed Monograma from a store that manages updates for you (such as
-F-Droid or IzzyOnDroid), the app periodically checks Monograma's **GitHub
+Unless you installed YewPlay from a store that manages updates for you (such as
+F-Droid or IzzyOnDroid), the app periodically checks YewPlay's **GitHub
 Releases** for a newer version. This is a normal web request to `github.com`;
 like any web request it exposes your IP address to GitHub, but it sends no
 account data or personal identifiers, and no data goes to the developer. You can
@@ -65,19 +65,19 @@ avoid these checks by installing and updating through F-Droid/IzzyOnDroid.
 
 ## 6. No profiling, no advertising, no monetization
 
-Monograma does not profile you, does not use analytics or automated
-decision-making about you, and shows no ads. Monograma is a free, non-commercial
+YewPlay does not profile you, does not use analytics or automated
+decision-making about you, and shows no ads. YewPlay is a free, non-commercial
 project: it does **not** solicit donations or payments and contains no in-app
 purchases.
 
 ## 7. Your rights (GDPR / CCPA)
 
-Because Monograma stores and transmits no personal data to the developer, the
+Because YewPlay stores and transmits no personal data to the developer, the
 developer holds no identifiable records associated with you, and therefore has
 nothing to export or delete on request. Data held by Google/YouTube or the
 community services above is governed by their respective policies.
 
 ## 8. Contact
 
-For questions about this policy or Monograma's privacy design, please open an issue
+For questions about this policy or YewPlay's privacy design, please open an issue
 on the project's GitHub repository.

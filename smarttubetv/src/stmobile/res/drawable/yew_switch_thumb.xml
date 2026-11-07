@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(visual): bolinha do interruptor, 26dp de altura para cobrir o trilho (o SwitchCompat
+     desenha a bolinha na altura do trilho) com um disco de 20dp dentro. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <layer-list>
+            <item android:width="26dp" android:height="26dp"><shape android:shape="oval"><solid android:color="@android:color/transparent" /></shape></item>
+            <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp"><shape android:shape="oval"><solid android:color="@color/mobile_color_on_inverse_surface" /></shape></item>
+        </layer-list>
+    </item>
+    <item>
+        <layer-list>
+            <item android:width="26dp" android:height="26dp"><shape android:shape="oval"><solid android:color="@android:color/transparent" /></shape></item>
+            <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp"><shape android:shape="oval"><solid android:color="@color/yew_switch_thumb_off" /></shape></item>
+        </layer-list>
+    </item>
+</selector>

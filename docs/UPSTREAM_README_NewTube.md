@@ -1,4 +1,4 @@
-> **Monograma:** este é o README original do [NewTube](https://github.com/aleixrodriala/newtube), do qual o Monograma é um fork. Fica aqui como crédito e referência; o README do Monograma está na [raiz do repositório](../README.md).
+> **YewPlay:** este é o README original do [NewTube](https://github.com/aleixrodriala/newtube), do qual o YewPlay é um fork. Fica aqui como crédito e referência; o README do YewPlay está na [raiz do repositório](../README.md).
 
 <div align="center">
 

@@ -3,6 +3,6 @@
     android:shape="rectangle">
     <solid android:color="?attr/newtubeColorSurface" />
     <corners
-        android:topLeftRadius="16dp"
-        android:topRightRadius="16dp" />
+        android:topLeftRadius="22dp"
+        android:topRightRadius="22dp" />
 </shape>

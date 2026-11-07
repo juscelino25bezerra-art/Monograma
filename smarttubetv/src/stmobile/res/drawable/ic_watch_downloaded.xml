@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Watch-page pill once the video is on the device (Material "download done"). -->
+<!-- YEWPLAY(icons): Phosphor "check-circle" (MIT, docs/licenses/Phosphor-MIT.txt) - traço regular; o
+     preenchido só no item ativo da navegação e nos controles do player. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24"
+    android:viewportWidth="256"
+    android:viewportHeight="256"
     android:tint="@color/mobile_color_on_surface">
     <path
         android:fillColor="@android:color/white"
-        android:pathData="M5,18h14v2H5v-2zM19,9.5l-1.41,-1.41L11.17,14.5 7.41,10.74 6,12.16l5.17,5.17L19,9.5z" />
+        android:pathData="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z" />
 </vector>

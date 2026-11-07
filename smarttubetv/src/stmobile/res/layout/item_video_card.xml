@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
+<!-- YEWPLAY(visual): o item de vídeo grande da proposta (p. 12 e 21) - miniatura de ponta a
+     ponta, sem cantos; título em Bricolage 17sp; canal em negrito com os metadados na mesma linha
+     (VideoCardAdapter); texto na margem de 20dp.
+     Antes:
   Home-grid video card, YouTube-style: a flat (no box, no elevation) cell whose thumbnail is
   clipped to rounded corners by the inner MaterialCardView, with title/channel text sitting
   directly on the window background. The outer card is only the click/ripple container.
@@ -11,7 +14,7 @@
     android:id="@+id/video_card_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/mobile_card_spacing"
+    android:layout_marginBottom="12dp"
     android:checkable="false"
     android:clickable="true"
     android:focusable="true"
@@ -31,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:cardBackgroundColor="@color/mobile_color_placeholder"
-            app:cardCornerRadius="@dimen/mobile_card_corner_radius"
+            app:cardCornerRadius="0dp"
             app:cardElevation="0dp"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,13 +53,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_margin="6dp"
+                android:layout_margin="8dp"
                 android:background="@drawable/bg_video_badge"
-                android:paddingHorizontal="5dp"
+                android:fontFamily="@font/instrument_semibold"
+                android:paddingHorizontal="6dp"
                 android:paddingVertical="2dp"
                 android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
+                android:textSize="11.5sp"
                 android:visibility="gone"
                 tools:text="12:34" />
 
@@ -83,7 +86,7 @@
             android:id="@+id/video_channel_avatar"
             android:layout_width="@dimen/mobile_card_avatar_size"
             android:layout_height="@dimen/mobile_card_avatar_size"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="@dimen/yew_side_margin"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerCrop"
             android:src="@drawable/bg_card_avatar_placeholder"
@@ -98,18 +101,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="4dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:lineSpacingExtra="2sp"
+            android:fontFamily="@font/bricolage_bold"
+            android:lineSpacingExtra="1sp"
             android:maxLines="2"
             android:textColor="@color/mobile_color_on_surface"
-            android:textSize="16sp"
+            android:textSize="17sp"
             app:layout_constraintEnd_toStartOf="@+id/video_overflow"
             app:layout_constraintStart_toEndOf="@id/video_channel_avatar"
             app:layout_constraintTop_toBottomOf="@id/video_thumbnail_frame"
-            app:layout_goneMarginStart="4dp"
+            app:layout_goneMarginStart="@dimen/yew_side_margin"
             tools:text="A great video title that may wrap to two lines" />
 
         <!-- Overflow = same context menu as card long-press (VideoMenuPresenter: Not interested,
@@ -120,6 +123,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/mobile_player_more"
+            android:layout_marginEnd="4dp"
             android:padding="12dp"
             android:src="@drawable/ic_mobile_more_vert"
             app:layout_constraintEnd_toEndOf="parent"
@@ -136,7 +140,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/mobile_color_on_surface_secondary"
-            android:textSize="13sp"
+            android:textSize="12.5sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/video_overflow"
             app:layout_constraintStart_toStartOf="@id/video_title"

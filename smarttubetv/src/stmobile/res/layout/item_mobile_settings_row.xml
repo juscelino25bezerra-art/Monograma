@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/settings_row_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:layout_marginEnd="@dimen/mobile_settings_icon_gap"
         android:contentDescription="@null"
         android:importantForAccessibility="no"
@@ -35,6 +35,7 @@
             android:id="@+id/settings_row_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/instrument_medium"
             android:textColor="@color/mobile_color_on_surface"
             android:textSize="@dimen/mobile_settings_row_title_size"
             tools:text="Background play" />

@@ -35,6 +35,18 @@
         <item name="colorAccent">@color/mobile_color_on_surface</item>
         <item name="colorSecondary">@color/mobile_color_on_surface</item>
         <item name="colorControlActivated">@color/mobile_color_on_surface</item>
+        <!-- YEWPLAY(visual): Instrument Sans é o padrão de todo texto (res/font; Android 8+). Só
+             android:fontFamily: um app:fontFamily no tema vira o padrão que o AppCompat aplica por
+             cima da fonte de cada MaterialButton e Chip. Os textos do Material também apontam
+             para ela. -->
+        <item name="android:fontFamily">@font/instrument_sans</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Yew.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Yew.Body</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Yew.Medium</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.Yew.Body</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Yew.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Yew.Caption</item>
+        <item name="switchStyle">@style/Widget.Yew.Switch</item>
         <!-- NEWTUBE(theme): the page colours (attrs_mobile.xml). ThemeOverlay.NewTube.PureBlack
              replaces them on the dark side; everything below reads them through the attributes. -->
         <item name="newtubePureBlack">false</item>
@@ -94,12 +106,80 @@
 
     <style name="Widget.NewTube.Snackbar.Action" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
         <item name="android:textColor">@color/mobile_color_background</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/instrument_semibold</item>
     </style>
 
     <style name="TextAppearance.NewTube.Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
+        <item name="android:fontFamily">@font/instrument_semibold</item>
+        <item name="fontFamily">@font/instrument_semibold</item>
+    </style>
+
+    <!-- YEWPLAY(visual): a escala de texto do Material em Instrument Sans. -->
+    <style name="TextAppearance.Yew.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:fontFamily">@font/bricolage_bold</item>
+        <item name="fontFamily">@font/bricolage_bold</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+    <style name="TextAppearance.Yew.Body" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:fontFamily">@font/instrument_sans</item>
+        <item name="fontFamily">@font/instrument_sans</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="TextAppearance.Yew.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:fontFamily">@font/instrument_sans</item>
+        <item name="fontFamily">@font/instrument_sans</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="TextAppearance.Yew.Medium" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:fontFamily">@font/instrument_semibold</item>
+        <item name="fontFamily">@font/instrument_semibold</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="TextAppearance.Yew.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:fontFamily">@font/instrument_sans</item>
+        <item name="fontFamily">@font/instrument_sans</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <!-- YEWPLAY(visual): títulos. Tela: Bricolage Bold 32sp, espaçamento -0,8 (proposta, p. 7);
+         seção: 19sp; título de vídeo em destaque: 17-22sp. -->
+    <style name="TextAppearance.Yew.ScreenTitle" parent="">
+        <item name="android:fontFamily">@font/bricolage_bold</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:letterSpacing">-0.025</item>
+        <item name="android:textColor">@color/mobile_color_on_surface</item>
+    </style>
+    <style name="TextAppearance.Yew.SectionTitle" parent="">
+        <item name="android:fontFamily">@font/bricolage_bold</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="android:textColor">@color/mobile_color_on_surface</item>
+    </style>
+
+    <!--
+      YEWPLAY(visual): o interruptor da proposta - trilho de 44x26dp em cápsula, cor da ação
+      (marfim no escuro, tinta no claro) quando ligado, com a bolinha na cor da página; Fumaça
+      com a bolinha cinza quando desligado. Desenhado por drawables próprios: o MaterialSwitch do
+      Material 3 fica de fora (a proposta não usa Material 3).
+    -->
+    <style name="Widget.Yew.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="useMaterialThemeColors">false</item>
+        <item name="android:thumb">@drawable/yew_switch_thumb</item>
+        <item name="track">@drawable/yew_switch_track</item>
+        <item name="thumbTint">@null</item>
+        <item name="trackTint">@null</item>
+        <item name="switchMinWidth">44dp</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <!-- YEWPLAY(visual): botões de 44dp e cantos de 12dp (proposta, p. 8). Secundário: Fumaça com
+         texto marfim ("Inscrito", "Aleatório", "Importar inscrições"). -->
+    <style name="Widget.Yew.Button.Secondary" parent="Widget.NewTube.Button.Pill">
+        <item name="android:textColor">@color/mobile_color_on_surface</item>
+        <item name="backgroundTint">@color/mobile_color_raised</item>
+        <item name="rippleColor">@color/mobile_color_divider</item>
     </style>
 
     <!--
@@ -114,18 +194,19 @@
         <item name="android:textColor">@color/mobile_color_on_inverse_surface</item>
         <item name="backgroundTint">@color/mobile_color_inverse_surface</item>
         <item name="rippleColor">@color/mobile_color_inverse_ripple</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/instrument_semibold</item>
+        <item name="android:textSize">14.5sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:letterSpacing">0</item>
-        <item name="android:insetTop">4dp</item>
-        <item name="android:insetBottom">4dp</item>
+        <item name="android:insetTop">2dp</item>
+        <item name="android:insetBottom">2dp</item>
         <item name="android:minHeight">48dp</item>
-        <item name="android:paddingStart">20dp</item>
-        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
         <item name="android:elevation">0dp</item>
         <item name="android:stateListAnimator">@null</item>
-        <item name="cornerRadius">20dp</item>
+        <!-- YEWPLAY(visual): 12dp, não pílula (proposta, p. 8). -->
+        <item name="cornerRadius">12dp</item>
     </style>
 
     <!--
@@ -173,8 +254,8 @@
 
     <style name="ShapeAppearance.NewTube.BottomSheet" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopLeft">16dp</item>
-        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">22dp</item>
+        <item name="cornerSizeTopRight">22dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
     </style>
@@ -299,7 +380,7 @@
     </style>
 
     <style name="MobileAlertDialogShape" parent="ShapeAppearance.MaterialComponents.MediumComponent">
-        <item name="cornerSize">16dp</item>
+        <item name="cornerSize">22dp</item>
     </style>
 
     <style name="MobileAlertDialogBody" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
@@ -341,14 +422,14 @@
     </style>
 
     <style name="MobileCastCodeDialogTitle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/instrument_semibold</item>
         <item name="android:textColor">@color/mobile_color_on_surface</item>
         <item name="android:textSize">20sp</item>
         <item name="android:letterSpacing">0</item>
     </style>
 
     <style name="MobileCastCodeDialogSecondaryButton" parent="MobileAlertDialogButton">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/instrument_semibold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:letterSpacing">0</item>
@@ -356,7 +437,7 @@
     </style>
 
     <style name="MobileCastCodeDialogPrimaryButton" parent="Widget.MaterialComponents.Button">
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/instrument_semibold</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textAllCaps">false</item>
@@ -375,9 +456,53 @@
     <!-- Regular weight at 11sp tracks the YouTube bar labels (medium/bold read heavier than
          theirs side-by-side; the old 10sp-medium choice predates dropping the long
          "Listas de reproducción" label from the bar). -->
+    <!-- YEWPLAY(player): um botão da fileira de ações da página do vídeo - ícone de 22dp em cima
+         e rótulo de 12sp embaixo, alvo de toque de 64x64dp. -->
+    <style name="YewWatchAction">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:minHeight">64dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
+    <style name="YewWatchActionIcon">
+        <item name="android:layout_width">22dp</item>
+        <item name="android:layout_height">22dp</item>
+        <item name="android:tint">@color/mobile_color_on_surface</item>
+    </style>
+    <style name="YewWatchActionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/mobile_color_on_surface_secondary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+
+    <!-- YEWPLAY(nav): rótulos da barra flutuante; o ativo em SemiBold. -->
+    <style name="YewNavText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:fontFamily">@font/instrument_medium</item>
+        <item name="fontFamily">@font/instrument_medium</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="YewNavText.Active">
+        <item name="android:fontFamily">@font/instrument_semibold</item>
+        <item name="fontFamily">@font/instrument_semibold</item>
+    </style>
+
     <style name="MobileBottomNavText" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">11sp</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">@font/instrument_sans</item>
     </style>
 
     <!-- Watch-page loading skeleton (alpha-pulsed from code while related videos load). -->

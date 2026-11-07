@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- NEWTUBE(feed-avatars): a card's channel avatar before (or without) its image: the thumbnail
      placeholder's colour, round. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <solid android:color="@color/mobile_color_placeholder" />
+    <!-- YEWPLAY(visual): a rounded square, like the avatar it stands in for (YewAvatar). -->
+    <corners android:radius="12dp" />
 </shape>

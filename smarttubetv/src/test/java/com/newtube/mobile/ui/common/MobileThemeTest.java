@@ -35,14 +35,20 @@ import org.robolectric.annotation.ConscryptMode;
 @Config(sdk = 28, manifest = Config.NONE, application = Application.class)
 @ConscryptMode(ConscryptMode.Mode.OFF)
 public class MobileThemeTest {
+    // YEWPLAY(visual): as paletas da proposta (values-night / values colors_mobile.xml).
+    private static final int DARK_PAGE = 0xFF18141A;
+    private static final int DARK_SURFACE = 0xFF221D24;
+    private static final int DARK_INK = 0xFFF3EEE9;
+    private static final int LIGHT_PAGE = 0xFFF6F2EE;
+    private static final int LIGHT_INK = 0xFF1C171E;
 
     @Test
     @Config(qualifiers = "night")
     public void darkSideKeepsTheDarkPaletteAndLightControls() {
         Context context = themed(R.style.Theme_NewTube);
-        assertEquals(0xFF0F0F0F, color(context, R.color.mobile_color_background));
-        assertEquals(0xFFFFFFFF, color(context, R.color.mobile_color_on_surface));
-        assertEquals(0xFF1E1E1E, color(context, R.color.mobile_color_surface));
+        assertEquals(DARK_PAGE, color(context, R.color.mobile_color_background));
+        assertEquals(DARK_INK, color(context, R.color.mobile_color_on_surface));
+        assertEquals(DARK_SURFACE, color(context, R.color.mobile_color_surface));
         assertTrue(lightControls(context));
     }
 
@@ -50,8 +56,8 @@ public class MobileThemeTest {
     @Config(qualifiers = "notnight")
     public void lightSideDrawsDarkControlsOnWhitePages() {
         Context context = themed(R.style.Theme_NewTube);
-        assertEquals(0xFFFFFFFF, color(context, R.color.mobile_color_background));
-        assertEquals(0xFF0F0F0F, color(context, R.color.mobile_color_on_surface));
+        assertEquals(LIGHT_PAGE, color(context, R.color.mobile_color_background));
+        assertEquals(LIGHT_INK, color(context, R.color.mobile_color_on_surface));
         assertFalse(lightControls(context));
     }
 
@@ -118,8 +124,8 @@ public class MobileThemeTest {
     @Config(qualifiers = "night")
     public void pureBlackBlackensThePageAndKeepsRaisedSurfacesApart() {
         Context dark = themed(R.style.Theme_NewTube);
-        assertEquals(0xFF0F0F0F, ThemeMode.color(dark, R.attr.newtubeColorBackground));
-        assertEquals(0xFF1E1E1E, ThemeMode.color(dark, R.attr.newtubeColorSurface));
+        assertEquals(DARK_PAGE, ThemeMode.color(dark, R.attr.newtubeColorBackground));
+        assertEquals(DARK_SURFACE, ThemeMode.color(dark, R.attr.newtubeColorSurface));
 
         Context black = themed(R.style.Theme_NewTube);
         black.getTheme().applyStyle(R.style.ThemeOverlay_NewTube_PureBlack, true);
@@ -135,7 +141,7 @@ public class MobileThemeTest {
         assertEquals(0xFF121212, a.getColor(2, 0));
         a.recycle();
         // The other palette text keeps its dark-theme values.
-        assertEquals(0xFFFFFFFF, color(black, R.color.mobile_color_on_surface));
+        assertEquals(DARK_INK, color(black, R.color.mobile_color_on_surface));
     }
 
     @Test
@@ -152,7 +158,7 @@ public class MobileThemeTest {
             ThemeMode.setPureBlack(app, false);
             Context next = themed(R.style.Theme_NewTube);
             ThemeMode.applyPalette(next);
-            assertEquals(0xFF0F0F0F, ThemeMode.color(next, R.attr.newtubeColorBackground));
+            assertEquals(DARK_PAGE, ThemeMode.color(next, R.attr.newtubeColorBackground));
             assertEquals(Configuration.UI_MODE_NIGHT_YES, ThemeMode.currentLook(next));
             // (Taking it off a live screen is a theme rebuild: rebuiltThemesFollowTheSwitchEachWay.)
         } finally {
@@ -168,7 +174,7 @@ public class MobileThemeTest {
             ThemeMode.setPureBlack(app, true);
             Context screen = themed(R.style.Theme_NewTube);
             ThemeMode.applyPalette(screen);
-            assertEquals(0xFFFFFFFF, ThemeMode.color(screen, R.attr.newtubeColorBackground));
+            assertEquals(LIGHT_PAGE, ThemeMode.color(screen, R.attr.newtubeColorBackground));
             assertEquals(Configuration.UI_MODE_NIGHT_NO, ThemeMode.currentLook(screen));
         } finally {
             ThemeMode.setPureBlack(app, false);
@@ -197,8 +203,8 @@ public class MobileThemeTest {
                     return theme;
                 }
             };
-            assertEquals(black ? 0xFF000000 : 0xFF0F0F0F, ThemeMode.color(screen, R.attr.newtubeColorBackground));
-            assertEquals(black ? 0xFF121212 : 0xFF1E1E1E, cardColor(screen));
+            assertEquals(black ? 0xFF000000 : DARK_PAGE, ThemeMode.color(screen, R.attr.newtubeColorBackground));
+            assertEquals(black ? 0xFF121212 : DARK_SURFACE, cardColor(screen));
         }
     }
 

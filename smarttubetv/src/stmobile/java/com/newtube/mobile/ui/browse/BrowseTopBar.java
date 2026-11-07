@@ -14,8 +14,10 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
  * no hint where the user was or that back returns to You.
  */
 final class BrowseTopBar {
-    private static final float WORDMARK_SP = 22f;
-    private static final float SUBSCREEN_TITLE_SP = 20f;
+    // YEWPLAY(visual): a destination's name is the screen title (Bricolage 32sp, proposta p. 7);
+    // a Library sub-screen's name sits beside the back arrow, smaller.
+    private static final float WORDMARK_SP = 32f;
+    private static final float SUBSCREEN_TITLE_SP = 22f;
 
     private final TextView mTitle;
     private final View mBack;
@@ -37,7 +39,7 @@ final class BrowseTopBar {
      */
     void show(boolean subScreen, CharSequence title) {
         mBack.setVisibility(subScreen ? View.VISIBLE : View.GONE);
-        mTitle.setText(subScreen && title != null && title.length() > 0
+        mTitle.setText(title != null && title.length() > 0
                 ? title : mTitle.getContext().getString(R.string.app_name));
         mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, subScreen ? SUBSCREEN_TITLE_SP : WORDMARK_SP);
         mTitle.setPaddingRelative(subScreen ? mBesideBackInset : mWordmarkInset,
