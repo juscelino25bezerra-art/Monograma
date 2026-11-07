@@ -1564,12 +1564,18 @@ public class MobileBrowseActivity extends MobileActivity
     // ---------------------------------------------------------------------------------
 
     /** Home and Subscriptions mix channels, so their cards show whose video it is, like YouTube. */
+    /**
+     * YEWPLAY(visual): the proposal's items carry no avatar - the large item names the channel in
+     * bold on its meta line, the compact one under the title - so no list shows card avatars.
+     */
     private static boolean showsChannelAvatars(int sectionId) {
-        return sectionId == MediaGroup.TYPE_HOME || sectionId == MediaGroup.TYPE_SUBSCRIPTIONS;
+        return false;
     }
 
     private void syncChannelAvatars() {
         mAdapter.setChannelAvatars(showsChannelAvatars(mCurrentSectionId) ? this::onChannelAvatarClicked : null);
+        // YEWPLAY(visual): the large item on Início and its filter tabs, the compact one elsewhere.
+        mAdapter.setRowLayout(!isOnHomeDestination());
     }
 
     /** The loading skeleton's avatar circles, where the cards will have avatars. */

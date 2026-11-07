@@ -456,6 +456,38 @@
     <!-- Regular weight at 11sp tracks the YouTube bar labels (medium/bold read heavier than
          theirs side-by-side; the old 10sp-medium choice predates dropping the long
          "Listas de reproducción" label from the bar). -->
+    <!-- YEWPLAY(player): um botão da fileira de ações da página do vídeo - ícone de 22dp em cima
+         e rótulo de 12sp embaixo, alvo de toque de 64x64dp. -->
+    <style name="YewWatchAction">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">64dp</item>
+        <item name="android:minHeight">64dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
+    <style name="YewWatchActionIcon">
+        <item name="android:layout_width">22dp</item>
+        <item name="android:layout_height">22dp</item>
+        <item name="android:tint">@color/mobile_color_on_surface</item>
+    </style>
+    <style name="YewWatchActionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/mobile_color_on_surface_secondary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+
     <!-- YEWPLAY(nav): rótulos da barra flutuante; o ativo em SemiBold. -->
     <style name="YewNavText" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">11.5sp</item>

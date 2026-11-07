@@ -36,6 +36,27 @@ PY
   if [ -n "$xy" ]; then adb shell input tap $xy; echo "toque: $1 ($xy)"; else echo "não achei: $1"; fi
 }
 
+# Toca no elemento cuja descrição de acessibilidade é $1 (botões só com ícone).
+tap_desc() {
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+  adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  local xy
+  xy=$(python3 - "$1" <<'PY'
+import re, sys
+desc = sys.argv[1]
+xml = open('/tmp/ui.xml', encoding='utf-8').read()
+for node in re.findall(r'<node [^>]*>', xml):
+    if 'content-desc="%s"' % desc in node:
+        b = re.search(r'bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"', node)
+        if b:
+            x1, y1, x2, y2 = map(int, b.groups())
+            print((x1 + x2) // 2, (y1 + y2) // 2)
+            break
+PY
+)
+  if [ -n "$xy" ]; then adb shell input tap $xy; echo "toque: $1 ($xy)"; else echo "não achei: $1"; fi
+}
+
 launch() {
   adb shell am force-stop $PKG
   adb shell monkey -p $PKG -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
@@ -69,27 +90,27 @@ adb shell pm grant $PKG android.permission.POST_NOTIFICATIONS >/dev/null 2>&1
 adb shell cmd uimode night yes
 launch
 shot 01_inicio 30
-tap_text "Downloads" last; shot 02_downloads 5
-tap_text "Você" last; shot 03_voce 5
-tap_text "Configurações"; shot 04_configuracoes 5
-tap_text "Aparência e idioma"; shot 05_aparencia 4
-adb shell input swipe 540 1900 540 700 900; shot 05b_aparencia_baixo 3
+tap_text "Música"; shot 01b_inicio_musica 8
+tap_text "Tudo"; sleep 3
+tap_text "Inscrições" last; shot 02_inscricoes 8
+tap_text "Biblioteca" last; shot 03_biblioteca 4
+tap_text "Downloads"; shot 03b_downloads 4
 adb shell input keyevent KEYCODE_BACK; sleep 2
-adb shell input swipe 540 1900 540 600 900; sleep 2
-shot 04b_configuracoes_baixo 2
-tap_text "Avançado"; shot 06_avancado 4
-adb shell input swipe 540 1900 540 700 900; shot 06b_avancado_baixo 3
-adb shell input keyevent KEYCODE_BACK; sleep 1
+tap_desc "Configurações"; shot 04_configuracoes 5
+adb shell input swipe 540 1900 540 700 900; shot 04b_configuracoes_baixo 3
+adb shell input keyevent KEYCODE_BACK; sleep 2
+tap_text "Busca" last; shot 05_busca 5
 adb shell input keyevent KEYCODE_BACK; sleep 2
 tap_text "Início" last; sleep 2
 adb shell am start -a android.intent.action.VIEW -d "https://www.youtube.com/watch?v=jNQXAC9IVRw" $PKG >/dev/null 2>&1
-shot 07_video 30
-adb shell input swipe 540 1800 540 900 900; shot 07b_video_baixo 3
+shot 06_video 30
+adb shell input swipe 540 1800 540 900 900; shot 06b_video_baixo 3
+adb shell input keyevent KEYCODE_BACK; shot 07_mini 6
 
 # --- Tema claro ---
 adb shell cmd uimode night no
 launch
 shot 08_inicio_claro 25
-tap_text "Você" last; shot 09_voce_claro 5
-tap_text "Configurações"; shot 10_configuracoes_claro 5
+tap_text "Biblioteca" last; shot 09_biblioteca_claro 5
+tap_desc "Configurações"; shot 10_configuracoes_claro 5
 exit 0

@@ -239,6 +239,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
         mGrid.setItemViewCacheSize(8);
         mGrid.setLayoutManager(mLayoutManager);
         // NOT setHasFixedSize: the header row makes the content height change with the data.
+        mAdapter.setRowLayout(true); // YEWPLAY(visual): compact items (proposta, p. 14)
         mGrid.setAdapter(new ConcatAdapter(mHeaderAdapter, mAdapter, mLoadMoreFooter));
         // Next cards' thumbnails decoded before they scroll in (no grey card + fade on a fling).
         // Grid positions are shifted by the optional playlist header row.

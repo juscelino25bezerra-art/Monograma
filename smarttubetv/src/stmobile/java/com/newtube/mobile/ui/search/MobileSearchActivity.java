@@ -257,6 +257,7 @@ public class MobileSearchActivity extends MobileActivity
         mGrid.setHasFixedSize(true);
         mGrid.setItemViewCacheSize(8);
         mGrid.setLayoutManager(mLayoutManager);
+        mAdapter.setRowLayout(true); // YEWPLAY(visual): compact items (proposta, p. 14)
         mGrid.setAdapter(mAdapter);
         // Next cards' thumbnails decoded before they scroll in (no grey card + fade on a fling).
         com.newtube.mobile.ui.common.FeedThumbnailPreloader.attach(mGrid, mAdapter);

@@ -204,6 +204,7 @@ public class MobileChannelActivity extends MobileActivity
         mGrid.setItemViewCacheSize(8);
         mGrid.setLayoutManager(mLayoutManager);
         // Cards first, so grid positions below the footer are card positions.
+        mAdapter.setRowLayout(true); // YEWPLAY(visual): compact items (proposta, p. 14)
         mGrid.setAdapter(new ConcatAdapter(mAdapter, mLoadMoreFooter));
         // Next cards' thumbnails decoded before they scroll in (no grey card + fade on a fling).
         com.newtube.mobile.ui.common.FeedThumbnailPreloader.attach(mGrid, mAdapter);

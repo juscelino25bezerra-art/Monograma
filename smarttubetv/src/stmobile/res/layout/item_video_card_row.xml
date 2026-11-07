@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  YEWPLAY(visual): o item de vídeo compacto da proposta (p. 12 e 21) - miniatura de 144x81dp com
+  cantos de 10dp à esquerda, título em até 2 linhas, canal e "27 mil, há 1 semana" embaixo. Mesmos
+  ids de item_video_card, então VideoCardAdapter.VideoViewHolder o preenche igual;
+  VideoCardAdapter.setRowLayout troca uma lista para ele (todas menos o Início).
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/video_card_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="2dp"
+    android:checkable="false"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="8dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/video_thumbnail_frame"
+            android:layout_width="@dimen/yew_compact_thumb_width"
+            android:layout_height="@dimen/yew_compact_thumb_height"
+            app:cardBackgroundColor="@color/mobile_color_placeholder"
+            app:cardCornerRadius="@dimen/yew_compact_thumb_radius"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/video_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/video_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="6dp"
+                android:background="@drawable/bg_video_badge"
+                android:fontFamily="@font/instrument_semibold"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="11.5sp"
+                android:visibility="gone"
+                tools:text="10:40"
+                tools:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/video_watch_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_gravity="bottom"
+                android:max="100"
+                android:progressBackgroundTint="@color/mobile_color_progress_track"
+                android:progressTint="@color/mobile_color_progress"
+                android:visibility="gone" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/video_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/instrument_semibold"
+                android:lineSpacingExtra="1sp"
+                android:maxLines="2"
+                android:textColor="@color/mobile_color_on_surface"
+                android:textSize="14.5sp"
+                tools:text="A great video title that may wrap to two lines" />
+
+            <TextView
+                android:id="@+id/video_meta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/mobile_color_on_surface_secondary"
+                android:textSize="12.5sp"
+                tools:text="Channel · 720p · 88.7 MB" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/video_overflow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="-6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_player_more"
+            android:padding="10dp"
+            android:src="@drawable/ic_mobile_more_vert" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

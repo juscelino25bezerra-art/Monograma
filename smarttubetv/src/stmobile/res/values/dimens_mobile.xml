@@ -63,6 +63,10 @@
     <dimen name="yew_mini_video_height">36dp</dimen>
     <!-- Margem lateral de todas as telas (proposta, p. 8). -->
     <dimen name="yew_side_margin">20dp</dimen>
+    <!-- O item de vídeo compacto (proposta, p. 21: 144x81dp, raio 10dp). -->
+    <dimen name="yew_compact_thumb_width">144dp</dimen>
+    <dimen name="yew_compact_thumb_height">81dp</dimen>
+    <dimen name="yew_compact_thumb_radius">10dp</dimen>
     <!-- O título grande das telas (Bricolage 32sp) e o recuo das abas de filtro: o texto da
          primeira aba alinha com a margem de 20dp. -->
     <dimen name="yew_title_height">64dp</dimen>
