@@ -33,7 +33,7 @@
             android:paddingEnd="16dp"
             android:textColor="@color/mobile_color_on_surface"
             android:textSize="@dimen/mobile_settings_title_size"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/instrument_semibold"
             tools:text="Settings" />
 
     </LinearLayout>

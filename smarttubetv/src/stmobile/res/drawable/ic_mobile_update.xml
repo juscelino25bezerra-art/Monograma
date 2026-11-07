@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Material "system update" glyph: an arrow into a tray. The You tab's update row. -->
+<!-- YEWPLAY(icons): Phosphor "arrow-circle-down" (MIT, docs/licenses/Phosphor-MIT.txt) - traço regular; o
+     preenchido só no item ativo da navegação e nos controles do player. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:tint="@color/mobile_color_on_surface"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
+    android:viewportWidth="256"
+    android:viewportHeight="256"
+    android:tint="@color/mobile_color_on_surface">
     <path
         android:fillColor="@android:color/white"
-        android:pathData="M12,16.5l4,-4h-3v-9h-2v9H8l4,4zM21,3.5h-6v1.99h6v14.03H3V5.49h6V3.5H3c-1.1,0 -2,0.9 -2,2v14c0,1.1 0.9,2 2,2h18c1.1,0 2,-0.9 2,-2v-14c0,-1.1 -0.9,-2 -2,-2z" />
+        android:pathData="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm37.66-85.66a8,8,0,0,1,0,11.32l-32,32a8,8,0,0,1-11.32,0l-32-32a8,8,0,0,1,11.32-11.32L120,148.69V88a8,8,0,0,1,16,0v60.69l18.34-18.35A8,8,0,0,1,165.66,130.34Z" />
 </vector>
