@@ -14,6 +14,9 @@ names, never shown to users; do not mass-rename them).
 - Updates: `update_urls.xml` -> this repo's `releases/latest/download/yewplay.json`,
   written by `release.yml`. Releases are signed with YewPlay's own key; its certificate
   SHA-256 is the repository variable `RELEASE_CERT_SHA256`.
+- Visual system (palettes Grafite/Papel, Bricolage Grotesque + Instrument Sans, Phosphor icons,
+  rubi for state only, marfim for action, no Material 3): **`docs/visual/README.md`**. CI:
+  `yewplay-ci.yml` (build + unit tests on `yewplay/**`), `yewplay-telas.yml` (emulator captures).
 - Work happens on `yewplay/<fase>` branches with small commits in Portuguese; never commit
   straight to `main`, never force-push.
 
