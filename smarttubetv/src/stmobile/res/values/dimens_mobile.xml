@@ -71,4 +71,8 @@
          primeira aba alinha com a margem de 20dp. -->
     <dimen name="yew_title_height">64dp</dimen>
     <dimen name="yew_filter_inset">8dp</dimen>
+    <!-- YEWPLAY(nav): espaço livre embaixo de uma tela que rola por trás da barra flutuante
+         (60dp de navegação + 12dp de margem + folga); a Biblioteca cobre a tela toda para que a
+         grade do Início não apareça em volta da barra. -->
+    <dimen name="yew_capsule_clearance">88dp</dimen>
 </resources>

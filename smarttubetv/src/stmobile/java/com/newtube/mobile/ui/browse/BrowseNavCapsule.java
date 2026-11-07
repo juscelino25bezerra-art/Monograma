@@ -25,6 +25,7 @@ final class BrowseNavCapsule {
     private final View mIndicator;
     private final View mMini;
     private final RecyclerView mList;
+    @androidx.annotation.Nullable private final View mLibrary;
     private final int mListBasePadding;
     private final int mGap;
     private int mSelectedId = View.NO_ID;
@@ -35,6 +36,8 @@ final class BrowseNavCapsule {
         mIndicator = root.findViewById(R.id.mobile_nav_indicator);
         mMini = root.findViewById(R.id.mobile_mini_player);
         mList = list;
+        // The Library panel runs behind the capsule too (so the Home grid never shows around it).
+        mLibrary = root.findViewById(R.id.mobile_you_panel);
         mListBasePadding = list.getPaddingBottom();
         mGap = Math.round(12 * root.getResources().getDisplayMetrics().density);
         mCapsule.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
@@ -75,6 +78,11 @@ final class BrowseNavCapsule {
         int bottom = mListBasePadding + Math.max(0, covered) + mGap;
         if (mList.getPaddingBottom() != bottom) {
             mList.setPadding(mList.getPaddingLeft(), mList.getPaddingTop(), mList.getPaddingRight(), bottom);
+        }
+        int libraryBottom = Math.max(0, covered) + mGap;
+        if (mLibrary != null && mLibrary.getPaddingBottom() != libraryBottom) {
+            mLibrary.setPadding(mLibrary.getPaddingLeft(), mLibrary.getPaddingTop(),
+                    mLibrary.getPaddingRight(), libraryBottom);
         }
     }
 
