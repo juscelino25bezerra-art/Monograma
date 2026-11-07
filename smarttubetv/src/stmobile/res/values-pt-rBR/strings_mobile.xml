@@ -390,4 +390,6 @@
     <string name="yew_downloads_videos">Vídeos</string>
     <string name="yew_downloads_audios">Áudios</string>
     <string name="yew_download_deleted">Download excluído</string>
+    <!-- YEWPLAY(library): títulos da Biblioteca. -->
+    <string name="yew_library_continue">Continue de onde parou</string>
 </resources>

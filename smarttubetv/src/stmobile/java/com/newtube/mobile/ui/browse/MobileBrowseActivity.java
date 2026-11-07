@@ -1272,6 +1272,8 @@ public class MobileBrowseActivity extends MobileActivity
             personal.add(section);
         }
 
+        addContinueRow();
+
         // YEWPLAY(nav): the Library (proposta, p. 15) - Histórico and Downloads first, then the
         // rest of the user's own sections; pinned channels and playlists under their own title.
         // Settings is the gear in the top bar.
@@ -1286,6 +1288,81 @@ public class MobileBrowseActivity extends MobileActivity
                 addYouSectionRow(pinned.get(i), i == pinned.size() - 1);
             }
         }
+    }
+
+    /** YEWPLAY(library): how many "Continue de onde parou" cards, at most. */
+    private static final int CONTINUE_MAX = 10;
+
+    /**
+     * YEWPLAY(library): "Continue de onde parou" (proposta, p. 15) - the videos left half-way, newest
+     * first, from the local playback state (no network, works signed out). A video counts between 3%
+     * and 95% watched; lives and anything without a title stay out.
+     */
+    private List<Video> continueWatching() {
+        List<Video> result = new ArrayList<>();
+        com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService service =
+                com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService.instance(this);
+        if (service == null) {
+            return result;
+        }
+        List<com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService.State> states =
+                new ArrayList<>(service.getStates());
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (int i = states.size() - 1; i >= 0 && result.size() < CONTINUE_MAX; i--) {
+            com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService.State state = states.get(i);
+            Video video = state != null ? state.video : null;
+            if (video == null || video.videoId == null || !seen.add(video.videoId)) {
+                continue;
+            }
+            if (video.isLive || state.durationMs <= 0 || video.getTitle() == null || video.getTitle().length() == 0) {
+                continue;
+            }
+            float percent = state.positionMs * 100f / state.durationMs;
+            if (percent < 3f || percent > 95f) {
+                continue;
+            }
+            video.percentWatched = percent;
+            result.add(video);
+        }
+        return result;
+    }
+
+    /** YEWPLAY(library): the "Continue de onde parou" title and its horizontal row of cards. */
+    private void addContinueRow() {
+        List<Video> videos = continueWatching();
+        if (videos.isEmpty()) {
+            return;
+        }
+        addYouGroupLabel(getString(R.string.yew_library_continue));
+        float density = getResources().getDisplayMetrics().density;
+        android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this);
+        scroll.setHorizontalScrollBarEnabled(false);
+        scroll.setClipToPadding(false);
+        int side = Math.round(20 * density);
+        scroll.setPadding(side, Math.round(4 * density), side - Math.round(12 * density), Math.round(16 * density));
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (Video video : videos) {
+            View card = inflater.inflate(R.layout.item_yew_continue_card, row, false);
+            TextView title = card.findViewById(R.id.yew_continue_title);
+            title.setText(video.getTitle());
+            TextView meta = card.findViewById(R.id.yew_continue_meta);
+            CharSequence author = video.getAuthor() != null ? video.getAuthor() : video.getSecondTitle();
+            meta.setText(author);
+            meta.setVisibility(author == null || author.length() == 0 ? View.GONE : View.VISIBLE);
+            android.widget.ProgressBar progress = card.findViewById(R.id.yew_continue_progress);
+            progress.setProgress(Math.round(video.percentWatched));
+            ImageView thumb = card.findViewById(R.id.yew_continue_thumb);
+            String url = video.cardImageUrl != null ? video.cardImageUrl
+                    : "https://i.ytimg.com/vi/" + video.videoId + "/mqdefault.jpg";
+            com.bumptech.glide.Glide.with(this).load(url).into(thumb);
+            card.setContentDescription(video.getTitle());
+            card.setOnClickListener(v -> onVideoClicked(video));
+            row.addView(card);
+        }
+        scroll.addView(row);
+        mYouRows.addView(scroll);
     }
 
     /** YEWPLAY(nav): the Library's order. */

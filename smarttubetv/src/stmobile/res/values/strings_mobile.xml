@@ -498,4 +498,6 @@
     <string name="yew_downloads_videos">Videos</string>
     <string name="yew_downloads_audios">Audio</string>
     <string name="yew_download_deleted">Download deleted</string>
+    <!-- YEWPLAY(library): títulos da Biblioteca. -->
+    <string name="yew_library_continue">Continue where you left off</string>
 </resources>
