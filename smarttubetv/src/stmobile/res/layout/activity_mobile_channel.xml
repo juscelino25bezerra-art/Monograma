@@ -55,6 +55,45 @@
 
     </LinearLayout>
 
+    <!-- YEWPLAY(channel): o topo do canal da proposta (p. 14) - avatar em quadrado arredondado e o
+         nome em Bricolage, sobre um banner suave na cor da página (o app não recebe a imagem de
+         banner do canal). O título da barra some enquanto este bloco aparece. -->
+    <LinearLayout
+        android:id="@+id/yew_channel_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_yew_channel_banner"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/yew_side_margin"
+        android:paddingTop="8dp"
+        android:paddingEnd="@dimen/yew_side_margin"
+        android:paddingBottom="14dp">
+
+        <ImageView
+            android:id="@+id/yew_channel_avatar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_card_avatar_placeholder" />
+
+        <TextView
+            android:id="@+id/yew_channel_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_weight="1"
+            android:accessibilityHeading="true"
+            android:ellipsize="end"
+            android:fontFamily="@font/bricolage_bold"
+            android:letterSpacing="-0.015"
+            android:maxLines="2"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="24sp"
+            tools:text="Finanças em Casa" />
+    </LinearLayout>
+
     <!-- One tab per channel section, in delivery order. Hidden until sections arrive.
          tabMaxWidth=0 lifts Material's 264dp cap (it wrapped long section names such as
          "WING IT! Production Logs (Pet Projects)" onto two lines); with 0 a scrollable tab
@@ -65,10 +104,14 @@
         android:layout_height="wrap_content"
         android:background="?attr/newtubeColorBackground"
         android:visibility="gone"
-        app:tabIndicatorColor="@color/mobile_color_on_surface"
+        app:tabIndicator="@drawable/bg_yew_tab_dot"
+        app:tabIndicatorColor="@color/mobile_color_accent"
+        app:tabIndicatorHeight="4dp"
         app:tabMaxWidth="0dp"
         app:tabMode="scrollable"
+        app:tabRippleColor="@color/mobile_color_divider"
         app:tabSelectedTextColor="@color/mobile_color_on_surface"
+        app:tabTextAppearance="@style/TextAppearance.Yew.Tab"
         app:tabTextColor="@color/mobile_color_on_surface_secondary"
         tools:visibility="visible" />
 

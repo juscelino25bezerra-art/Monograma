@@ -153,6 +153,39 @@ public class MobileChannelActivity extends MobileActivity
         String name = channel != null ? Helpers.firstNonNull(channel.getAuthor(), channel.getTitle()) : null;
         mTitleFromCard = name != null;
         mTitleView.setText(name != null ? name : getString(R.string.header_channels));
+        bindYewHeader(channel, name);
+    }
+
+    /**
+     * YEWPLAY(channel): the header block of the proposal (p. 14) - the channel's avatar as a
+     * rounded square and its name in Bricolage. The toolbar title stays empty while it shows.
+     */
+    private void bindYewHeader(@Nullable Video channel, @Nullable String name) {
+        View header = findViewById(R.id.yew_channel_header);
+        if (header == null) {
+            return;
+        }
+        boolean show = name != null;
+        header.setVisibility(show ? View.VISIBLE : View.GONE);
+        mTitleView.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+        if (!show) {
+            return;
+        }
+        ((android.widget.TextView) findViewById(R.id.yew_channel_name)).setText(name);
+        android.widget.ImageView avatar = findViewById(R.id.yew_channel_avatar);
+        String url = channel != null ? com.newtube.mobile.ui.common.ChannelAvatars.get(channel) : null;
+        if (url == null && channel != null) {
+            com.newtube.mobile.ui.common.ChannelAvatars.request(channel);
+            url = channel.cardImageUrl;
+        }
+        if (url != null) {
+            int size = getResources().getDimensionPixelSize(R.dimen.yew_strip_avatar) * 2;
+            com.bumptech.glide.Glide.with(this)
+                    .load(com.newtube.mobile.ui.common.ChannelAvatars.sized(url, size))
+                    .transform(com.newtube.mobile.ui.common.YewAvatar.get())
+                    .placeholder(R.drawable.bg_card_avatar_placeholder)
+                    .into(avatar);
+        }
     }
 
     /** NEWTUBE: name a link-opened channel once its first videos arrive. */
@@ -170,6 +203,7 @@ public class MobileChannelActivity extends MobileActivity
         if (name != null) {
             mTitleFromCard = true;
             mTitleView.setText(name);
+            bindYewHeader(mPresenter != null ? mPresenter.getChannel() : null, name);
         }
     }
 

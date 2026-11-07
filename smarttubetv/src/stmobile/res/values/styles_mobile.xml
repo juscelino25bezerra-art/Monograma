@@ -497,6 +497,16 @@
         <item name="android:importantForAccessibility">no</item>
     </style>
 
+    <!-- YEWPLAY(tabs): texto das abas de canal - Instrument Sans Medium, sem caixa alta. -->
+    <style name="TextAppearance.Yew.Tab" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:fontFamily">@font/instrument_medium</item>
+        <item name="fontFamily">@font/instrument_medium</item>
+        <item name="android:textSize">14.5sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
     <!-- YEWPLAY(playlist): um quarto da capa em mosaico (proposta p. 15). -->
     <style name="YewMosaicTile">
         <item name="android:layout_width">0dp</item>

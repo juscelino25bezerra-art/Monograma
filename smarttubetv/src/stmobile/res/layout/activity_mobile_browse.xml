@@ -45,7 +45,7 @@
         android:paddingStart="@dimen/yew_side_margin"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.Yew.ScreenTitle"
-        app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
+        app:layout_constraintEnd_toStartOf="@id/yew_bell_button"
         app:layout_constraintStart_toEndOf="@id/mobile_title_back"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,6 +60,22 @@
         android:padding="12dp"
         android:src="@drawable/ic_mobile_cast"
         app:layout_constraintEnd_toStartOf="@id/mobile_search_button"
+        app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
+
+    <!-- YEWPLAY(home): o sino do Início (proposta p. 14) abre as notificações. O botão de transmitir
+         só aparece no Início enquanto há uma sessão (conectando ou conectada); fora isso, o sino. -->
+    <ImageButton
+        android:id="@+id/yew_bell_button"
+        android:layout_width="48dp"
+        android:layout_height="@dimen/yew_title_height"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/yew_notifications"
+        android:padding="12dp"
+        android:src="@drawable/ic_yew_bell"
+        android:tint="@color/mobile_color_on_surface"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/mobile_cast_button"
         app:layout_constraintTop_toTopOf="@id/mobile_title_bar" />
 
     <!-- YEWPLAY(nav): a busca virou um destino da barra; o botão fica (GONE) para o código que

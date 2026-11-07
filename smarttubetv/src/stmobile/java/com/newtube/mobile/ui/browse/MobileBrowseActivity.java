@@ -1155,6 +1155,11 @@ public class MobileBrowseActivity extends MobileActivity
         if (mCastButton == null) {
             return;
         }
+        if (mTopBar != null && mNavCapsule != null && !mYouShowing && isOnHomeDestination()) {
+            boolean casting = mCastSessionManager != null
+                    && (mCastSessionManager.isConnected() || mCastSessionManager.isConnecting());
+            mCastButton.setVisibility(casting ? View.VISIBLE : View.GONE);
+        }
         boolean connecting = mCastSessionManager != null && mCastSessionManager.isConnecting();
         if (connecting != mCastIconAnimating) {
             mCastIconAnimating = connecting;
@@ -1328,7 +1333,20 @@ public class MobileBrowseActivity extends MobileActivity
             title = getCurrentSectionTitle();
         }
         mTopBar.show(subScreen, title);
-        mCastButton.setVisibility(home ? View.VISIBLE : View.GONE);
+        // YEWPLAY(home): the bell (proposta p. 14); cast only while a session is live.
+        boolean casting = mCastSessionManager != null
+                && (mCastSessionManager.isConnected() || mCastSessionManager.isConnecting());
+        mCastButton.setVisibility(home && casting ? View.VISIBLE : View.GONE);
+        View bell = findViewById(R.id.yew_bell_button);
+        boolean hasNotifications = false;
+        for (BrowseSection section : mSections) {
+            hasNotifications |= section.getId() == MediaGroup.TYPE_NOTIFICATIONS;
+        }
+        bell.setVisibility(home && hasNotifications ? View.VISIBLE : View.GONE);
+        bell.setOnClickListener(v -> {
+            mSectionFromYou = true;
+            onSectionChosen(MediaGroup.TYPE_NOTIFICATIONS);
+        });
         mSettingsButton.setVisibility(mYouShowing ? View.VISIBLE : View.GONE);
         boolean downloads = subScreen && isDownloadsSectionShowing();
         if (home) {

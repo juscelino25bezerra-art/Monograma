@@ -441,4 +441,5 @@
     <string name="yew_listen_audio_mode">Reprodução em segundo plano</string>
     <string name="yew_playlist_play">Reproduzir</string>
     <string name="yew_playlist_shuffle">Aleatório</string>
+    <string name="yew_notifications">Notificações</string>
 </resources>

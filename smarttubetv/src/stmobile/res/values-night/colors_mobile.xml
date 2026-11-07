@@ -41,4 +41,6 @@
     <color name="dialog_text_color">#F3EEE9</color>
     <color name="dialog_hint_color">#33FFFFFF</color>
     <color name="dialog_proxy_hint_color">#80FFFFFF</color>
+    <!-- YEWPLAY(channel): mobile_color_raised transparente, fim do degradê do topo do canal. -->
+    <color name="yew_raised_clear">#002C262F</color>
 </resources>
