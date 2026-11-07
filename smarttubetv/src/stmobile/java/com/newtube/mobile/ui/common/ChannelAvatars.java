@@ -272,6 +272,18 @@ public final class ChannelAvatars {
                 && System.currentTimeMillis() - avatar.savedAtMs < (avatar.url != null ? AVATAR_TTL_MS : MISSING_TTL_MS);
     }
 
+    /**
+     * YEWPLAY(channel): whether the account follows this channel, from the last Subscriptions
+     * response; null when none has been seen (signed out, or the feed never loaded).
+     */
+    public static synchronized Boolean isSubscribed(String channelId) {
+        mergeSubscriptions();
+        if (sMergedSubscriptions == null || sMergedSubscriptions.isEmpty() || channelId == null) {
+            return null;
+        }
+        return sMergedSubscriptions.containsKey(channelId);
+    }
+
     /** Folds the last Subscriptions response's channel list in, once per response. */
     private static void mergeSubscriptions() {
         Map<String, String> subscriptions;

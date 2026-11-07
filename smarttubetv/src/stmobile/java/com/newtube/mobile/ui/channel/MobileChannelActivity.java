@@ -178,6 +178,7 @@ public class MobileChannelActivity extends MobileActivity
             com.newtube.mobile.ui.common.ChannelAvatars.request(channel);
             url = channel.cardImageUrl;
         }
+        bindSubscribe(channel);
         if (url != null) {
             int size = getResources().getDimensionPixelSize(R.dimen.yew_strip_avatar) * 2;
             com.bumptech.glide.Glide.with(this)
@@ -186,6 +187,64 @@ public class MobileChannelActivity extends MobileActivity
                     .placeholder(R.drawable.bg_card_avatar_placeholder)
                     .into(avatar);
         }
+    }
+
+    @Nullable
+    private io.reactivex.rxjava3.disposables.Disposable mSubscribeAction;
+    @Nullable
+    private Boolean mSubscribed;
+
+    /**
+     * YEWPLAY(channel): the proposal's subscribe button (p. 14). The state comes from the last
+     * Subscriptions response (ChannelAvatars); without one (signed out) the button still shows
+     * Inscrever-se and a failed call says so.
+     */
+    private void bindSubscribe(@Nullable Video channel) {
+        com.google.android.material.button.MaterialButton button = findViewById(R.id.yew_channel_subscribe);
+        String channelId = channel != null ? com.newtube.mobile.ui.common.ChannelAvatars.channelIdOf(channel) : null;
+        if (button == null || channelId == null) {
+            if (button != null) {
+                button.setVisibility(View.GONE);
+            }
+            return;
+        }
+        if (mSubscribed == null) {
+            Boolean known = com.newtube.mobile.ui.common.ChannelAvatars.isSubscribed(channelId);
+            mSubscribed = known != null ? known : channel.isSubscribed;
+        }
+        button.setVisibility(View.VISIBLE);
+        paintSubscribe(button, mSubscribed);
+        button.setOnClickListener(v -> {
+            com.newtube.mobile.ui.common.Haptics.tick(v);
+            boolean subscribe = !Boolean.TRUE.equals(mSubscribed);
+            com.liskovsoft.mediaserviceinterfaces.MediaItemService service =
+                    com.liskovsoft.youtubeapi.service.YouTubeServiceManager.instance().getMediaItemService();
+            com.liskovsoft.sharedutils.rx.RxHelper.disposeActions(mSubscribeAction);
+            mSubscribed = subscribe;
+            paintSubscribe(button, subscribe);
+            mSubscribeAction = com.liskovsoft.sharedutils.rx.RxHelper.execute(
+                    subscribe ? service.subscribeObserve(channelId) : service.unsubscribeObserve(channelId),
+                    error -> runOnUiThread(() -> {
+                        mSubscribed = !subscribe;
+                        paintSubscribe(button, !subscribe);
+                        android.widget.Toast.makeText(this, subscribe ? R.string.subscribe_failed
+                                : R.string.unsubscribe_failed, android.widget.Toast.LENGTH_SHORT).show();
+                    }),
+                    () -> com.liskovsoft.smartyoutubetv2.common.app.models.playback.controllers.SuggestionsController
+                            .onUserStateChanged());
+        });
+    }
+
+    private void paintSubscribe(com.google.android.material.button.MaterialButton button, boolean on) {
+        button.setText(on ? R.string.mobile_watch_subscribed : R.string.mobile_watch_subscribe);
+        button.setIconResource(on ? R.drawable.ic_yew_check_small : 0);
+        int bg = androidx.core.content.ContextCompat.getColor(this,
+                on ? R.color.mobile_color_raised : R.color.mobile_color_inverse_surface);
+        int fg = androidx.core.content.ContextCompat.getColor(this,
+                on ? R.color.mobile_color_on_surface : R.color.mobile_color_on_inverse_surface);
+        button.setBackgroundTintList(android.content.res.ColorStateList.valueOf(bg));
+        button.setTextColor(fg);
+        button.setIconTint(android.content.res.ColorStateList.valueOf(fg));
     }
 
     /** NEWTUBE: name a link-opened channel once its first videos arrive. */
@@ -545,6 +604,7 @@ public class MobileChannelActivity extends MobileActivity
 
     @Override
     protected void onDestroy() {
+        com.liskovsoft.sharedutils.rx.RxHelper.disposeActions(mSubscribeAction);
         MiniPlayerBridge.unregisterMiniHost(this);
         mTornDown = true;
 

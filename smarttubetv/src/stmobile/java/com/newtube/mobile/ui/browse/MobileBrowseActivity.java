@@ -248,6 +248,11 @@ public class MobileBrowseActivity extends MobileActivity
     private static final int DOWNLOADS_TAB_ALL = -9001;
     private static final int DOWNLOADS_TAB_VIDEO = -9002;
     private static final int DOWNLOADS_TAB_AUDIO = -9003;
+    /** YEWPLAY(subs): the Inscrições group tabs - "Todos", then one per channel group (base - index). */
+    private static final int SUBS_TAB_ALL = -9100;
+    private int mSubsTab = SUBS_TAB_ALL;
+    @androidx.annotation.Nullable
+    private java.util.Set<String> mSubsGroupChannels;
     private int mDownloadsFilter = DOWNLOADS_TAB_ALL;
     /** NEWTUBE(feed-swap): the grid's item animator, parked while a swap is laid out. */
     private RecyclerView.ItemAnimator mParkedItemAnimator;
@@ -347,6 +352,10 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** YEWPLAY(nav): an Início filter tab - Home itself or one of the YouTube sections. */
     private void onFilterTabChosen(int sectionId) {
+        if (sectionId <= SUBS_TAB_ALL && sectionId > SUBS_TAB_ALL - 1000) {
+            chooseSubsGroup(sectionId);
+            return;
+        }
         if (isDownloadsTab(sectionId)) {
             mDownloadsFilter = sectionId;
             mFilterTabs.select(sectionId);
@@ -356,6 +365,54 @@ public class MobileBrowseActivity extends MobileActivity
         mSectionFromYou = false;
         hideYouPanel();
         onSectionChosen(sectionId);
+    }
+
+    /**
+     * YEWPLAY(subs): the Inscrições tabs of the proposal (p. 15, "Grupos como abas") - Todos and
+     * the user's channel groups (made from a card's menu, "Adicionar ao grupo"). Empty when there
+     * are no groups: then no tab row shows.
+     */
+    private List<FilterTabs.Tab> subsTabs() {
+        List<FilterTabs.Tab> tabs = new ArrayList<>();
+        List<com.liskovsoft.mediaserviceinterfaces.data.ItemGroup> groups;
+        try {
+            groups = com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.channelgroup
+                    .ChannelGroupServiceWrapper.instance(this).getChannelGroups();
+        } catch (RuntimeException e) {
+            groups = null;
+        }
+        if (groups == null || groups.isEmpty()) {
+            return tabs;
+        }
+        tabs.add(new FilterTabs.Tab(SUBS_TAB_ALL, getString(R.string.yew_subs_all)));
+        for (int i = 0; i < groups.size() && i < 999; i++) {
+            tabs.add(new FilterTabs.Tab(SUBS_TAB_ALL - 1 - i, groups.get(i).getTitle()));
+        }
+        return tabs;
+    }
+
+    private void chooseSubsGroup(int tab) {
+        mSubsTab = tab;
+        mSubsGroupChannels = null;
+        if (tab != SUBS_TAB_ALL) {
+            try {
+                List<com.liskovsoft.mediaserviceinterfaces.data.ItemGroup> groups =
+                        com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.channelgroup
+                                .ChannelGroupServiceWrapper.instance(this).getChannelGroups();
+                int index = SUBS_TAB_ALL - 1 - tab;
+                if (groups != null && index >= 0 && index < groups.size()) {
+                    String[] ids = com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.channelgroup
+                            .ChannelGroupServiceWrapper.instance(this).findChannelIdsForGroup(groups.get(index).getId());
+                    mSubsGroupChannels = new java.util.HashSet<>(ids != null ? java.util.Arrays.asList(ids)
+                            : new ArrayList<String>());
+                }
+            } catch (RuntimeException e) {
+                mSubsGroupChannels = null;
+            }
+        }
+        mFilterTabs.select(tab);
+        mAdapter.submitList(new ArrayList<>(mCurrentVideos));
+        mContentGrid.scrollToPosition(0);
     }
 
     /**
@@ -435,6 +492,20 @@ public class MobileBrowseActivity extends MobileActivity
                 videos.add(video);
             }
         }
+        if (mSubsGroupChannels != null && !videos.isEmpty() && !videos.get(0).isChannel()) {
+            // YEWPLAY(subs): a group tab shows only that group's channels.
+            List<Video> inGroup = new ArrayList<>();
+            for (Video video : videos) {
+                String channelId = com.newtube.mobile.ui.common.ChannelAvatars.channelIdOf(video);
+                if (channelId != null && mSubsGroupChannels.contains(channelId)) {
+                    inGroup.add(video);
+                }
+            }
+            videos = inGroup;
+            if (videos.isEmpty()) {
+                return videos;
+            }
+        }
         if (videos.isEmpty() || videos.get(0).isChannel()) {
             return list; // the signed-out/empty states and the channels list keep their own shape
         }
@@ -484,6 +555,21 @@ public class MobileBrowseActivity extends MobileActivity
             out.add(videos.get(i));
         }
         return out;
+    }
+
+    /** YEWPLAY(home): the content country's name ("Brasil"), or the device's when none is set. */
+    private String contentRegion() {
+        String code = null;
+        try {
+            code = new com.liskovsoft.sharedutils.locale.LocaleUpdater(this).getPreferredCountry();
+        } catch (RuntimeException e) {
+            // fall back to the device's
+        }
+        java.util.Locale ui = getResources().getConfiguration().getLocales().get(0);
+        if (code == null || code.isEmpty()) {
+            code = ui.getCountry();
+        }
+        return code == null || code.isEmpty() ? "" : new java.util.Locale("", code).getDisplayCountry(ui);
     }
 
     /** YEWPLAY(downloads): "Pausar tudo" / "Retomar tudo" in the Baixando header. */
@@ -1333,6 +1419,12 @@ public class MobileBrowseActivity extends MobileActivity
             title = getCurrentSectionTitle();
         }
         mTopBar.show(subScreen, title);
+        // YEWPLAY(home): service and region over Início's title (proposta p. 14).
+        View context = findViewById(R.id.yew_home_context);
+        context.setVisibility(home ? View.VISIBLE : View.GONE);
+        if (home) {
+            ((TextView) findViewById(R.id.yew_home_region)).setText(contentRegion());
+        }
         // YEWPLAY(home): the bell (proposta p. 14); cast only while a session is live.
         boolean casting = mCastSessionManager != null
                 && (mCastSessionManager.isConnected() || mCastSessionManager.isConnecting());
@@ -1349,14 +1441,19 @@ public class MobileBrowseActivity extends MobileActivity
         });
         mSettingsButton.setVisibility(mYouShowing ? View.VISIBLE : View.GONE);
         boolean downloads = subScreen && isDownloadsSectionShowing();
+        boolean subs = !subScreen && !mYouShowing && mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS;
+        List<FilterTabs.Tab> groupTabs = subs ? subsTabs() : null;
         if (home) {
             mFilterTabs.setTabs(homeTabs());
             mFilterTabs.select(mCurrentSectionId);
         } else if (downloads) {
             mFilterTabs.setTabs(downloadsTabs());
             mFilterTabs.select(mDownloadsFilter);
+        } else if (groupTabs != null && !groupTabs.isEmpty()) {
+            mFilterTabs.setTabs(groupTabs);
+            mFilterTabs.select(mSubsTab);
         }
-        mFilterTabs.show(home || downloads);
+        mFilterTabs.show(home || downloads || groupTabs != null && !groupTabs.isEmpty());
         int lit;
         if (mYouShowing) {
             lit = YOU_ITEM_ID;
@@ -1441,12 +1538,59 @@ public class MobileBrowseActivity extends MobileActivity
             addYouSectionRow(personal.get(i), i == personal.size() - 1);
         }
 
+        addPlaylistsRow();
+
         if (!pinned.isEmpty()) {
             addYouGroupLabel(getString(R.string.mobile_you_pinned));
             for (int i = 0; i < pinned.size(); i++) {
                 addYouSectionRow(pinned.get(i), i == pinned.size() - 1);
             }
         }
+    }
+
+    /**
+     * YEWPLAY(library): "Suas playlists" with square covers (proposta p. 15), from the last copy of
+     * the Playlists section the app kept (FeedCache) - nothing shows until that section was
+     * opened once.
+     */
+    private void addPlaylistsRow() {
+        boolean hasSection = false;
+        for (BrowseSection section : mSections) {
+            hasSection |= section.getId() == MediaGroup.TYPE_USER_PLAYLISTS;
+        }
+        List<Video> playlists = hasSection ? FeedCache.getOrRestore(MediaGroup.TYPE_USER_PLAYLISTS) : null;
+        if (playlists == null || playlists.isEmpty()) {
+            return;
+        }
+        addYouGroupLabel(getString(R.string.yew_library_your_playlists));
+        float density = getResources().getDisplayMetrics().density;
+        android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this);
+        scroll.setHorizontalScrollBarEnabled(false);
+        scroll.setClipToPadding(false);
+        int side = Math.round(20 * density);
+        scroll.setPadding(side, Math.round(4 * density), side - Math.round(12 * density), Math.round(16 * density));
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        int shown = 0;
+        for (Video playlist : playlists) {
+            if (shown++ >= 12) {
+                break;
+            }
+            View card = inflater.inflate(R.layout.item_yew_playlist_square, row, false);
+            ((TextView) card.findViewById(R.id.yew_playlist_square_title)).setText(playlist.getTitle());
+            TextView meta = card.findViewById(R.id.yew_playlist_square_meta);
+            CharSequence count = playlist.badge != null ? playlist.badge : playlist.getSecondTitle();
+            meta.setText(count);
+            meta.setVisibility(count == null || count.length() == 0 ? View.GONE : View.VISIBLE);
+            com.bumptech.glide.Glide.with(this).load(playlist.getCardImageUrl()).centerCrop()
+                    .into((ImageView) card.findViewById(R.id.yew_playlist_square_cover));
+            card.setContentDescription(playlist.getTitle());
+            card.setOnClickListener(v -> onVideoClicked(playlist));
+            row.addView(card);
+        }
+        scroll.addView(row);
+        mYouRows.addView(scroll);
     }
 
     /** YEWPLAY(library): how many "Continue de onde parou" cards, at most. */

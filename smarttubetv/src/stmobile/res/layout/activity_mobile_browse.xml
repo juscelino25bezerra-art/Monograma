@@ -15,6 +15,37 @@
     the system windows (solid app-colored status/nav bars), so this layout never renders
     under the bars regardless of what the player did to the display in between. -->
 
+    <!-- YEWPLAY(home): acima do título do Início, o serviço e a região (proposta p. 14) - "YouTube"
+         à esquerda, o país do conteúdo à direita (Configurações > Aparência e idioma > País). -->
+    <LinearLayout
+        android:id="@+id/yew_home_context"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/yew_side_margin"
+        android:paddingTop="6dp"
+        android:paddingEnd="@dimen/yew_side_margin"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/yew_home_service"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/yew_home_region"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
     <!-- NEWTUBE(you-subscreen): back arrow shown (with the section's name in the title bar) only
          while a section opened from a You row is on screen - BrowseTopBar. GONE otherwise, and a
          GONE view collapses to a point at the start, so the wordmark keeps its 16dp inset. -->
@@ -29,7 +60,7 @@
         android:src="@drawable/ic_mobile_back_arrow"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/yew_home_context" />
 
     <!-- YEWPLAY(visual): o título da tela em Bricolage 32sp ("Início", "Inscrições",
          "Biblioteca"); numa subtela, a seta e o nome menor (BrowseTopBar). -->
@@ -47,7 +78,7 @@
         android:textAppearance="@style/TextAppearance.Yew.ScreenTitle"
         app:layout_constraintEnd_toStartOf="@id/yew_bell_button"
         app:layout_constraintStart_toEndOf="@id/mobile_title_back"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/yew_home_context" />
 
     <!-- Cast picker entry on the home feed, like the official app's top bar. Tinted with the
          accent while a session is connected (MobileBrowseActivity.updateCastIconTint). -->

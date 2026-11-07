@@ -549,4 +549,7 @@
     <string name="yew_playlist_play">Play</string>
     <string name="yew_playlist_shuffle">Shuffle</string>
     <string name="yew_notifications">Notifications</string>
+    <string name="yew_subs_all">All</string>
+    <string name="yew_library_your_playlists">Your playlists</string>
+    <string name="yew_home_service" translatable="false">YouTube</string>
 </resources>

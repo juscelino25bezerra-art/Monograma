@@ -442,4 +442,6 @@
     <string name="yew_playlist_play">Reproduzir</string>
     <string name="yew_playlist_shuffle">Aleatório</string>
     <string name="yew_notifications">Notificações</string>
+    <string name="yew_subs_all">Todos</string>
+    <string name="yew_library_your_playlists">Suas playlists</string>
 </resources>
