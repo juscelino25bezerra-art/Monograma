@@ -1529,6 +1529,7 @@ public class MobileBrowseActivity extends MobileActivity
         mContentGrid.animate().cancel();
         mContentGrid.setAlpha(1f);
         setSkeletonAvatars(showsChannelAvatars(sectionId));
+        setSkeletonShape(isOnHomeDestination());
         if (switched) {
             // NEWTUBE(motion): another section is a new page, not an edit of the old one. Through
             // the item animator it played as a shuffle (Pixel 9, History -> Home: the old cards
@@ -1650,6 +1651,23 @@ public class MobileBrowseActivity extends MobileActivity
         collectTagged(mFeedSkeleton, "avatar", avatars);
         for (View avatar : avatars) {
             avatar.setVisibility(shown ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    /**
+     * YEWPLAY(skeleton): the skeleton in the shape of the cards coming - the large item on Início,
+     * the compact one in every list (mobile_feed_skeleton).
+     */
+    private void setSkeletonShape(boolean large) {
+        List<View> views = new ArrayList<>();
+        collectTagged(mFeedSkeleton, "large", views);
+        for (View view : views) {
+            view.setVisibility(large ? View.VISIBLE : View.GONE);
+        }
+        views.clear();
+        collectTagged(mFeedSkeleton, "compact", views);
+        for (View view : views) {
+            view.setVisibility(large ? View.GONE : View.VISIBLE);
         }
     }
 

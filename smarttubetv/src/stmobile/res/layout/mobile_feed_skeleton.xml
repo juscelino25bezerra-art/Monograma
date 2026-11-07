@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Shimmering (ShimmerLinearLayout) loading skeleton for the feed grids. Mirrors
-     item_video_card's geometry (16:9-ish thumb + title + meta line) so the real cards
-     replace it without a jarring layout shift. Shown only while a section loads into an
-     EMPTY grid - never over content (returning to already-loaded content stays instant).
-     NEWTUBE(feed-avatars): the avatar circles (tag "avatar") show where the cards have one, on
-     Home and Subscriptions (MobileBrowseActivity.setSkeletonAvatars). -->
+<!-- Shimmering (ShimmerLinearLayout) loading skeleton for the feed grids. Shown only while a section
+     loads into an EMPTY grid - never over content.
+     YEWPLAY(skeleton): no formato novo (proposta, "esqueleto de carregamento") - dois desenhos no
+     mesmo esqueleto; o compacto é o padrão (Busca) e MobileBrowseActivity.setSkeletonShape mostra o que a tela vai ter: o item grande
+     do Início (tag "large": miniatura de ponta a ponta, texto na margem de 20dp) ou o item compacto
+     das listas (tag "compact": miniatura 144x81 de raio 10dp e três linhas ao lado). -->
 <com.newtube.mobile.ui.common.ShimmerLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,11 +12,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/mobile_card_spacing"
-    android:paddingTop="@dimen/mobile_card_spacing"
     tools:visibility="visible">
 
-    <LinearLayout style="@style/MobileSkeletonFeedCard">
+    <LinearLayout style="@style/MobileSkeletonFeedCard" android:tag="large" android:visibility="gone">
+        <View style="@style/MobileSkeletonFeedThumb" />
+        <LinearLayout style="@style/MobileSkeletonFeedTextRow">
+            <View style="@style/MobileSkeletonFeedAvatar" />
+            <LinearLayout style="@style/MobileSkeletonFeedText">
+                <View style="@style/MobileSkeletonFeedLineWide" />
+                <View style="@style/MobileSkeletonFeedLineNarrow" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout style="@style/MobileSkeletonFeedCard" android:tag="large" android:visibility="gone">
+        <View style="@style/MobileSkeletonFeedThumb" />
+        <LinearLayout style="@style/MobileSkeletonFeedTextRow">
+            <View style="@style/MobileSkeletonFeedAvatar" />
+            <LinearLayout style="@style/MobileSkeletonFeedText">
+                <View style="@style/MobileSkeletonFeedLineWide" />
+                <View style="@style/MobileSkeletonFeedLineNarrow" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout style="@style/MobileSkeletonFeedCard" android:tag="large" android:visibility="gone">
         <View style="@style/MobileSkeletonFeedThumb" />
         <LinearLayout style="@style/MobileSkeletonFeedTextRow">
             <View style="@style/MobileSkeletonFeedAvatar" />
@@ -27,25 +45,52 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout style="@style/MobileSkeletonFeedCard">
-        <View style="@style/MobileSkeletonFeedThumb" />
-        <LinearLayout style="@style/MobileSkeletonFeedTextRow">
-            <View style="@style/MobileSkeletonFeedAvatar" />
-            <LinearLayout style="@style/MobileSkeletonFeedText">
-                <View style="@style/MobileSkeletonFeedLineWide" />
-                <View style="@style/MobileSkeletonFeedLineNarrow" />
-            </LinearLayout>
+    <LinearLayout style="@style/YewSkeletonRow" android:tag="compact">
+        <View style="@style/YewSkeletonRowThumb" />
+        <LinearLayout style="@style/MobileSkeletonFeedText">
+            <View style="@style/YewSkeletonRowLineWide" />
+            <View style="@style/YewSkeletonRowLineMid" />
+            <View style="@style/YewSkeletonRowLineNarrow" />
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout style="@style/MobileSkeletonFeedCard">
-        <View style="@style/MobileSkeletonFeedThumb" />
-        <LinearLayout style="@style/MobileSkeletonFeedTextRow">
-            <View style="@style/MobileSkeletonFeedAvatar" />
-            <LinearLayout style="@style/MobileSkeletonFeedText">
-                <View style="@style/MobileSkeletonFeedLineWide" />
-                <View style="@style/MobileSkeletonFeedLineNarrow" />
-            </LinearLayout>
+    <LinearLayout style="@style/YewSkeletonRow" android:tag="compact">
+        <View style="@style/YewSkeletonRowThumb" />
+        <LinearLayout style="@style/MobileSkeletonFeedText">
+            <View style="@style/YewSkeletonRowLineWide" />
+            <View style="@style/YewSkeletonRowLineMid" />
+            <View style="@style/YewSkeletonRowLineNarrow" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout style="@style/YewSkeletonRow" android:tag="compact">
+        <View style="@style/YewSkeletonRowThumb" />
+        <LinearLayout style="@style/MobileSkeletonFeedText">
+            <View style="@style/YewSkeletonRowLineWide" />
+            <View style="@style/YewSkeletonRowLineMid" />
+            <View style="@style/YewSkeletonRowLineNarrow" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout style="@style/YewSkeletonRow" android:tag="compact">
+        <View style="@style/YewSkeletonRowThumb" />
+        <LinearLayout style="@style/MobileSkeletonFeedText">
+            <View style="@style/YewSkeletonRowLineWide" />
+            <View style="@style/YewSkeletonRowLineMid" />
+            <View style="@style/YewSkeletonRowLineNarrow" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout style="@style/YewSkeletonRow" android:tag="compact">
+        <View style="@style/YewSkeletonRowThumb" />
+        <LinearLayout style="@style/MobileSkeletonFeedText">
+            <View style="@style/YewSkeletonRowLineWide" />
+            <View style="@style/YewSkeletonRowLineMid" />
+            <View style="@style/YewSkeletonRowLineNarrow" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout style="@style/YewSkeletonRow" android:tag="compact">
+        <View style="@style/YewSkeletonRowThumb" />
+        <LinearLayout style="@style/MobileSkeletonFeedText">
+            <View style="@style/YewSkeletonRowLineWide" />
+            <View style="@style/YewSkeletonRowLineMid" />
+            <View style="@style/YewSkeletonRowLineNarrow" />
         </LinearLayout>
     </LinearLayout>
 
