@@ -389,4 +389,5 @@
     <!-- YEWPLAY(downloads): as abas da tela Downloads. -->
     <string name="yew_downloads_videos">Vídeos</string>
     <string name="yew_downloads_audios">Áudios</string>
+    <string name="yew_download_deleted">Download excluído</string>
 </resources>

@@ -59,7 +59,7 @@ public final class DownloadMenu {
             dialog.appendSingleButton(UiOptionItem.from(context.getString(R.string.mobile_download_delete),
                     optionItem -> {
                         dialog.closeDialog();
-                        delete(context, item);
+                        deleteWithUndo(context, item);
                     }));
         }
 
@@ -95,7 +95,34 @@ public final class DownloadMenu {
         context.startActivity(chooser);
     }
 
+    /** YEWPLAY(undo): how long "Desfazer" can bring a deleted download back. */
+    private static final int UNDO_WINDOW_MS = 5_000;
+    private static final android.os.Handler sMain = new android.os.Handler(android.os.Looper.getMainLooper());
+
+    /**
+     * YEWPLAY(undo): the proposal's "Removido · Desfazer" instead of a confirmation - the item
+     * leaves the list at once, and its files are only deleted once the undo window has passed.
+     */
+    public static void deleteWithUndo(Context context, DownloadItem item) {
+        Context app = context.getApplicationContext();
+        DownloadRegistry registry = DownloadRegistry.instance(app);
+        int index = registry.indexOf(item);
+        registry.remove(item);
+        Runnable purge = () -> deleteFiles(app, item);
+        sMain.postDelayed(purge, UNDO_WINDOW_MS);
+        com.newtube.mobile.ui.common.MobileSnackbar.show(context, context.getString(R.string.yew_download_deleted),
+                context.getString(R.string.mobile_undo), () -> {
+                    sMain.removeCallbacks(purge);
+                    registry.restore(item, index);
+                }, UNDO_WINDOW_MS - 500);
+    }
+
     public static void delete(Context context, DownloadItem item) {
+        deleteFiles(context, item);
+        DownloadRegistry.instance(context).remove(item);
+    }
+
+    private static void deleteFiles(Context context, DownloadItem item) {
         DownloadStorage storage = new DownloadStorage(context);
         storage.delete(item.outputUri);
         if (item.thumbPath != null) {
@@ -109,6 +136,5 @@ public final class DownloadMenu {
         new File(parts, item.id + ".audio").delete();
         //noinspection ResultOfMethodCallIgnored
         DownloadOptions.audioIdFile(new File(parts, item.id + ".audio")).delete();
-        DownloadRegistry.instance(context).remove(item);
     }
 }
