@@ -222,6 +222,7 @@ public final class MobileMiniPlayerController {
 
         MiniPlayerBridge.fitToVideo(mFrame); // NEWTUBE(issue #9): letterbox, never stretch
         attachTexture();
+        MiniPlayerBridge.bindRowText(mBar); // YEWPLAY(nav): title and channel in the row
         mBar.setVisibility(View.VISIBLE);
         updatePlayPause(player);
 
@@ -390,41 +391,27 @@ public final class MobileMiniPlayerController {
         }
     }
 
-    /** Start as the full-width 16:9 watch video, then land on the channel's floating card. */
+    /**
+     * YEWPLAY(nav): the bar rises into place and fades in. It used to grow out of the full-width
+     * watch video, which worked for a 16:9 corner card but stretches a wide, short row.
+     */
     private void animateFromWatchPage() {
-        int width = mBar.getWidth();
         int height = mBar.getHeight();
-        if (width <= 0 || height <= 0) {
+        if (mBar.getWidth() <= 0 || height <= 0) {
             return;
         }
         mSwipe.stop();
-
-        int[] cardLocation = new int[2];
-        int[] contentLocation = new int[2];
-        mBar.getLocationOnScreen(cardLocation);
-        View content = mActivity.findViewById(android.R.id.content);
-        content.getLocationOnScreen(contentLocation);
-
-        float sourceWidth = mActivity.getResources().getDisplayMetrics().widthPixels;
-        float sourceHeight = sourceWidth * 9f / 16f;
-
-        mBar.setPivotX(0f);
-        mBar.setPivotY(0f);
-        mBar.setScaleX(sourceWidth / width);
-        mBar.setScaleY(sourceHeight / height);
-        mBar.setTranslationX(contentLocation[0] - cardLocation[0]);
-        mBar.setTranslationY(contentLocation[1] - cardLocation[1]);
-
+        mBar.setTranslationY(height * 0.6f);
+        mBar.setAlpha(0f);
         setControlsAlpha(0f);
         mBar.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .translationX(0f)
                 .translationY(0f)
+                .alpha(1f)
                 .setDuration(ENTRY_DURATION_MS)
                 .setInterpolator(new DecelerateInterpolator())
                 .withEndAction(() -> {
                     resetTransform();
+                    mBar.setAlpha(1f);
                     mEntryAnimating = false;
                     hideFreezeWhenReady();
                     mPlayPause.animate().alpha(1f).setDuration(90).start();
@@ -433,6 +420,40 @@ public final class MobileMiniPlayerController {
                     publishBounds();
                 })
                 .start();
+    }
+
+    /**
+     * YEWPLAY(nav): where the video box of this host's mini bar is - or will be: hidden, the bar
+     * (mobile_mini_player_overlay) opens at the content bottom, 12dp in from the edges.
+     */
+    public boolean videoTargetOnScreen(@androidx.annotation.NonNull Rect out) {
+        View box = mBar.findViewById(R.id.mobile_mini_video_box);
+        if (box == null) {
+            return false;
+        }
+        int[] at = new int[2];
+        if (mBar.getVisibility() == View.VISIBLE && box.getWidth() > 0) {
+            box.getLocationOnScreen(at);
+            out.set(at[0], at[1], at[0] + box.getWidth(), at[1] + box.getHeight());
+            return true;
+        }
+        View content = mActivity.findViewById(android.R.id.content);
+        if (content == null || content.getHeight() == 0) {
+            return false;
+        }
+        android.content.res.Resources res = mActivity.getResources();
+        int margin = res.getDimensionPixelSize(R.dimen.yew_capsule_margin);
+        int rowHeight = res.getDimensionPixelSize(R.dimen.yew_mini_row_height);
+        int padding = res.getDimensionPixelSize(R.dimen.yew_mini_row_padding);
+        int width = res.getDimensionPixelSize(R.dimen.yew_mini_video_width);
+        int height = res.getDimensionPixelSize(R.dimen.yew_mini_video_height);
+        int stroke = Math.round(res.getDisplayMetrics().density);
+        content.getLocationOnScreen(at);
+        int rowBottom = at[1] + content.getHeight() - content.getPaddingBottom() - margin - stroke;
+        int top = rowBottom - rowHeight + (rowHeight - height) / 2;
+        int left = at[0] + content.getPaddingLeft() + margin + stroke + padding;
+        out.set(left, top, left + width, top + height);
+        return true;
     }
 
     private void hideFreezeWhenReady() {

@@ -363,4 +363,15 @@
     <string name="mobile_about_share_text">YewPlay — um app de YouTube para celular, feito a partir do NewTube e do SmartTube: %1$s</string>
     <string name="sabr_vod_option">Preferir SABR mesmo quando os links funcionam (experimental; próximo vídeo)</string>
     <string name="sabr_vod_stopped">A reprodução experimental via SABR parou. Toque em reproduzir para tentar de novo ou desative o SABR nas Configurações.</string>
+
+    <!-- YEWPLAY(nav) -->
+    <string name="yew_nav_home">Início</string>
+    <string name="yew_nav_search">Busca</string>
+    <string name="yew_nav_library">Biblioteca</string>
+    <string name="yew_filter_all">Tudo</string>
+    <plurals name="yew_library_items">
+        <item quantity="one">%1$d item</item>
+        <item quantity="many">%1$d itens</item>
+        <item quantity="other">%1$d itens</item>
+    </plurals>
 </resources>

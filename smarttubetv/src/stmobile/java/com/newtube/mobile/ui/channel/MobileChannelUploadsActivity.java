@@ -551,6 +551,12 @@ public class MobileChannelUploadsActivity extends MobileActivity
         return 0;
     }
 
+    /** YEWPLAY(nav): the minimize lands on this screen's mini bar video box. */
+    @Override
+    public boolean getMiniVideoTargetOnScreen(@androidx.annotation.NonNull android.graphics.Rect out) {
+        return mMiniPlayer != null && mMiniPlayer.videoTargetOnScreen(out);
+    }
+
     private void handleBack() {
         if (mPresenter != null && mPresenter.getView() == this) {
             mPresenter.onFinish();

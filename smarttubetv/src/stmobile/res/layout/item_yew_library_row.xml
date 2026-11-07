@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(nav): uma linha da Biblioteca (proposta, p. 15): ícone de traço, nome, contagem em
+     cinza quente quando houver ("12 itens") e seta; sem cartão, separadas por um fio de 1dp. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/yew_side_margin"
+        android:paddingEnd="14dp">
+
+        <ImageView
+            android:id="@+id/mobile_you_row_icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:scaleType="fitCenter"
+            android:tint="@color/mobile_color_on_surface" />
+
+        <TextView
+            android:id="@+id/mobile_you_row_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/instrument_medium"
+            android:maxLines="1"
+            android:textColor="@color/mobile_color_on_surface"
+            android:textSize="15.5sp"
+            tools:text="Downloads" />
+
+        <TextView
+            android:id="@+id/yew_library_row_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="13.5sp"
+            android:visibility="gone"
+            tools:text="12 itens"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_chevron_right"
+            android:tint="@color/mobile_color_on_surface_secondary" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/yew_library_row_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="60dp"
+        android:background="@color/mobile_color_divider"
+        android:importantForAccessibility="no" />
+</LinearLayout>

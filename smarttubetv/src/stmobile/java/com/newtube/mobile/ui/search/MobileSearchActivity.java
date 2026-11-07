@@ -641,6 +641,12 @@ public class MobileSearchActivity extends MobileActivity
         return 0;
     }
 
+    /** YEWPLAY(nav): the minimize lands on this screen's mini bar video box. */
+    @Override
+    public boolean getMiniVideoTargetOnScreen(@androidx.annotation.NonNull android.graphics.Rect out) {
+        return mMiniPlayer != null && mMiniPlayer.videoTargetOnScreen(out);
+    }
+
     // NOTE: back normally flows OnBackPressedDispatcher -> MobileActivity.finish() ->
     // finishReally() below, which is the single place SearchPresenter.onFinish() is invoked.
     // (Previously it was also called here on back, so onFinish() ran twice per back press.)

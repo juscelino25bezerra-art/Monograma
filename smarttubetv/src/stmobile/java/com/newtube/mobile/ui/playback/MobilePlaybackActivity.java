@@ -5738,6 +5738,21 @@ public class MobilePlaybackActivity extends MobileActivity
         video.set(0, 0, mVideoArea.getWidth(), mVideoArea.getHeight());
         mContainer.offsetDescendantRectToMyCoords(mVideoArea, video);
 
+        // YEWPLAY(nav): a host that knows where its mini video box sits (the YewPlay mini-player
+        // is a row with a small video at its start) gets the video landed exactly there.
+        Rect target = new Rect();
+        if (host != null && video.width() > 0 && host.getMiniVideoTargetOnScreen(target) && target.width() > 0) {
+            int[] origin = new int[2];
+            mContainer.getLocationOnScreen(origin);
+            float fit = target.width() / (float) video.width();
+            mMorphScaleX = fit;
+            mMorphScaleY = fit;
+            float landedH = video.height() * fit;
+            mMorphTx = (target.left - origin[0]) - video.left;
+            mMorphTy = (target.centerY() - origin[1] - landedH / 2f) - video.top;
+            return;
+        }
+
         float scale = video.width() > 0 ? cardW / video.width() : 0.44f;
         float cardH = video.height() * scale; // 16:9 video -> ~the card's 102dp
         float targetX = mContainer.getWidth() - margin - cardW;

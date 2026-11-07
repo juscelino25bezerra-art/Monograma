@@ -472,4 +472,14 @@
     <!-- Experimental SABR playback (was strings_sabr.xml) -->
     <string name="sabr_vod_option">Prefer SABR even when links work (experimental; next VOD)</string>
     <string name="sabr_vod_stopped">Experimental SABR playback stopped. Tap play to retry, or disable SABR in Settings.</string>
+
+    <!-- YEWPLAY(nav): the four destinations of the floating bar and the Home filter tabs. -->
+    <string name="yew_nav_home">Home</string>
+    <string name="yew_nav_search">Search</string>
+    <string name="yew_nav_library">Library</string>
+    <string name="yew_filter_all">All</string>
+    <plurals name="yew_library_items">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
 </resources>

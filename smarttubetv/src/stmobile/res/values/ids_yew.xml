@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY: ids das views criadas em código. -->
+<resources>
+    <item name="yew_filter_label" type="id" />
+    <item name="yew_filter_dot" type="id" />
+    <item name="yew_nav_search" type="id" />
+</resources>

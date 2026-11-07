@@ -456,6 +456,18 @@
     <!-- Regular weight at 11sp tracks the YouTube bar labels (medium/bold read heavier than
          theirs side-by-side; the old 10sp-medium choice predates dropping the long
          "Listas de reproducción" label from the bar). -->
+    <!-- YEWPLAY(nav): rótulos da barra flutuante; o ativo em SemiBold. -->
+    <style name="YewNavText" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:fontFamily">@font/instrument_medium</item>
+        <item name="fontFamily">@font/instrument_medium</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+    <style name="YewNavText.Active">
+        <item name="android:fontFamily">@font/instrument_semibold</item>
+        <item name="fontFamily">@font/instrument_semibold</item>
+    </style>
+
     <style name="MobileBottomNavText" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/instrument_sans</item>

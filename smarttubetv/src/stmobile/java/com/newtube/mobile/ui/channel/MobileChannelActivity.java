@@ -481,6 +481,12 @@ public class MobileChannelActivity extends MobileActivity
         return 0;
     }
 
+    /** YEWPLAY(nav): the minimize lands on this screen's mini bar video box. */
+    @Override
+    public boolean getMiniVideoTargetOnScreen(@androidx.annotation.NonNull android.graphics.Rect out) {
+        return mMiniPlayer != null && mMiniPlayer.videoTargetOnScreen(out);
+    }
+
     @Override
     protected void onPause() {
         // NEWTUBE(motion): a docked card stays up frozen until the player covers it.

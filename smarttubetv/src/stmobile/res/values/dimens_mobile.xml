@@ -52,4 +52,19 @@
     <dimen name="mobile_settings_row_title_size">16sp</dimen>
     <dimen name="mobile_settings_row_summary_size">14sp</dimen>
     <dimen name="mobile_settings_header_size">16sp</dimen>
+    <!-- YEWPLAY(nav): a barra flutuante (proposta, p. 8: raio 26dp, 12dp das bordas) e o
+         mini-player que mora dentro dela. -->
+    <dimen name="yew_capsule_margin">12dp</dimen>
+    <dimen name="yew_capsule_radius">26dp</dimen>
+    <dimen name="yew_nav_height">60dp</dimen>
+    <dimen name="yew_mini_row_height">60dp</dimen>
+    <dimen name="yew_mini_row_padding">10dp</dimen>
+    <dimen name="yew_mini_video_width">64dp</dimen>
+    <dimen name="yew_mini_video_height">36dp</dimen>
+    <!-- Margem lateral de todas as telas (proposta, p. 8). -->
+    <dimen name="yew_side_margin">20dp</dimen>
+    <!-- O título grande das telas (Bricolage 32sp) e o recuo das abas de filtro: o texto da
+         primeira aba alinha com a margem de 20dp. -->
+    <dimen name="yew_title_height">64dp</dimen>
+    <dimen name="yew_filter_inset">8dp</dimen>
 </resources>

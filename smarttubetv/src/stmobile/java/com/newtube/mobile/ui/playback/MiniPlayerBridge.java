@@ -7,6 +7,7 @@ import android.graphics.SurfaceTexture;
 import android.os.SystemClock;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.media3.common.VideoSize;
@@ -15,6 +16,7 @@ import androidx.media3.ui.AspectRatioFrameLayout;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.app.views.PlaybackView;
 import com.liskovsoft.smartyoutubetv2.common.app.views.ViewManager;
+import com.liskovsoft.smartyoutubetv2.tv.R;
 
 import java.lang.ref.WeakReference;
 
@@ -55,6 +57,37 @@ public final class MiniPlayerBridge {
          * THIS host's card instead of always assuming Home's geometry.
          */
         int getMiniCardBottomOffsetPx();
+
+        /**
+         * YEWPLAY(nav): where this host's mini-player video box is - or will be once shown - in
+         * screen coordinates, for the minimize morph to land on. The YewPlay mini-player is a row
+         * with a small video at its start, not the 180dp corner card the default geometry assumes.
+         * @return false to keep that default
+         */
+        default boolean getMiniVideoTargetOnScreen(@NonNull android.graphics.Rect out) {
+            return false;
+        }
+    }
+
+    /**
+     * YEWPLAY(nav): the mini row's title and channel, from the session's video. Both hosts' rows
+     * (mobile_mini_player_row) call this when they show the card.
+     */
+    public static void bindRowText(@Nullable View card) {
+        if (card == null) {
+            return;
+        }
+        android.widget.TextView title = card.findViewById(R.id.mobile_mini_title);
+        android.widget.TextView subtitle = card.findViewById(R.id.mobile_mini_subtitle);
+        Video video = getVideo();
+        if (title != null) {
+            title.setText(video != null && video.getTitle() != null ? video.getTitle() : "");
+        }
+        if (subtitle != null) {
+            CharSequence author = video != null ? video.getAuthor() : null;
+            subtitle.setText(author != null ? author : "");
+            subtitle.setVisibility(author != null && author.length() > 0 ? View.VISIBLE : View.GONE);
+        }
     }
 
     /**

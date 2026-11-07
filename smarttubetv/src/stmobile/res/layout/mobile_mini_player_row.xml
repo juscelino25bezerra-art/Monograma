@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  YEWPLAY(nav): o mini-player da proposta - uma linha com o vídeo pequeno à esquerda, título e canal,
+  pausar e fechar, e a linha de progresso rubi embaixo. Fica dentro da barra flutuante (Browse) ou
+  numa barra própria (mobile_mini_player_overlay: Busca, Canal). Os ids são os que
+  MobileMiniPlayerController e MobileBrowseActivity já usavam: o vídeo continua sendo a textura do
+  player adotada dentro de mobile_mini_player_frame.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/yew_mini_row_height">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/yew_mini_row_padding"
+        android:paddingEnd="4dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mobile_mini_video_box"
+            android:layout_width="@dimen/yew_mini_video_width"
+            android:layout_height="@dimen/yew_mini_video_height"
+            app:cardBackgroundColor="@android:color/black"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <!-- NEWTUBE(issue #9): an AspectRatioFrameLayout (FIT), given the video's shape by
+                 MiniPlayerBridge.fitToVideo: other shapes are letterboxed, not stretched. -->
+            <androidx.media3.ui.AspectRatioFrameLayout
+                android:id="@+id/mobile_mini_player_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/mobile_mini_freeze"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitXY"
+                    android:visibility="gone" />
+            </androidx.media3.ui.AspectRatioFrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:importantForAccessibility="no"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/mobile_mini_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/instrument_semibold"
+                android:maxLines="1"
+                android:textColor="@color/mobile_color_on_surface"
+                android:textSize="14sp"
+                tools:text="Como montar uma rotina matinal" />
+
+            <TextView
+                android:id="@+id/mobile_mini_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/mobile_color_on_surface_secondary"
+                android:textSize="12.5sp"
+                tools:text="Rotina Leve" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/mobile_mini_play_pause"
+            android:layout_width="44dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_mini_play_pause"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_player_pause"
+            android:tint="@color/mobile_color_on_surface" />
+
+        <ImageButton
+            android:id="@+id/mobile_mini_close"
+            android:layout_width="44dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/mobile_mini_close"
+            android:padding="13dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_sheet_close"
+            android:tint="@color/mobile_color_on_surface_secondary" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/mobile_mini_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_gravity="bottom"
+        android:importantForAccessibility="no"
+        android:max="1000"
+        android:progressBackgroundTint="@android:color/transparent"
+        android:progressTint="@color/mobile_color_progress"
+        tools:progress="400" />
+</FrameLayout>
