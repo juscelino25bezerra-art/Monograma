@@ -104,7 +104,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="4dp"
             android:ellipsize="end"
-            android:fontFamily="@font/bricolage_bold"
+            android:fontFamily="@font/bricolage_semibold"
             android:lineSpacingExtra="1sp"
             android:maxLines="2"
             android:textColor="@color/mobile_color_on_surface"

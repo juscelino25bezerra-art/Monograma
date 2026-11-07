@@ -217,6 +217,14 @@
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.NewTube" />
 
+        <!-- YEWPLAY(listen): a tela Ouvir; controla o player da sessão mini (MiniPlayerBridge). -->
+        <activity
+            android:name="com.newtube.mobile.ui.playback.MobileListenActivity"
+            android:exported="false"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|layoutDirection|keyboardHidden|uiMode"
+            android:screenOrientation="unspecified"
+            android:theme="@style/Theme.NewTube" />
+
         <activity
             android:name="com.newtube.mobile.ui.channel.MobileChannelActivity"
             android:exported="false"

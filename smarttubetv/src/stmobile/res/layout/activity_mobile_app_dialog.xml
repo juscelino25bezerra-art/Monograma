@@ -65,6 +65,7 @@
 
             <TextView
                 android:id="@+id/mobile_dialog_title"
+        android:fontFamily="@font/bricolage_bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -73,7 +74,7 @@
                 android:paddingStart="4dp"
                 android:paddingEnd="16dp"
                 android:textColor="@color/mobile_color_on_surface"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 tools:text="Settings" />
 

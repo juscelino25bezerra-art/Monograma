@@ -24,6 +24,12 @@ final class DownloadProgressText {
             }
             case DownloadItem.STATE_PROCESSING:
                 return context.getString(R.string.mobile_download_state_processing);
+            case DownloadItem.STATE_PAUSED: {
+                String done = DownloadOptions.formatBytes(item.bytesDone);
+                return item.bytesTotal > 0
+                        ? context.getString(R.string.yew_download_paused_of, done, DownloadOptions.formatBytes(item.bytesTotal))
+                        : context.getString(R.string.yew_download_paused);
+            }
             case DownloadItem.STATE_FAILED:
                 return item.error != null ? item.error : context.getString(R.string.mobile_download_error_generic);
             case DownloadItem.STATE_DONE:

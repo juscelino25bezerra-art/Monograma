@@ -716,17 +716,18 @@
                      own 6dp inset hold the old spacing. -->
                 <!-- YEWPLAY(player): as ações rotuladas da proposta (p. 16) - ícone em cima, rótulo
                      embaixo, sem pílula: curtidas, Baixar, Ouvir (segundo plano), Salvar, Janela
-                     (picture-in-picture); Não curti e Compartilhar seguem na mesma fileira, que
-                     rola. Mesmos ids de antes, para MobilePlaybackActivity. -->
+                     (picture-in-picture). Não curti e Compartilhar ficam escondidos aqui (o código
+                     ainda lê o estado deles) e aparecem no menu "Mais". Mesmos ids de antes, para MobilePlaybackActivity. -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:fillViewport="true"
                     android:overScrollMode="never"
                     android:scrollbars="none">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingHorizontal="8dp">
@@ -794,6 +795,7 @@
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/mobile_watch_dislike"
+                        android:visibility="gone"
                         style="@style/YewWatchAction">
                         <ImageView
                             android:id="@+id/mobile_watch_dislike_icon"
@@ -807,6 +809,7 @@
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/mobile_watch_share"
+                        android:visibility="gone"
                         style="@style/YewWatchAction">
                         <ImageView
                             style="@style/YewWatchActionIcon"
@@ -1096,6 +1099,7 @@
 
                 <TextView
                     android:id="@+id/mobile_watch_related_label"
+        android:fontFamily="@font/bricolage_bold"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

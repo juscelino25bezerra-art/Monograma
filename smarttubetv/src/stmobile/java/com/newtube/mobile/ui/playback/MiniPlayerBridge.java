@@ -358,6 +358,52 @@ public final class MiniPlayerBridge {
         ViewManager.instance(context).startView(PlaybackView.class);
     }
 
+    // YEWPLAY(listen): o que a tela Ouvir pede ao player.
+    public static final int LISTEN_PREVIOUS = 1;
+    public static final int LISTEN_NEXT = 2;
+    public static final int LISTEN_SHUFFLE = 3;
+    public static final int LISTEN_REPEAT = 4;
+    public static final int LISTEN_SAVE = 5;
+    public static final int LISTEN_SHARE = 6;
+    public static final int LISTEN_QUEUE = 7;
+    public static final int LISTEN_BACKGROUND_MODE = 8;
+
+    public static void listenAction(int action) {
+        MobilePlaybackActivity activity = sActivity.get();
+        if (isActive() && activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
+            activity.onListenAction(action);
+        }
+    }
+
+    public static boolean isShuffling() {
+        MobilePlaybackActivity activity = sActivity.get();
+        return isActive() && activity != null && activity.isShufflingForListen();
+    }
+
+    /** YEWPLAY(listen): the speed button, through the player's own speed path (it is remembered). */
+    public static void setSpeed(float speed) {
+        MobilePlaybackActivity activity = sActivity.get();
+        if (isActive() && activity != null) {
+            activity.applySpeedFromListen(speed);
+        }
+    }
+
+    /** YEWPLAY(listen): bring the screen the video came from (the mini host) to the front. */
+    public static void showHost(android.content.Context context) {
+        MiniHost host = getMiniHost();
+        Class<?> view = host != null ? host.getMiniHostViewClass()
+                : com.liskovsoft.smartyoutubetv2.common.app.views.BrowseView.class;
+        com.liskovsoft.smartyoutubetv2.common.app.views.ViewManager.instance(context).startView(view);
+    }
+
+    /** YEWPLAY(mini): o botão "próximo" da barra - o mesmo do player. */
+    public static void next() {
+        MobilePlaybackActivity activity = sActivity.get();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {
+            activity.nextFromMiniPlayer();
+        }
+    }
+
     /** Close from the bar's X: stop playback and finish the hidden playback activity. */
     public static void close() {
         MobilePlaybackActivity activity = sActivity.get();

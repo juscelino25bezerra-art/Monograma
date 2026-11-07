@@ -392,4 +392,56 @@
     <string name="yew_download_deleted">Download excluído</string>
     <!-- YEWPLAY(library): títulos da Biblioteca. -->
     <string name="yew_library_continue">Continue de onde parou</string>
+    <!-- YEWPLAY(empty): títulos dos estados vazios (proposta p. 17). -->
+    <string name="yew_empty_subs_title">Seus canais crescem aqui</string>
+    <string name="yew_empty_downloads_title">Nada baixado ainda</string>
+    <string name="yew_empty_offline_title">Sem conexão</string>
+    <string name="yew_empty_offline_body">Confira o Wi-Fi ou os dados móveis e tente de novo.</string>
+    <string name="yew_empty_generic_title">Nada por aqui ainda</string>
+    <string name="yew_empty_generic_body">Puxe para baixo para atualizar.</string>
+    <string name="yew_empty_signin_title">Faça login para ver</string>
+    <string name="yew_library_saved_playlists">Playlists salvas</string>
+    <string name="yew_mini_next">Próximo</string>
+    <string name="yew_search_cancel">Cancelar</string>
+    <string name="yew_search_type_videos">Vídeos</string>
+    <string name="yew_search_type_channels">Canais</string>
+    <string name="yew_search_type_playlists">Playlists</string>
+    <string name="yew_search_type_movies">Filmes</string>
+    <!-- YEWPLAY(downloads): a tela Downloads da proposta (p. 16). -->
+    <string name="yew_download_paused">Pausado</string>
+    <string name="yew_download_paused_of">Pausado, %1$s de %2$s</string>
+    <string name="yew_download_of">%1$s de %2$s</string>
+    <string name="yew_download_speed">%1$s, %2$s/s</string>
+    <string name="yew_download_format_video">Vídeo MP4 %1$s, %2$s</string>
+    <string name="yew_download_format_audio">Áudio M4A, %1$s</string>
+    <string name="yew_download_pause">Pausar</string>
+    <string name="yew_download_resume">Retomar</string>
+    <string name="yew_downloads_active">Baixando</string>
+    <string name="yew_downloads_done">Concluídos</string>
+    <string name="yew_downloads_pause_all">Pausar tudo</string>
+    <string name="yew_downloads_resume_all">Retomar tudo</string>
+    <string name="yew_storage_used">%1$s usados pelo app</string>
+    <string name="yew_storage_free">%1$s livres</string>
+    <!-- YEWPLAY(subs): o feed de Inscrições por dia (proposta p. 15). -->
+    <string name="yew_day_today">Hoje</string>
+    <string name="yew_day_yesterday">Ontem</string>
+    <string name="yew_day_week">Esta semana</string>
+    <string name="yew_day_earlier">Antes</string>
+    <plurals name="yew_subs_new">
+        <item quantity="one">%1$d novo</item>
+        <item quantity="many">%1$d novos</item>
+        <item quantity="other">%1$d novos</item>
+    </plurals>
+    <!-- YEWPLAY(listen): a tela Ouvir (proposta p. 16). -->
+    <string name="yew_listen_close">Fechar</string>
+    <string name="yew_listen_now_playing">Tocando agora</string>
+    <string name="yew_listen_previous">Anterior</string>
+    <string name="yew_listen_timer">Timer para dormir</string>
+    <string name="yew_listen_show_video">Ver o vídeo</string>
+    <string name="yew_listen_audio_mode">Reprodução em segundo plano</string>
+    <string name="yew_playlist_play">Reproduzir</string>
+    <string name="yew_playlist_shuffle">Aleatório</string>
+    <string name="yew_notifications">Notificações</string>
+    <string name="yew_subs_all">Todos</string>
+    <string name="yew_library_your_playlists">Suas playlists</string>
 </resources>

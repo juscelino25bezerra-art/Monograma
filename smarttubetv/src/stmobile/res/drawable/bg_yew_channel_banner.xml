@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(channel): o "banner" do topo do canal - uma luz suave de Fumaça/Areia que se apaga
+     na cor da página. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="?attr/newtubeColorBackground" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient
+                android:angle="270"
+                android:endColor="@color/yew_raised_clear"
+                android:startColor="@color/mobile_color_raised" />
+        </shape>
+    </item>
+</layer-list>

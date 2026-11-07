@@ -22,6 +22,15 @@ Material Components 1.14 continuam por baixo (tema M2), mas cor, forma e tipo s�
 
 ## Tipo (`res/font/`, OFL em `docs/licenses/`)
 
+- Os arquivos da Bricolage são os cortes de título (tamanho óptico 24pt SemiBold, 36pt Bold,
+  48pt ExtraBold), os mesmos do YewPlay em Compose; os nomes de recurso continuam
+  `bricolage_{semibold,bold,extrabold}`. Backup dos cortes anteriores: branch
+  `yewplay/backup-fontes-2026-11-07`.
+- **Atenção:** o tema define `android:fontFamily` (Instrument Sans) e isso vence a fonte de um
+  `textAppearance` declarado no XML. Todo título em Bricolage declara
+  `android:fontFamily="@font/bricolage_bold"` na própria tag (`setTextAppearance` em código não
+  tem o problema).
+
 - **Bricolage Grotesque** (títulos): tela 32sp `-0.025` (`TextAppearance.Yew.ScreenTitle`),
   seção 19sp (`.SectionTitle`), vídeo em destaque 17sp, título do vídeo no player 20sp.
 - **Instrument Sans** (interface, fonte do tema): título de item SemiBold 14.5sp, corpo 13.5–15sp,
@@ -75,12 +84,38 @@ player. Conversão: `phosphor2vd.py` manteve tamanho, cor e tint de cada vetor.
 Ouvir (não "segundo plano"), Janela (não "Popup"/"Picture-in-picture"), "Sem conexão." +
 "Tentar de novo", Inscrever-se -> Inscrito.
 
-## Ainda não feito
+## Fase 4 (fidelidade à proposta)
 
-Suas playlists com capa na Biblioteca; avatares e agrupamento por dia em Inscrições (o feed não
-traz a data de publicação como número, só o texto "há 2 dias"); botão "próximo" no mini-player
-(o próximo vídeo é escolhido pelo player, que fica em outra tela); tela dedicada Ouvir; espaço
-usado e seções Baixando/Concluídos em Downloads; mosaico de playlist e banner de canal.
+- Gravuras: os quatro traçados da proposta (`yew_gravura_{boas_vindas,inscricoes,downloads,sobre}`),
+  convertidos dos SVG do YewPlay em Compose por `tools/visual/gravuras.py` (skia-pathops; o traço
+  é cortado em ladrilhos porque o aapt2 não aceita um path com mais de 32 mil caracteres).
+- Estado vazio (p. 17): gravura, título em Bricolage, frase e ação em marfim.
+- Mini-player: tocar/pausar e Próximo (p. 14); fechar é arrastar a barra para o lado.
+- Player: só as cinco ações; Não curti e Compartilhar no menu Mais.
+- Busca: campo grande com lupa, X e Cancelar; abas Tudo, Vídeos, Canais, Playlists, Filmes.
+- Configurações: lupa no topo no lugar do campo.
+- Downloads: espaço usado, Baixando (velocidade, Pausar/Retomar no item e Pausar tudo),
+  Concluídos (formato e data). A pausa guarda as partes; Retomar continua delas.
+- Inscrições: fileira de canais com ponto rubi e feed por Hoje, Ontem, Esta semana e Antes (o
+  dia sai do texto relativo do YouTube, `FeedDays`).
+- Ouvir: tela própria (`MobileListenActivity`), controla o player da sessão mini.
+- Playlist: capa em mosaico, Reproduzir, Aleatório, Ouvir e itens numerados.
+- Canal: topo com avatar e nome em Bricolage; abas com ponto rubi.
+- Início: serviço e região acima do título; sino das notificações; transmitir só aparece
+  com uma sessão ativa.
+- Inscrições: abas Todos + grupos de canais (filtram o feed). Canal: Inscrever-se/Inscrito.
+- Biblioteca: Suas playlists com capa quadrada.
+
+## Ainda diferente da proposta
+
+- Busca: a aba "Músicas" vira "Filmes" (o YouTube não tem filtro de música nessa busca).
+- Inscrições: sem "+ Grupo" na fileira de abas (grupos se criam pelo menu de um vídeo,
+  "Adicionar ao grupo") nem "atualizado há"; sem ícones de ordenar.
+- Canal: sem imagem de banner, número de inscritos, avisos, RSS e "Mais recentes" (a tela de
+  canal não recebe esses dados). Inscrever-se usa o estado da última lista de inscrições.
+- Biblioteca: "Suas playlists" aparece depois que a seção Playlists foi aberta uma vez (vem da
+  cópia guardada); sem "Nova".
+- Ouvir: a fonte aparece como "Tocando agora", não o nome da playlist.
 
 ## Verificação
 

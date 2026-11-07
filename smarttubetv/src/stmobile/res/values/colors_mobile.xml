@@ -87,4 +87,6 @@
     <color name="mobile_color_accent">#C8243C</color>
     <color name="mobile_color_raised">#E3DCD7</color>
     <color name="yew_switch_thumb_off">#6B6268</color>
+    <!-- YEWPLAY(channel): mobile_color_raised transparente, fim do degradê do topo do canal. -->
+    <color name="yew_raised_clear">#00E3DCD7</color>
 </resources>

@@ -23,18 +23,19 @@ import java.util.List;
  * YEWPLAY(nav): as abas de filtro do Início (proposta, p. 6 e 12) - texto, sem chip nem contorno; a
  * ativa em marfim com um ponto rubi embaixo, as outras em cinza quente. Cada aba é uma seção do
  * Browse ("Tudo" é o Início, as outras são Música, Jogos, Ao vivo...), então tocar numa troca de
- * seção sem sair do destino Início.
+ * seção sem sair do destino Início. A Busca usa as mesmas abas para o filtro por tipo (o "id" da
+ * aba é então um SearchOptions.TYPE_*).
  */
-final class FilterTabs {
-    interface Listener {
+public final class FilterTabs {
+    public interface Listener {
         void onTabChosen(int sectionId);
     }
 
-    static final class Tab {
+    public static final class Tab {
         final int sectionId;
         final CharSequence title;
 
-        Tab(int sectionId, CharSequence title) {
+        public Tab(int sectionId, CharSequence title) {
             this.sectionId = sectionId;
             this.title = title;
         }
@@ -46,18 +47,18 @@ final class FilterTabs {
     private String mSignature = "";
     private int mSelected = Integer.MIN_VALUE;
 
-    FilterTabs(@NonNull HorizontalScrollView scroll, @NonNull LinearLayout row, @NonNull Listener listener) {
+    public FilterTabs(@NonNull HorizontalScrollView scroll, @NonNull LinearLayout row, @NonNull Listener listener) {
         mScroll = scroll;
         mRow = row;
         mListener = listener;
     }
 
-    void show(boolean visible) {
+    public void show(boolean visible) {
         mScroll.setVisibility(visible && mRow.getChildCount() > 1 ? View.VISIBLE : View.GONE);
     }
 
     /** Rebuilds the row only when the tabs changed. */
-    void setTabs(@NonNull List<Tab> tabs) {
+    public void setTabs(@NonNull List<Tab> tabs) {
         StringBuilder signature = new StringBuilder();
         for (Tab tab : tabs) {
             signature.append(tab.sectionId).append('\u0001').append(tab.title).append('\u0002');
@@ -76,7 +77,7 @@ final class FilterTabs {
         select(selected);
     }
 
-    void select(int sectionId) {
+    public void select(int sectionId) {
         if (mSelected == sectionId) {
             return;
         }

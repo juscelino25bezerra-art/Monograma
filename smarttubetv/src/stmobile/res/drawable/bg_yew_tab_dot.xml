@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(tabs): o indicador de aba da proposta - um ponto rubi de 4dp sob o texto, não a linha
+     do Material (a TabLayout estica o drawable na largura da aba; o item centraliza o ponto). -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="4dp"
+        android:height="4dp"
+        android:gravity="center">
+        <shape android:shape="oval">
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+</layer-list>

@@ -29,6 +29,20 @@
         android:paddingHorizontal="8dp"
         android:paddingVertical="8dp">
 
+        <!-- YEWPLAY(playlist): o número do item numa playlist (proposta p. 15). -->
+        <TextView
+            android:id="@+id/yew_row_number"
+            android:layout_width="22dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="6dp"
+            android:gravity="center"
+            android:textColor="@color/mobile_color_on_surface_secondary"
+            android:textSize="12.5sp"
+            android:visibility="gone"
+            tools:text="1"
+            tools:visibility="visible" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/video_thumbnail_frame"
             android:layout_width="@dimen/yew_compact_thumb_width"
@@ -101,6 +115,51 @@
                 android:textColor="@color/mobile_color_on_surface_secondary"
                 android:textSize="12.5sp"
                 tools:text="Channel · 720p · 88.7 MB" />
+
+            <!-- YEWPLAY(downloads): um download por terminar (proposta p. 16) - barra rubi com a
+                 porcentagem ao lado; o texto de baixo ("82 de 180 MB, 2,1 MB/s") é o video_meta2. -->
+            <LinearLayout
+                android:id="@+id/yew_download_progress_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ProgressBar
+                    android:id="@+id/yew_download_progress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="3dp"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:progressBackgroundTint="@color/mobile_color_raised"
+                    android:progressTint="@color/mobile_color_accent" />
+
+                <TextView
+                    android:id="@+id/yew_download_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/mobile_color_on_surface_secondary"
+                    android:textSize="11.5sp"
+                    tools:text="45%" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/video_meta2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/mobile_color_on_surface_secondary"
+                android:textSize="12.5sp"
+                android:visibility="gone"
+                tools:text="27 de setembro"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <ImageButton

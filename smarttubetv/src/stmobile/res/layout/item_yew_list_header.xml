@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- YEWPLAY(lists): título de seção dentro de uma lista (proposta p. 15-16: "Baixando" / "Pausar
+     tudo", "Concluídos" / "10 itens", "Hoje" / "8 novos"). Título em Bricolage Bold, o texto do
+     fim em cinza quente; quando é uma ação, ele recebe o toque. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="48dp"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/yew_side_margin"
+    android:paddingTop="10dp"
+    android:paddingEnd="8dp">
+
+    <TextView
+        android:id="@+id/yew_header_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:accessibilityHeading="true"
+        android:ellipsize="end"
+        android:fontFamily="@font/bricolage_bold"
+        android:maxLines="1"
+        android:textColor="@color/mobile_color_on_surface"
+        android:textSize="18sp"
+        tools:text="Baixando" />
+
+    <TextView
+        android:id="@+id/yew_header_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:gravity="center"
+        android:minHeight="40dp"
+        android:paddingHorizontal="12dp"
+        android:textColor="@color/mobile_color_on_surface_secondary"
+        android:textSize="12.5sp"
+        tools:text="Pausar tudo" />
+</LinearLayout>

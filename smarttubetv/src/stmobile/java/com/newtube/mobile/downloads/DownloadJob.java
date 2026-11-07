@@ -48,6 +48,9 @@ final class DownloadJob {
         mListener = listener;
     }
 
+    private long mSpeedMarkMs;
+    private long mSpeedMarkBytes;
+
     void run() {
         mItem.state = DownloadItem.STATE_DOWNLOADING;
         mItem.error = null;
@@ -68,6 +71,14 @@ final class DownloadJob {
             retirePreviousCopies();
             deleteParts(videoPart, audioPart);
         } catch (StreamFetcher.CancelledException e) {
+            if (mItem.pauseRequested && !mItem.cancelRequested) {
+                // YEWPLAY(downloads): pausa - as partes ficam; retry() retoma a partir delas.
+                mItem.pauseRequested = false;
+                mItem.bytesPerSecond = 0;
+                mItem.state = DownloadItem.STATE_PAUSED;
+                mRegistry.notifyChanged();
+                return;
+            }
             deleteParts(videoPart, audioPart);
             mRegistry.remove(mItem);
             return;
@@ -179,14 +190,25 @@ final class DownloadJob {
     }
 
     private boolean report(long bytesDone) {
-        mItem.bytesDone = bytesDone;
         long now = System.currentTimeMillis();
+        // YEWPLAY(downloads): velocidade para "82 de 180 MB, 2,1 MB/s" (proposta p. 16), média
+        // móvel sobre janelas de ~1 s.
+        if (mSpeedMarkMs == 0 || bytesDone < mSpeedMarkBytes) {
+            mSpeedMarkMs = now;
+            mSpeedMarkBytes = bytesDone;
+        } else if (now - mSpeedMarkMs >= 1000) {
+            long rate = (bytesDone - mSpeedMarkBytes) * 1000 / (now - mSpeedMarkMs);
+            mItem.bytesPerSecond = mItem.bytesPerSecond <= 0 ? rate : (mItem.bytesPerSecond + rate) / 2;
+            mSpeedMarkMs = now;
+            mSpeedMarkBytes = bytesDone;
+        }
+        mItem.bytesDone = bytesDone;
         if (now - mLastNotifyMs >= 500) {
             mLastNotifyMs = now;
             mRegistry.notifyChanged();
             mListener.onProgress(mItem);
         }
-        return !mItem.cancelRequested;
+        return !mItem.cancelRequested && !mItem.pauseRequested;
     }
 
     /**

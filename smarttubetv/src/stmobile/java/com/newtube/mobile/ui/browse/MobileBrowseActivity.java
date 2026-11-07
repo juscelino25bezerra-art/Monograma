@@ -170,6 +170,7 @@ public class MobileBrowseActivity extends MobileActivity
     private View mErrorContainer;
     private ImageView mErrorIcon;
     private TextView mErrorMessage;
+    private TextView mErrorTitle;
     private MaterialButton mErrorAction;
     private ImageButton mSearchButton;
     private ImageButton mCastButton;
@@ -247,6 +248,11 @@ public class MobileBrowseActivity extends MobileActivity
     private static final int DOWNLOADS_TAB_ALL = -9001;
     private static final int DOWNLOADS_TAB_VIDEO = -9002;
     private static final int DOWNLOADS_TAB_AUDIO = -9003;
+    /** YEWPLAY(subs): the Inscrições group tabs - "Todos", then one per channel group (base - index). */
+    private static final int SUBS_TAB_ALL = -9100;
+    private int mSubsTab = SUBS_TAB_ALL;
+    @androidx.annotation.Nullable
+    private java.util.Set<String> mSubsGroupChannels;
     private int mDownloadsFilter = DOWNLOADS_TAB_ALL;
     /** NEWTUBE(feed-swap): the grid's item animator, parked while a swap is laid out. */
     private RecyclerView.ItemAnimator mParkedItemAnimator;
@@ -323,6 +329,7 @@ public class MobileBrowseActivity extends MobileActivity
         mErrorContainer = findViewById(R.id.mobile_error_container);
         mErrorIcon = findViewById(R.id.mobile_error_icon);
         mErrorMessage = findViewById(R.id.mobile_error_message);
+        mErrorTitle = findViewById(R.id.mobile_error_title);
         mErrorAction = findViewById(R.id.mobile_error_action);
         mSearchButton = findViewById(R.id.mobile_search_button);
         mCastButton = findViewById(R.id.mobile_cast_button);
@@ -345,6 +352,10 @@ public class MobileBrowseActivity extends MobileActivity
 
     /** YEWPLAY(nav): an Início filter tab - Home itself or one of the YouTube sections. */
     private void onFilterTabChosen(int sectionId) {
+        if (sectionId <= SUBS_TAB_ALL && sectionId > SUBS_TAB_ALL - 1000) {
+            chooseSubsGroup(sectionId);
+            return;
+        }
         if (isDownloadsTab(sectionId)) {
             mDownloadsFilter = sectionId;
             mFilterTabs.select(sectionId);
@@ -357,11 +368,223 @@ public class MobileBrowseActivity extends MobileActivity
     }
 
     /**
+     * YEWPLAY(subs): the Inscrições tabs of the proposal (p. 15, "Grupos como abas") - Todos and
+     * the user's channel groups (made from a card's menu, "Adicionar ao grupo"). Empty when there
+     * are no groups: then no tab row shows.
+     */
+    private List<FilterTabs.Tab> subsTabs() {
+        List<FilterTabs.Tab> tabs = new ArrayList<>();
+        List<com.liskovsoft.mediaserviceinterfaces.data.ItemGroup> groups;
+        try {
+            groups = com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.channelgroup
+                    .ChannelGroupServiceWrapper.instance(this).getChannelGroups();
+        } catch (RuntimeException e) {
+            groups = null;
+        }
+        if (groups == null || groups.isEmpty()) {
+            return tabs;
+        }
+        tabs.add(new FilterTabs.Tab(SUBS_TAB_ALL, getString(R.string.yew_subs_all)));
+        for (int i = 0; i < groups.size() && i < 999; i++) {
+            tabs.add(new FilterTabs.Tab(SUBS_TAB_ALL - 1 - i, groups.get(i).getTitle()));
+        }
+        return tabs;
+    }
+
+    private void chooseSubsGroup(int tab) {
+        mSubsTab = tab;
+        mSubsGroupChannels = null;
+        if (tab != SUBS_TAB_ALL) {
+            try {
+                List<com.liskovsoft.mediaserviceinterfaces.data.ItemGroup> groups =
+                        com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.channelgroup
+                                .ChannelGroupServiceWrapper.instance(this).getChannelGroups();
+                int index = SUBS_TAB_ALL - 1 - tab;
+                if (groups != null && index >= 0 && index < groups.size()) {
+                    String[] ids = com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.channelgroup
+                            .ChannelGroupServiceWrapper.instance(this).findChannelIdsForGroup(groups.get(index).getId());
+                    mSubsGroupChannels = new java.util.HashSet<>(ids != null ? java.util.Arrays.asList(ids)
+                            : new ArrayList<String>());
+                }
+            } catch (RuntimeException e) {
+                mSubsGroupChannels = null;
+            }
+        }
+        mFilterTabs.select(tab);
+        mAdapter.submitList(new ArrayList<>(mCurrentVideos));
+        mContentGrid.scrollToPosition(0);
+    }
+
+    /**
      * YEWPLAY(nav): the Início tabs - "Tudo" (Home), then every enabled section that is neither a
      * destination nor the user's own (Música, Jogos, Ao vivo, Notícias...).
      */
     private static boolean isDownloadsTab(int id) {
         return id == DOWNLOADS_TAB_ALL || id == DOWNLOADS_TAB_VIDEO || id == DOWNLOADS_TAB_AUDIO;
+    }
+
+    /**
+     * YEWPLAY(downloads): the Downloads list of the proposal (p. 16) - the space the app uses on
+     * top, then "Baixando" (with Pausar tudo / Retomar tudo) and "Concluídos" (with the count).
+     */
+    private List<Video> decorateDownloads(List<Video> list) {
+        if (list.isEmpty()) {
+            return list;
+        }
+        DownloadsBridge bridge = DownloadsBridge.instance(this);
+        List<Video> pending = new ArrayList<>();
+        List<Video> done = new ArrayList<>();
+        long used = 0;
+        boolean running = false;
+        boolean paused = false;
+        for (Video video : list) {
+            if (video.isYewPseudo()) {
+                continue;
+            }
+            DownloadItem item = bridge.itemFor(video);
+            if (item == null || item.isDone()) {
+                done.add(video);
+                if (item != null) {
+                    used += Math.max(0, item.bytesTotal);
+                }
+            } else {
+                pending.add(video);
+                used += Math.max(0, item.bytesDone);
+                running |= item.state == DownloadItem.STATE_DOWNLOADING || item.state == DownloadItem.STATE_QUEUED;
+                paused |= item.isPaused();
+            }
+        }
+        List<Video> out = new ArrayList<>(list.size() + 3);
+        Video storage = new Video();
+        storage.videoId = "yew:storage";
+        storage.yewStorageUsed = used;
+        try {
+            storage.yewStorageFree = new android.os.StatFs(
+                    android.os.Environment.getExternalStorageDirectory().getPath()).getAvailableBytes();
+        } catch (RuntimeException e) {
+            storage.yewStorageFree = -1;
+        }
+        out.add(storage);
+        if (!pending.isEmpty()) {
+            String end = running ? getString(R.string.yew_downloads_pause_all)
+                    : paused ? getString(R.string.yew_downloads_resume_all) : null;
+            out.add(Video.yewHeader(running ? "active:pause" : "active:resume",
+                    getString(R.string.yew_downloads_active), end, end != null));
+            out.addAll(pending);
+        }
+        if (!done.isEmpty()) {
+            out.add(Video.yewHeader("done", getString(R.string.yew_downloads_done),
+                    getResources().getQuantityString(R.plurals.yew_library_items, done.size(), done.size()), false));
+            out.addAll(done);
+        }
+        return out;
+    }
+
+    /**
+     * YEWPLAY(subs): Inscrições as in the proposal (p. 15) - the channels row on top (newest first,
+     * a rubi dot on those with something from today), then the feed under Hoje / Ontem / Esta
+     * semana / Antes. A video whose age can't be read stays in the group above it.
+     */
+    private List<Video> decorateSubscriptions(List<Video> list) {
+        List<Video> videos = new ArrayList<>(list.size());
+        for (Video video : list) {
+            if (!video.isYewPseudo()) {
+                videos.add(video);
+            }
+        }
+        if (mSubsGroupChannels != null && !videos.isEmpty() && !videos.get(0).isChannel()) {
+            // YEWPLAY(subs): a group tab shows only that group's channels.
+            List<Video> inGroup = new ArrayList<>();
+            for (Video video : videos) {
+                String channelId = com.newtube.mobile.ui.common.ChannelAvatars.channelIdOf(video);
+                if (channelId != null && mSubsGroupChannels.contains(channelId)) {
+                    inGroup.add(video);
+                }
+            }
+            videos = inGroup;
+            if (videos.isEmpty()) {
+                return videos;
+            }
+        }
+        if (videos.isEmpty() || videos.get(0).isChannel()) {
+            return list; // the signed-out/empty states and the channels list keep their own shape
+        }
+        int[] days = new int[videos.size()];
+        int day = FeedDays.TODAY;
+        int todayCount = 0;
+        java.util.LinkedHashMap<String, Video> channels = new java.util.LinkedHashMap<>();
+        java.util.Set<String> fresh = new java.util.HashSet<>();
+        for (int i = 0; i < videos.size(); i++) {
+            Video video = videos.get(i);
+            int parsed = FeedDays.of(video);
+            if (parsed != FeedDays.UNKNOWN) {
+                day = Math.max(day, parsed); // the feed is newest first: never go back up
+            }
+            days[i] = day;
+            String channelId = com.newtube.mobile.ui.common.ChannelAvatars.channelIdOf(video);
+            String key = channelId != null ? channelId : video.getAuthor();
+            if (key != null && !channels.containsKey(key) && channels.size() < 30) {
+                channels.put(key, video);
+            }
+            if (day == FeedDays.TODAY) {
+                todayCount++;
+                if (channelId != null) {
+                    fresh.add(channelId);
+                }
+            }
+        }
+        List<Video> out = new ArrayList<>(videos.size() + 5);
+        if (channels.size() > 1) {
+            Video strip = new Video();
+            strip.videoId = "yew:strip";
+            strip.yewStrip = new ArrayList<>(channels.values());
+            strip.yewStripNew = fresh;
+            out.add(strip);
+        }
+        int shown = -1;
+        for (int i = 0; i < videos.size(); i++) {
+            if (days[i] != shown) {
+                shown = days[i];
+                int title = shown == FeedDays.TODAY ? R.string.yew_day_today
+                        : shown == FeedDays.YESTERDAY ? R.string.yew_day_yesterday
+                        : shown == FeedDays.THIS_WEEK ? R.string.yew_day_week : R.string.yew_day_earlier;
+                String end = shown == FeedDays.TODAY && todayCount > 0
+                        ? getResources().getQuantityString(R.plurals.yew_subs_new, todayCount, todayCount) : null;
+                out.add(Video.yewHeader("day:" + shown, getString(title), end, false));
+            }
+            out.add(videos.get(i));
+        }
+        return out;
+    }
+
+    /** YEWPLAY(home): the content country's name ("Brasil"), or the device's when none is set. */
+    private String contentRegion() {
+        String code = null;
+        try {
+            code = new com.liskovsoft.sharedutils.locale.LocaleUpdater(this).getPreferredCountry();
+        } catch (RuntimeException e) {
+            // fall back to the device's
+        }
+        java.util.Locale ui = getResources().getConfiguration().getLocales().get(0);
+        if (code == null || code.isEmpty()) {
+            code = ui.getCountry();
+        }
+        return code == null || code.isEmpty() ? "" : new java.util.Locale("", code).getDisplayCountry(ui);
+    }
+
+    /** YEWPLAY(downloads): "Pausar tudo" / "Retomar tudo" in the Baixando header. */
+    private void onYewHeaderAction(Video header) {
+        boolean pause = "yew:active:pause".equals(header.videoId);
+        if (!pause && !"yew:active:resume".equals(header.videoId)) {
+            return;
+        }
+        for (DownloadItem item : DownloadRegistry.instance(this).itemsNewestFirst()) {
+            if (pause && (item.state == DownloadItem.STATE_DOWNLOADING || item.state == DownloadItem.STATE_QUEUED)) {
+                com.newtube.mobile.downloads.MobileDownloadService.pause(this, item);
+            } else if (!pause && item.isPaused()) {
+                com.newtube.mobile.downloads.MobileDownloadService.retry(this, item);
+            }
+        }
     }
 
     /** YEWPLAY(downloads): Tudo, Vídeos, Áudios. */
@@ -522,7 +745,7 @@ public class MobileBrowseActivity extends MobileActivity
             }
         });
 
-        findViewById(R.id.mobile_mini_close).setOnClickListener(v -> closeMiniPlayer());
+        findViewById(R.id.mobile_mini_close).setOnClickListener(v -> MiniPlayerBridge.next());
         // NEWTUBE(motion): or swipe the card away sideways.
         mMiniSwipe = com.newtube.mobile.ui.playback.MiniCardSwipe.attach(mMiniPlayerBar,
                 new com.newtube.mobile.ui.playback.MiniCardSwipe.Callback() {
@@ -915,6 +1138,10 @@ public class MobileBrowseActivity extends MobileActivity
     private void setupContentGrid() {
         mLayoutManager = new GridLayoutManager(this, computeSpanCount());
         mAdapter = new VideoCardAdapter(this::onVideoClicked, this::onVideoLongClicked);
+        mAdapter.setStripChannelListener(this::onChannelAvatarClicked);
+        // YEWPLAY(downloads): Baixando / Concluídos e o espaço usado, só na tela Downloads.
+        mAdapter.setListDecorator(list -> isDownloadsSectionShowing() ? decorateDownloads(list)
+                : mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS && !mYouShowing ? decorateSubscriptions(list) : list);
 
         // Channel rows (rare on Home, possible in some sections) span the whole grid width
         // when landscape/tablet layouts use 2+ columns.
@@ -1013,6 +1240,11 @@ public class MobileBrowseActivity extends MobileActivity
     private void updateCastIconTint() {
         if (mCastButton == null) {
             return;
+        }
+        if (mTopBar != null && mNavCapsule != null && !mYouShowing && isOnHomeDestination()) {
+            boolean casting = mCastSessionManager != null
+                    && (mCastSessionManager.isConnected() || mCastSessionManager.isConnecting());
+            mCastButton.setVisibility(casting ? View.VISIBLE : View.GONE);
         }
         boolean connecting = mCastSessionManager != null && mCastSessionManager.isConnecting();
         if (connecting != mCastIconAnimating) {
@@ -1187,17 +1419,41 @@ public class MobileBrowseActivity extends MobileActivity
             title = getCurrentSectionTitle();
         }
         mTopBar.show(subScreen, title);
-        mCastButton.setVisibility(home ? View.VISIBLE : View.GONE);
+        // YEWPLAY(home): service and region over Início's title (proposta p. 14).
+        View context = findViewById(R.id.yew_home_context);
+        context.setVisibility(home ? View.VISIBLE : View.GONE);
+        if (home) {
+            ((TextView) findViewById(R.id.yew_home_region)).setText(contentRegion());
+        }
+        // YEWPLAY(home): the bell (proposta p. 14); cast only while a session is live.
+        boolean casting = mCastSessionManager != null
+                && (mCastSessionManager.isConnected() || mCastSessionManager.isConnecting());
+        mCastButton.setVisibility(home && casting ? View.VISIBLE : View.GONE);
+        View bell = findViewById(R.id.yew_bell_button);
+        boolean hasNotifications = false;
+        for (BrowseSection section : mSections) {
+            hasNotifications |= section.getId() == MediaGroup.TYPE_NOTIFICATIONS;
+        }
+        bell.setVisibility(home && hasNotifications ? View.VISIBLE : View.GONE);
+        bell.setOnClickListener(v -> {
+            mSectionFromYou = true;
+            onSectionChosen(MediaGroup.TYPE_NOTIFICATIONS);
+        });
         mSettingsButton.setVisibility(mYouShowing ? View.VISIBLE : View.GONE);
         boolean downloads = subScreen && isDownloadsSectionShowing();
+        boolean subs = !subScreen && !mYouShowing && mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS;
+        List<FilterTabs.Tab> groupTabs = subs ? subsTabs() : null;
         if (home) {
             mFilterTabs.setTabs(homeTabs());
             mFilterTabs.select(mCurrentSectionId);
         } else if (downloads) {
             mFilterTabs.setTabs(downloadsTabs());
             mFilterTabs.select(mDownloadsFilter);
+        } else if (groupTabs != null && !groupTabs.isEmpty()) {
+            mFilterTabs.setTabs(groupTabs);
+            mFilterTabs.select(mSubsTab);
         }
-        mFilterTabs.show(home || downloads);
+        mFilterTabs.show(home || downloads || groupTabs != null && !groupTabs.isEmpty());
         int lit;
         if (mYouShowing) {
             lit = YOU_ITEM_ID;
@@ -1282,12 +1538,59 @@ public class MobileBrowseActivity extends MobileActivity
             addYouSectionRow(personal.get(i), i == personal.size() - 1);
         }
 
+        addPlaylistsRow();
+
         if (!pinned.isEmpty()) {
             addYouGroupLabel(getString(R.string.mobile_you_pinned));
             for (int i = 0; i < pinned.size(); i++) {
                 addYouSectionRow(pinned.get(i), i == pinned.size() - 1);
             }
         }
+    }
+
+    /**
+     * YEWPLAY(library): "Suas playlists" with square covers (proposta p. 15), from the last copy of
+     * the Playlists section the app kept (FeedCache) - nothing shows until that section was
+     * opened once.
+     */
+    private void addPlaylistsRow() {
+        boolean hasSection = false;
+        for (BrowseSection section : mSections) {
+            hasSection |= section.getId() == MediaGroup.TYPE_USER_PLAYLISTS;
+        }
+        List<Video> playlists = hasSection ? FeedCache.getOrRestore(MediaGroup.TYPE_USER_PLAYLISTS) : null;
+        if (playlists == null || playlists.isEmpty()) {
+            return;
+        }
+        addYouGroupLabel(getString(R.string.yew_library_your_playlists));
+        float density = getResources().getDisplayMetrics().density;
+        android.widget.HorizontalScrollView scroll = new android.widget.HorizontalScrollView(this);
+        scroll.setHorizontalScrollBarEnabled(false);
+        scroll.setClipToPadding(false);
+        int side = Math.round(20 * density);
+        scroll.setPadding(side, Math.round(4 * density), side - Math.round(12 * density), Math.round(16 * density));
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        int shown = 0;
+        for (Video playlist : playlists) {
+            if (shown++ >= 12) {
+                break;
+            }
+            View card = inflater.inflate(R.layout.item_yew_playlist_square, row, false);
+            ((TextView) card.findViewById(R.id.yew_playlist_square_title)).setText(playlist.getTitle());
+            TextView meta = card.findViewById(R.id.yew_playlist_square_meta);
+            CharSequence count = playlist.badge != null ? playlist.badge : playlist.getSecondTitle();
+            meta.setText(count);
+            meta.setVisibility(count == null || count.length() == 0 ? View.GONE : View.VISIBLE);
+            com.bumptech.glide.Glide.with(this).load(playlist.getCardImageUrl()).centerCrop()
+                    .into((ImageView) card.findViewById(R.id.yew_playlist_square_cover));
+            card.setContentDescription(playlist.getTitle());
+            card.setOnClickListener(v -> onVideoClicked(playlist));
+            row.addView(card);
+        }
+        scroll.addView(row);
+        mYouRows.addView(scroll);
     }
 
     /** YEWPLAY(library): how many "Continue de onde parou" cards, at most. */
@@ -1365,6 +1668,28 @@ public class MobileBrowseActivity extends MobileActivity
         mYouRows.addView(scroll);
     }
 
+    /** YEWPLAY(icons): os ícones Phosphor das linhas da Biblioteca; as seções sem par guardam o seu. */
+    private static int libraryIcon(int sectionId, int stock) {
+        switch (sectionId) {
+            case MediaGroup.TYPE_HISTORY:
+                return R.drawable.ic_nav_history_outline;
+            case VideoDownloads.SECTION_ID:
+                return R.drawable.ic_nav_downloads_outline;
+            case MediaGroup.TYPE_USER_PLAYLISTS:
+                return R.drawable.ic_yew_saved;
+            case MediaGroup.TYPE_CHANNEL_UPLOADS:
+                return R.drawable.ic_yew_channels;
+            case MediaGroup.TYPE_MY_VIDEOS:
+                return R.drawable.ic_yew_my_videos;
+            case MediaGroup.TYPE_PLAYBACK_QUEUE:
+                return R.drawable.ic_yew_queue;
+            case MediaGroup.TYPE_NOTIFICATIONS:
+                return R.drawable.ic_yew_bell;
+            default:
+                return stock;
+        }
+    }
+
     /** YEWPLAY(nav): the Library's order. */
     private static int libraryRank(int sectionId) {
         switch (sectionId) {
@@ -1387,9 +1712,11 @@ public class MobileBrowseActivity extends MobileActivity
 
     private void addYouSectionRow(BrowseSection section, boolean last) {
         int sectionId = section.getId();
-        int icon = sectionId == MediaGroup.TYPE_HISTORY ? R.drawable.ic_nav_history_outline
-                : sectionId == VideoDownloads.SECTION_ID ? R.drawable.ic_nav_downloads_outline : section.getResId();
-        View row = addYouRow(icon, section.getTitle(), () -> {
+        int icon = libraryIcon(sectionId, section.getResId());
+        // YEWPLAY(library): a biblioteca de playlists do YouTube é "Playlists salvas" na proposta (p. 15).
+        String label = sectionId == MediaGroup.TYPE_USER_PLAYLISTS
+                ? getString(R.string.yew_library_saved_playlists) : section.getTitle();
+        View row = addYouRow(icon, label, () -> {
             mSectionFromYou = true;
             hideYouPanel();
             onSectionChosen(sectionId);
@@ -1662,6 +1989,10 @@ public class MobileBrowseActivity extends MobileActivity
 
     private void onVideoClicked(Video video) {
         if (mPresenter == null) {
+            return;
+        }
+        if (video.isYewPseudo()) {
+            onYewHeaderAction(video);
             return;
         }
 
@@ -1977,6 +2308,9 @@ public class MobileBrowseActivity extends MobileActivity
             VideoGroup sync = VideoGroup.from(DownloadsBridge.instance(this).syncCards());
             sync.setAction(VideoGroup.ACTION_SYNC);
             updateSection(sync);
+            // YEWPLAY(downloads): an item can move from Baixando to Concluídos (or the header's
+            // Pausar/Retomar can change) without the set changing - repaint the headers.
+            mAdapter.submitList(new ArrayList<>(mCurrentVideos));
         } else {
             mPresenter.refresh(false);
         }
@@ -1989,10 +2323,24 @@ public class MobileBrowseActivity extends MobileActivity
         mContentGrid.setVisibility(View.GONE);
         mErrorContainer.setVisibility(View.VISIBLE);
         mErrorIcon.setVisibility(View.VISIBLE);
-        mErrorMessage.setText(mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS
-                ? R.string.mobile_empty_subscriptions : R.string.mobile_empty_generic);
+        if (mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS) {
+            showEmptyState(R.drawable.yew_gravura_inscricoes, getString(R.string.yew_empty_subs_title),
+                    getString(R.string.mobile_empty_subscriptions));
+        } else {
+            showEmptyState(R.drawable.yew_gravura_boas_vindas, getString(R.string.yew_empty_generic_title),
+                    getString(R.string.yew_empty_generic_body));
+        }
         mErrorAction.setVisibility(View.GONE);
         mErrorAction.setTag(null);
+    }
+
+    /** YEWPLAY(empty): gravura, título em Bricolage e a frase do estado vazio (proposta p. 17). */
+    private void showEmptyState(int engraving, CharSequence title, CharSequence body) {
+        mErrorIcon.setImageResource(engraving);
+        mErrorTitle.setText(title);
+        mErrorTitle.setVisibility(title != null && title.length() > 0 ? View.VISIBLE : View.GONE);
+        mErrorMessage.setText(body);
+        mErrorMessage.setVisibility(body != null && body.length() > 0 ? View.VISIBLE : View.GONE);
     }
 
     private void showDownloadsEmptyState() {
@@ -2001,7 +2349,8 @@ public class MobileBrowseActivity extends MobileActivity
         mContentGrid.setVisibility(View.GONE);
         mErrorContainer.setVisibility(View.VISIBLE);
         mErrorIcon.setVisibility(View.VISIBLE);
-        mErrorMessage.setText(R.string.mobile_downloads_empty);
+        showEmptyState(R.drawable.yew_gravura_downloads, getString(R.string.yew_empty_downloads_title),
+                getString(R.string.mobile_downloads_empty));
         mErrorAction.setVisibility(View.GONE);
         mErrorAction.setTag(null);
     }
@@ -2529,7 +2878,11 @@ public class MobileBrowseActivity extends MobileActivity
                         // again "a snapshot awaiting fresh content": drop the swap, keep the screen.
                         cancelFeedSwap();
                         mCurrentVideos.clear();
-                        mCurrentVideos.addAll(mAdapter.getCurrentList());
+                        for (Video kept : mAdapter.getCurrentList()) {
+                            if (!kept.isYewPseudo()) {
+                                mCurrentVideos.add(kept);
+                            }
+                        }
                         mAwaitingFreshContent = true;
                     }
                     if (emptyReplace && FeedSwapWarmup.keepScreenOnClear(mAwaitingFreshContent, swapPending)) {
@@ -2982,7 +3335,10 @@ public class MobileBrowseActivity extends MobileActivity
             mErrorIcon.setVisibility(View.VISIBLE);
 
             if (hasSignInAction) {
-                mErrorMessage.setText(SignInCopy.forSection(this, mCurrentSectionId, getCurrentSectionTitle()));
+                boolean subs = mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS;
+                showEmptyState(subs ? R.drawable.yew_gravura_inscricoes : R.drawable.yew_gravura_boas_vindas,
+                        getString(subs ? R.string.yew_empty_subs_title : R.string.yew_empty_signin_title),
+                        SignInCopy.forSection(this, mCurrentSectionId, getCurrentSectionTitle()));
                 mErrorAction.setText(actionText);
                 mErrorAction.setVisibility(View.VISIBLE);
             } else if (!hasValidatedNetwork()) {
@@ -2992,14 +3348,16 @@ public class MobileBrowseActivity extends MobileActivity
                 // is the whole complaint. The section really being empty and the request never
                 // leaving the device are indistinguishable at this seam, so ask the device
                 // instead of guessing from the error.
-                mErrorMessage.setText(R.string.mobile_empty_no_connection);
+                showEmptyState(R.drawable.yew_gravura_boas_vindas, getString(R.string.yew_empty_offline_title),
+                        getString(R.string.yew_empty_offline_body));
                 mErrorAction.setText(R.string.mobile_signin_retry_button);
                 mErrorAction.setVisibility(View.VISIBLE);
                 // Null tag = "plain retry" for the click listener; this state has no sign-in action
                 // to carry, and running the section's own onAction here would be the wrong thing.
                 actionData = null;
             } else {
-                mErrorMessage.setText(R.string.mobile_empty_generic);
+                showEmptyState(R.drawable.yew_gravura_boas_vindas, getString(R.string.yew_empty_generic_title),
+                        getString(R.string.yew_empty_generic_body));
                 mErrorAction.setVisibility(View.GONE);
             }
 

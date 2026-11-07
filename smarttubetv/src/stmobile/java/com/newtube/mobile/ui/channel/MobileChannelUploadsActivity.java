@@ -164,6 +164,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
         boolean isPlaylist = opener != null && opener.getPlaylistId() != null;
 
         mHeaderAdapter.setPlaylist(isPlaylist ? opener : null);
+        mAdapter.setNumbered(isPlaylist);
         applyToolbarTitleAlpha();
     }
 
@@ -221,6 +222,12 @@ public class MobileChannelUploadsActivity extends MobileActivity
             @Override
             public void onShuffle() {
                 shuffle();
+            }
+
+            @Override
+            public void onListen() {
+                com.newtube.mobile.ui.playback.MobilePlaybackActivity.requestListenOnStart();
+                playAll();
             }
         });
 
@@ -322,6 +329,21 @@ public class MobileChannelUploadsActivity extends MobileActivity
     }
 
     /** Start from the first playable item, carrying this destination's playlist context. */
+    /** YEWPLAY(playlist): the first four thumbnails make the header's mosaic cover. */
+    private void updateMosaic() {
+        List<String> urls = new ArrayList<>(4);
+        for (Video video : mVideos) {
+            String url = video.getCardImageUrl();
+            if (url != null) {
+                urls.add(url);
+            }
+            if (urls.size() == 4) {
+                break;
+            }
+        }
+        mHeaderAdapter.setMosaic(urls);
+    }
+
     private void playAll() {
         Video first = findFirstPlayableVideo();
 
@@ -624,6 +646,7 @@ public class MobileChannelUploadsActivity extends MobileActivity
 
             mLastPaginationTriggerCount = -1; // allow pagination to fire again at the new size
             mAdapter.submitList(new ArrayList<>(mVideos));
+            updateMosaic();
             updatePlayAllVisibility();
 
             if (!mVideos.isEmpty()) {

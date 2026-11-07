@@ -55,11 +55,12 @@ public final class MobileDownloadService extends Service {
         start(context);
     }
 
-    /** Re-runs a failed item (part files, if any, resume where they stopped). */
+    /** Re-runs a failed or paused item (part files, if any, resume where they stopped). */
     public static void retry(Context context, DownloadItem item) {
         item.state = DownloadItem.STATE_QUEUED;
         item.error = null;
         item.cancelRequested = false;
+        item.pauseRequested = false;
         DownloadRegistry.instance(context).notifyChanged();
         start(context);
     }
@@ -72,6 +73,20 @@ public final class MobileDownloadService extends Service {
         item.cancelRequested = true;
         if (item.state == DownloadItem.STATE_QUEUED) {
             DownloadRegistry.instance(context).remove(item);
+        }
+    }
+
+    /**
+     * YEWPLAY(downloads): pausa um item (proposta p. 16, "Pausar e retomar no item"). Na fila,
+     * para na hora; baixando, o job para no próximo tique e guarda as partes. Finalizando (a
+     * mixagem) não pausa - já falta pouco.
+     */
+    public static void pause(Context context, DownloadItem item) {
+        if (item.state == DownloadItem.STATE_QUEUED) {
+            item.state = DownloadItem.STATE_PAUSED;
+            DownloadRegistry.instance(context).notifyChanged();
+        } else if (item.state == DownloadItem.STATE_DOWNLOADING) {
+            item.pauseRequested = true;
         }
     }
 
