@@ -60,6 +60,15 @@ player. Conversão: `phosphor2vd.py` manteve tamanho, cor e tint de cada vetor.
 - Configurações: título grande, títulos de grupo pequenos em cinza quente, linhas com ícone e
   descrição de uma linha.
 - Estados vazios: gravura do ramo de teixo (`ic_mobile_empty`).
+- Início: o primeiro vídeo de "Tudo" é o destaque editorial (`item_video_card_hero`): de ponta a
+  ponta, mais alto, título Bricolage 22sp e metadados em branco sobre um degradê grafite.
+- Biblioteca: "Continue de onde parou" no topo, cartões 176x99 com a linha rubi do quanto já foi
+  visto, a partir do estado local de reprodução (`VideoStateService`, entre 3% e 95%).
+- Downloads: abas Tudo, Vídeos e Áudios na fileira de filtros; excluir mostra "Desfazer" por 5 s e
+  só então apaga os arquivos (`DownloadMenu.deleteWithUndo`).
+- Sobre numa tela só: topo com ícone, nome, versão, origem (NewTube e SmartTube), licença MIT em
+  uma frase e o significado do nome; linhas em grupos nomeados.
+- Esqueleto de carregamento no formato dos itens: grande no Início, compacto nas listas e na Busca.
 
 ## Voz (pt-BR)
 
@@ -68,10 +77,10 @@ Ouvir (não "segundo plano"), Janela (não "Popup"/"Picture-in-picture"), "Sem c
 
 ## Ainda não feito
 
-Continue de onde parou e Suas playlists na Biblioteca; avatares e agrupamento por dia em
-Inscrições; item editorial em destaque; botão "próximo" no mini-player; tela dedicada Ouvir;
-abas e progresso em Downloads; mosaico de playlist e banner de canal; Sobre numa tela só;
-snackbar com Desfazer; esqueleto de carregamento no novo formato.
+Suas playlists com capa na Biblioteca; avatares e agrupamento por dia em Inscrições (o feed não
+traz a data de publicação como número, só o texto "há 2 dias"); botão "próximo" no mini-player
+(o próximo vídeo é escolhido pelo player, que fica em outra tela); tela dedicada Ouvir; espaço
+usado e seções Baixando/Concluídos em Downloads; mosaico de playlist e banner de canal.
 
 ## Verificação
 
