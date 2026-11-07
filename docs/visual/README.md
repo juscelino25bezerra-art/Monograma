@@ -101,16 +101,20 @@ Ouvir (não "segundo plano"), Janela (não "Popup"/"Picture-in-picture"), "Sem c
 - Ouvir: tela própria (`MobileListenActivity`), controla o player da sessão mini.
 - Playlist: capa em mosaico, Reproduzir, Aleatório, Ouvir e itens numerados.
 - Canal: topo com avatar e nome em Bricolage; abas com ponto rubi.
-- Início: sino das notificações; transmitir só aparece com uma sessão ativa.
+- Início: serviço e região acima do título; sino das notificações; transmitir só aparece
+  com uma sessão ativa.
+- Inscrições: abas Todos + grupos de canais (filtram o feed). Canal: Inscrever-se/Inscrito.
+- Biblioteca: Suas playlists com capa quadrada.
 
 ## Ainda diferente da proposta
 
-- Início: sem "serviço e região" acima do título (o app tem um serviço só).
 - Busca: a aba "Músicas" vira "Filmes" (o YouTube não tem filtro de música nessa busca).
-- Inscrições: sem abas de grupo nem "atualizado há"; sem ícones de ordenar.
-- Canal: sem imagem de banner, número de inscritos, Inscrever-se, avisos, RSS e "Mais
-  recentes" (a tela de canal não recebe esses dados hoje).
-- Biblioteca: "Suas playlists" com capa quadrada.
+- Inscrições: sem "+ Grupo" na fileira de abas (grupos se criam pelo menu de um vídeo,
+  "Adicionar ao grupo") nem "atualizado há"; sem ícones de ordenar.
+- Canal: sem imagem de banner, número de inscritos, avisos, RSS e "Mais recentes" (a tela de
+  canal não recebe esses dados). Inscrever-se usa o estado da última lista de inscrições.
+- Biblioteca: "Suas playlists" aparece depois que a seção Playlists foi aberta uma vez (vem da
+  cópia guardada); sem "Nova".
 - Ouvir: a fonte aparece como "Tocando agora", não o nome da playlist.
 
 ## Verificação
