@@ -250,6 +250,9 @@ public class MobileBrowseActivity extends MobileActivity
     private static final int DOWNLOADS_TAB_AUDIO = -9003;
     /** YEWPLAY(subs): the Inscrições group tabs - "Todos", then one per channel group (base - index). */
     private static final int SUBS_TAB_ALL = -9100;
+    private static final String FIND_CHANNELS_TAG = "yew:find-channels";
+    /** YEWPLAY(subs): when the Inscrições feed last arrived, for "atualizado há 12 min". */
+    private long mSubsUpdatedAt;
     private int mSubsTab = SUBS_TAB_ALL;
     @androidx.annotation.Nullable
     private java.util.Set<String> mSubsGroupChannels;
@@ -548,13 +551,32 @@ public class MobileBrowseActivity extends MobileActivity
                 int title = shown == FeedDays.TODAY ? R.string.yew_day_today
                         : shown == FeedDays.YESTERDAY ? R.string.yew_day_yesterday
                         : shown == FeedDays.THIS_WEEK ? R.string.yew_day_week : R.string.yew_day_earlier;
-                String end = shown == FeedDays.TODAY && todayCount > 0
-                        ? getResources().getQuantityString(R.plurals.yew_subs_new, todayCount, todayCount) : null;
+                String end = null;
+                if (out.size() <= 1) {
+                    // The first header carries "8 novos, atualizado há 12 min" (proposta p. 10).
+                    String fresh2 = shown == FeedDays.TODAY && todayCount > 0
+                            ? getResources().getQuantityString(R.plurals.yew_subs_new, todayCount, todayCount) : null;
+                    String updated = updatedAgo();
+                    end = fresh2 == null ? updated : updated == null ? fresh2 : fresh2 + ", " + updated;
+                }
                 out.add(Video.yewHeader("day:" + shown, getString(title), end, false));
             }
             out.add(videos.get(i));
         }
         return out;
+    }
+
+    @androidx.annotation.Nullable
+    private String updatedAgo() {
+        if (mSubsUpdatedAt <= 0) {
+            return null;
+        }
+        long minutes = (System.currentTimeMillis() - mSubsUpdatedAt) / 60_000;
+        if (minutes < 1) {
+            return getString(R.string.yew_subs_updated_now);
+        }
+        return minutes < 60 ? getString(R.string.yew_subs_updated_min, (int) minutes)
+                : getString(R.string.yew_subs_updated_hours, (int) (minutes / 60));
     }
 
     /** YEWPLAY(home): the content country's name ("Brasil"), or the device's when none is set. */
@@ -1979,6 +2001,9 @@ public class MobileBrowseActivity extends MobileActivity
             Object data = mErrorAction.getTag();
             if (data instanceof ErrorFragmentData) {
                 ((ErrorFragmentData) data).onAction();
+            } else if (FIND_CHANNELS_TAG.equals(data)) {
+                // YEWPLAY(voz): "Seus canais crescem aqui. Encontrar canais" (proposta p. 10).
+                SearchPresenter.instance(this).startSearch(null);
             } else if (mPresenter != null) {
                 // Offline empty state (see showError): the button is a plain retry. Pull-to-refresh
                 // does the same thing, but it is invisible on a screen with no rows to pull.
@@ -2326,6 +2351,10 @@ public class MobileBrowseActivity extends MobileActivity
         if (mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS) {
             showEmptyState(R.drawable.yew_gravura_inscricoes, getString(R.string.yew_empty_subs_title),
                     getString(R.string.mobile_empty_subscriptions));
+            mErrorAction.setText(R.string.yew_empty_find_channels);
+            mErrorAction.setTag(FIND_CHANNELS_TAG);
+            mErrorAction.setVisibility(View.VISIBLE);
+            return;
         } else {
             showEmptyState(R.drawable.yew_gravura_boas_vindas, getString(R.string.yew_empty_generic_title),
                     getString(R.string.yew_empty_generic_body));
@@ -2864,6 +2893,11 @@ public class MobileBrowseActivity extends MobileActivity
                 syncVideos(group.getVideos());
                 mAdapter.refreshItems(group.getVideos());
                 return;
+            }
+
+            if (group.getAction() == VideoGroup.ACTION_REPLACE && mCurrentSectionId == MediaGroup.TYPE_SUBSCRIPTIONS
+                    && group.getVideos() != null && !group.getVideos().isEmpty()) {
+                mSubsUpdatedAt = System.currentTimeMillis();
             }
 
             // NEWTUBE(feed-swap): this update replaces a FeedCache snapshot with fresh content.

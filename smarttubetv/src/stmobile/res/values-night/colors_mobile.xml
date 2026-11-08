@@ -43,4 +43,6 @@
     <color name="dialog_proxy_hint_color">#80FFFFFF</color>
     <!-- YEWPLAY(channel): mobile_color_raised transparente, fim do degradê do topo do canal. -->
     <color name="yew_raised_clear">#002C262F</color>
+    <!-- YEWPLAY(splash): o fundo do ícone na tela de abertura - o marfim do ícone, nos dois temas. -->
+    <color name="yew_splash_icon_background">#F3EEE9</color>
 </resources>

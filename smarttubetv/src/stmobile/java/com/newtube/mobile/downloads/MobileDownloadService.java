@@ -247,6 +247,8 @@ public final class MobileDownloadService extends Service {
                 .setContentTitle(getString(R.string.mobile_download_done_title))
                 .setContentText(item.title)
                 .setContentIntent(openDownloadsIntent())
+                // YEWPLAY(voz): "Download concluído · Abrir" (proposta p. 10).
+                .addAction(R.drawable.ic_yew_play, getString(R.string.yew_download_open), openDownloadsIntent())
                 .setAutoCancel(true)
                 .setSilent(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

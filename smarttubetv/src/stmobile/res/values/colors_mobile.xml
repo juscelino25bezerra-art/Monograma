@@ -12,7 +12,9 @@
     <color name="mobile_color_background">#F6F2EE</color>
     <color name="mobile_color_surface">#ECE6E1</color>
     <color name="mobile_color_on_surface">#1C171E</color>
-    <color name="mobile_color_on_surface_secondary">#6B6268</color>
+    <!-- YEWPLAY(a11y): a proposta pede texto de apoio acima de 5,5:1 sobre o fundo (p. 11); o
+         #6B6268 dava 5,28:1 no Papel e 4,33:1 na Areia. #645B61 dá 5,87:1 e 4,82:1 com o mesmo tom. -->
+    <color name="mobile_color_on_surface_secondary">#645B61</color>
     <color name="mobile_color_badge_bg">#CC000000</color>
     <color name="mobile_color_badge_live_bg">#C8243C</color>
     <color name="mobile_color_progress_track">#33FFFFFF</color>
@@ -89,4 +91,6 @@
     <color name="yew_switch_thumb_off">#6B6268</color>
     <!-- YEWPLAY(channel): mobile_color_raised transparente, fim do degradê do topo do canal. -->
     <color name="yew_raised_clear">#00E3DCD7</color>
+    <!-- YEWPLAY(splash): o fundo do ícone na tela de abertura - o marfim do ícone, nos dois temas. -->
+    <color name="yew_splash_icon_background">#F3EEE9</color>
 </resources>

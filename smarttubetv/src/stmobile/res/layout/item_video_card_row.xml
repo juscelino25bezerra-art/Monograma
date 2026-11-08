@@ -164,12 +164,13 @@
 
         <ImageButton
             android:id="@+id/video_overflow"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="-6dp"
+            android:layout_width="44dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="-10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/mobile_player_more"
-            android:padding="10dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="14dp"
             android:src="@drawable/ic_mobile_more_vert" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
