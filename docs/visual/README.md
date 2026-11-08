@@ -106,6 +106,19 @@ Ouvir (não "segundo plano"), Janela (não "Popup"/"Picture-in-picture"), "Sem c
 - Inscrições: abas Todos + grupos de canais (filtram o feed). Canal: Inscrever-se/Inscrito.
 - Biblioteca: Suas playlists com capa quadrada.
 
+## Fase 5 (acabamento)
+
+- Voz (p. 10): Download concluído · Abrir; Removido de Importante · Desfazer (já existia);
+  Seus canais crescem aqui · Encontrar canais; "8 novos, atualizado há 12 min" no primeiro título
+  do feed; sem "player" nem exclamações nos textos.
+- Contraste: texto principal 15,8:1 nos dois temas; texto de apoio 6,1:1 (escuro) e 5,87:1
+  (claro, `#645B61` no lugar de `#6B6268`, que dava 5,28:1). Rubi não é usado como texto.
+- Rubi nunca sozinho: aba ativa também em marfim e SemiBold; ponto da fileira de canais e
+  Aleatório da tela Ouvir também são ditos ao TalkBack.
+- Alvos de toque de 48dp (busca, comentários, linha de vídeo, chat ao vivo).
+- Animações: todas usam animadores do sistema, então "remover animações" as zera sozinho.
+- Tela de abertura (Android 12+): ícone Marfim num círculo marfim sobre a cor da página.
+
 ## Ainda diferente da proposta
 
 - Busca: a aba "Músicas" vira "Filmes" (o YouTube não tem filtro de música nessa busca).

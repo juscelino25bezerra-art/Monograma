@@ -192,6 +192,8 @@ public class MobileListenActivity extends MobileActivity {
         boolean shuffling = MiniPlayerBridge.isShuffling();
         mShuffle.setImageTintList(ContextCompat.getColorStateList(this,
                 shuffling ? R.color.mobile_color_accent : R.color.mobile_color_on_surface));
+        // YEWPLAY(a11y): on/off is also said, not only shown in rubi.
+        mShuffle.setContentDescription(getString(shuffling ? R.string.yew_shuffle_on : R.string.yew_shuffle_off));
     }
 
     private void bindVideo(Video video) {

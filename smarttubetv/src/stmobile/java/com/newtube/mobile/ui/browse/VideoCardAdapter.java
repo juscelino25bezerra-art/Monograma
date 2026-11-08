@@ -917,8 +917,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                 name.setText(author);
                 initials.setText(initialsOf(author));
                 String channelId = ChannelAvatars.channelIdOf(video);
-                cell.findViewById(R.id.yew_strip_dot).setVisibility(strip.yewStripNew != null && channelId != null
-                        && strip.yewStripNew.contains(channelId) ? View.VISIBLE : View.GONE);
+                boolean fresh = strip.yewStripNew != null && channelId != null && strip.yewStripNew.contains(channelId);
+                cell.findViewById(R.id.yew_strip_dot).setVisibility(fresh ? View.VISIBLE : View.GONE);
                 String url = ChannelAvatars.get(video);
                 if (url != null) {
                     initials.setVisibility(View.GONE);
@@ -933,7 +933,8 @@ public class VideoCardAdapter extends ListAdapter<Video, RecyclerView.ViewHolder
                     initials.setVisibility(View.VISIBLE);
                     avatar.setImageResource(R.drawable.bg_card_avatar_placeholder);
                 }
-                cell.setContentDescription(author);
+                // YEWPLAY(a11y): the rubi dot is never the only sign - TalkBack hears it too.
+                cell.setContentDescription(fresh ? context.getString(R.string.yew_strip_new_desc, author) : author);
                 cell.setOnClickListener(onChannel == null ? null : v -> onChannel.onVideoClick(video));
                 mRow.addView(cell);
             }

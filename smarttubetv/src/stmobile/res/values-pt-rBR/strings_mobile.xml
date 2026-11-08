@@ -148,7 +148,7 @@
     <string name="mobile_signin_waiting_title">Aguardando o Google…</string>
     <string name="mobile_signin_waiting_caption">Conclua na página do Google: escolha sua conta e permita o acesso. O login aqui é feito automaticamente.</string>
     <string name="mobile_signin_reopen_button">Abrir a página de login de novo</string>
-    <string name="mobile_signin_success">Login concluído!</string>
+    <string name="mobile_signin_success">Login concluído.</string>
     <string name="mobile_signin_error">Não foi possível concluir o login. Verifique sua conexão e tente de novo — você vai receber um código novo.</string>
     <string name="mobile_signin_retry_button">Tentar de novo</string>
     <string name="mobile_accounts_title">Contas</string>
@@ -172,7 +172,7 @@
     <string name="mobile_load_more_error">Não foi possível carregar mais.</string>
     <string name="mobile_refresh_error">Não foi possível atualizar.</string>
     <string name="mobile_mini_play_pause">Reproduzir ou pausar</string>
-    <string name="mobile_mini_expand">Expandir player</string>
+    <string name="mobile_mini_expand">Abrir o vídeo</string>
     <string name="pin_playlist">Fixar playlist em Você</string>
     <string name="pin_channel">Fixar canal em Você</string>
     <string name="pinned_to_sidebar">Fixado em Você</string>
@@ -196,7 +196,7 @@
     <string name="mobile_more_options_for">Mais opções para %1$s</string>
     <string name="mobile_card_go_to_channel">Ir para o canal %1$s</string>
     <string name="mobile_comment_likes">%1$s curtidas</string>
-    <string name="mobile_mini_close">Fechar player</string>
+    <string name="mobile_mini_close">Fechar o vídeo</string>
     <string name="mobile_first_run_setup">Configuração inicial — preparando o YouTube…</string>
     <string name="mobile_cast_button">Transmitir para a TV</string>
     <string name="mobile_cast_picker_title">Transmitir para</string>
@@ -264,7 +264,7 @@
     <string name="mobile_cast_quality_cap">Até %1$dp</string>
     <string name="mobile_cast_quality_tv_remote">Usar o controle da TV</string>
     <string name="mobile_cast_subtitles_need_tv_app">Mudar para o app da TV</string>
-    <string name="mobile_cast_quality_receiver_help">Escolha a qualidade nas configurações do player na sua TV.</string>
+    <string name="mobile_cast_quality_receiver_help">Escolha a qualidade nas configurações de reprodução da sua TV.</string>
     <string name="mobile_cast_subtitles_sent">Legenda enviada para a TV</string>
     <string name="mobile_cast_subtitles_failed">Não foi possível mudar as legendas neste receptor</string>
     <string name="mobile_cast_switch_subtitles_title">Usar o app da TV para legendas?</string>
@@ -444,4 +444,14 @@
     <string name="yew_notifications">Notificações</string>
     <string name="yew_subs_all">Todos</string>
     <string name="yew_library_your_playlists">Suas playlists</string>
+    <!-- YEWPLAY(voz): a tabela de voz da proposta (p. 10). -->
+    <string name="yew_download_open">Abrir</string>
+    <string name="yew_empty_find_channels">Encontrar canais</string>
+    <string name="yew_subs_updated_now">atualizado agora</string>
+    <string name="yew_subs_updated_min">atualizado há %1$d min</string>
+    <string name="yew_subs_updated_hours">atualizado há %1$d h</string>
+    <!-- YEWPLAY(a11y) -->
+    <string name="yew_strip_new_desc">%1$s, vídeos novos hoje</string>
+    <string name="yew_shuffle_on">Aleatório: ligado</string>
+    <string name="yew_shuffle_off">Aleatório: desligado</string>
 </resources>

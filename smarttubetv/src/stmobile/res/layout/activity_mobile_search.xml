@@ -39,7 +39,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="44dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@drawable/mobile_search_field_background"
             android:gravity="center_vertical"
@@ -74,11 +74,11 @@
             <!-- Clear the query; visible only while the field has text. -->
             <ImageButton
                 android:id="@+id/mobile_search_clear"
-                android:layout_width="40dp"
-                android:layout_height="44dp"
+                android:layout_width="44dp"
+                android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/mobile_search_clear"
-                android:padding="11dp"
+                android:padding="13dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_yew_x_circle"
                 android:tint="@color/mobile_color_on_surface_secondary"
@@ -87,11 +87,11 @@
 
             <ImageButton
                 android:id="@+id/mobile_search_mic"
-                android:layout_width="40dp"
-                android:layout_height="44dp"
+                android:layout_width="44dp"
+                android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/mobile_search_voice"
-                android:padding="11dp"
+                android:padding="13dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_mobile_mic"
                 android:tint="@color/mobile_color_on_surface_secondary" />

@@ -24,6 +24,12 @@
       stays dark in both, like YouTube's: its chrome uses the fixed mobile_player_* colours.
     -->
     <style name="Theme.NewTube" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- YEWPLAY(splash): a tela de abertura (proposta p. 4 e 22) - o ícone Marfim (Y grafite,
+             play rubi) num círculo marfim sobre a cor da página (Grafite no escuro, Papel no
+             claro). Android 12+ desenha isso sozinho; antes dele, a janela já abre na cor certa. -->
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">@color/mobile_color_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">@drawable/ic_launcher_foreground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">@color/yew_splash_icon_background</item>
         <item name="colorPrimary">@color/mobile_color_primary</item>
         <item name="colorPrimaryDark">@color/mobile_color_primary_dark</item>
         <!-- Selection controls (checkbox, radio, switch, text caret) and any untinted
