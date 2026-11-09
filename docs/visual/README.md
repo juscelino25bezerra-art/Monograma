@@ -7,11 +7,11 @@ Material Components 1.14 continuam por baixo (tema M2), mas cor, forma e tipo s�
 
 | Papel | Escuro | Claro | Token |
 |---|---|---|---|
-| Fundo | Grafite `#18141A` | Papel `#F6F2EE` | `mobile_color_background` / `?attr/newtubeColorBackground` |
-| Blocos | Grafite claro `#221D24` | Papel escuro `#ECE6E1` | `mobile_color_surface` |
-| Secundário | Fumaça `#2C262F` | Areia `#E3DCD7` | `mobile_color_raised` |
-| Texto e ação | Marfim `#F3EEE9` | Tinta `#1C171E` | `mobile_color_on_surface`, `mobile_color_inverse_surface` |
-| Apoio | Cinza quente `#9C9399` | `#6B6268` | `mobile_color_on_surface_secondary` |
+| Fundo | Grafite `#0E0F11` | Papel `#F6F2EE` | `mobile_color_background` / `?attr/newtubeColorBackground` |
+| Blocos | Grafite claro `#1A1C20` | Papel escuro `#ECE6E1` | `mobile_color_surface` |
+| Secundário | Fumaça `#24272C` | Areia `#E3DCD7` | `mobile_color_raised` |
+| Texto e ação | Marfim `#F2F3F5` | Tinta `#1C171E` | `mobile_color_on_surface`, `mobile_color_inverse_surface` |
+| Apoio | Cinza `#9BA1A9` | `#6B6268` | `mobile_color_on_surface_secondary` |
 | Estado | Rubi `#E0364F` | Rubi escuro `#C8243C` | `mobile_color_accent` |
 
 - A ação principal (Inscrever-se, chave ligada) é **marfim/tinta**, nunca rubi.

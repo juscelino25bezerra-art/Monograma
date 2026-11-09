@@ -7,18 +7,18 @@
         <shape android:shape="rectangle">
             <gradient
                 android:angle="270"
-                android:endColor="#0018141A"
-                android:startColor="#7318141A" />
+                android:endColor="#000E0F11"
+                android:startColor="#730E0F11" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <gradient
                 android:angle="270"
-                android:centerColor="#5918141A"
+                android:centerColor="#590E0F11"
                 android:centerY="0.55"
-                android:endColor="#F218141A"
-                android:startColor="#0018141A" />
+                android:endColor="#F20E0F11"
+                android:startColor="#000E0F11" />
         </shape>
     </item>
 </layer-list>

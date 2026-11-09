@@ -36,9 +36,9 @@ import org.robolectric.annotation.ConscryptMode;
 @ConscryptMode(ConscryptMode.Mode.OFF)
 public class MobileThemeTest {
     // YEWPLAY(visual): as paletas da proposta (values-night / values colors_mobile.xml).
-    private static final int DARK_PAGE = 0xFF18141A;
-    private static final int DARK_SURFACE = 0xFF221D24;
-    private static final int DARK_INK = 0xFFF3EEE9;
+    private static final int DARK_PAGE = 0xFF0E0F11;
+    private static final int DARK_SURFACE = 0xFF1A1C20;
+    private static final int DARK_INK = 0xFFF2F3F5;
     private static final int LIGHT_PAGE = 0xFFF6F2EE;
     private static final int LIGHT_INK = 0xFF1C171E;
 

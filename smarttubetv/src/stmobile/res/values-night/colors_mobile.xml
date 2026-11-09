@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- YEWPLAY(visual): o tema escuro (padrão) da proposta - Grafite, Grafite claro, Fumaça,
+    <!-- YEWPLAY(visual): o tema escuro (padrão) usa a paleta grafite do Sonivell, com o rubi no
+         lugar do lima - Grafite, Grafite claro, Fumaça,
          Marfim, Cinza quente e Rubi. Só as cores que mudam entre os temas; os papéis estão em
          values/colors_mobile.xml. -->
     <color name="mobile_color_primary">#E0364F</color>
     <color name="mobile_color_primary_dark">#C8243C</color>
     <color name="mobile_color_badge_live_bg">#E0364F</color>
     <color name="mobile_color_accent">#E0364F</color>
-    <color name="mobile_color_raised">#2C262F</color>
-    <color name="yew_switch_thumb_off">#9C9399</color>
+    <color name="mobile_color_raised">#24272C</color>
+    <color name="yew_switch_thumb_off">#9BA1A9</color>
     <color name="mobile_color_cast_active">#E0364F</color>
-    <color name="mobile_color_background">#18141A</color>
-    <color name="mobile_color_surface">#221D24</color>
-    <color name="mobile_color_on_surface">#F3EEE9</color>
-    <color name="mobile_color_on_surface_secondary">#9C9399</color>
-    <color name="mobile_color_placeholder">#2C262F</color>
+    <color name="mobile_color_background">#0E0F11</color>
+    <color name="mobile_color_surface">#1A1C20</color>
+    <color name="mobile_color_on_surface">#F2F3F5</color>
+    <color name="mobile_color_on_surface_secondary">#9BA1A9</color>
+    <color name="mobile_color_placeholder">#24272C</color>
     <!-- NEWTUBE(motion): the light that sweeps over skeleton blocks (ShimmerLinearLayout). -->
-    <color name="mobile_color_skeleton_highlight">#3A333D</color>
+    <color name="mobile_color_skeleton_highlight">#33373E</color>
     <color name="mobile_color_link">#F2899A</color>
-    <color name="mobile_color_divider">#1FF3EEE9</color>
-    <color name="mobile_color_pill">#2C262F</color>
-    <color name="mobile_color_subscribed_button">#2C262F</color>
-    <color name="mobile_color_comment_parent">#1D191F</color>
+    <color name="mobile_color_divider">#1FF2F3F5</color>
+    <color name="mobile_color_pill">#24272C</color>
+    <color name="mobile_color_subscribed_button">#24272C</color>
+    <color name="mobile_color_comment_parent">#16181B</color>
     <color name="mobile_color_comment_creator_pill">#24FFFFFF</color>
-    <color name="mobile_color_menu_surface">#2C262F</color>
+    <color name="mobile_color_menu_surface">#24272C</color>
     <color name="mobile_color_comment_handle">#D1FFFFFF</color>
 
     <!-- Tokens added with the light theme; each is what that spot used before it. -->
-    <color name="mobile_color_card">#221D24</color>
-    <color name="mobile_color_inverse_surface">#F3EEE9</color>
-    <color name="mobile_color_on_inverse_surface">#18141A</color>
+    <color name="mobile_color_card">#1A1C20</color>
+    <color name="mobile_color_inverse_surface">#F2F3F5</color>
+    <color name="mobile_color_on_inverse_surface">#0E0F11</color>
     <color name="mobile_color_inverse_ripple">#33000000</color>
-    <color name="mobile_color_track">#2C262F</color>
-    <color name="mobile_color_field">#221D24</color>
-    <color name="mobile_color_background_scrim">#6618141A</color>
-    <color name="mobile_color_navigation_bar">#18141A</color>
+    <color name="mobile_color_track">#24272C</color>
+    <color name="mobile_color_field">#1A1C20</color>
+    <color name="mobile_color_background_scrim">#660E0F11</color>
+    <color name="mobile_color_navigation_bar">#0E0F11</color>
 
     <!-- The shared edit dialogs keep the library's AppDialog colours (sharedutils / common). -->
-    <color name="dialog_bg_color">#221D24</color>
-    <color name="dialog_text_color">#F3EEE9</color>
+    <color name="dialog_bg_color">#1A1C20</color>
+    <color name="dialog_text_color">#F2F3F5</color>
     <color name="dialog_hint_color">#33FFFFFF</color>
     <color name="dialog_proxy_hint_color">#80FFFFFF</color>
 </resources>
