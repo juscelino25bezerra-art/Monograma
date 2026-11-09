@@ -6,7 +6,7 @@
     <item>
         <inset android:inset="8dp">
             <shape android:shape="oval">
-                <solid android:color="#6618141A" />
+                <solid android:color="#660E0F11" />
             </shape>
         </inset>
     </item>
